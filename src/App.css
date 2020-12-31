@@ -1,38 +1,82 @@
-.App {
+.container {
+  width: 80%;
+  max-width: 1200px;
+  margin: 3em auto;
+  padding: 1em;
+}
+
+.container * {
+  box-sizing: border-box;
+}
+
+p {
+  color: #003366;
+}
+
+a {
+  color: #003366;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #003366;
+}
+
+button {
+  font-size: 12px;
+}
+
+.btn.btn-primary {
+  background-color: #003366; /* Green */
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn.btn-primary:hover {
+text-decoration: underline;
+opacity: 0.9;
+}
+
+div {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  margin-bottom: 50px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.container h1 {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.display-linebreak {
+  white-space: pre-line;
+}
+
+.flex-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.flex-container > div {
+  margin: 0 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (max-width: 500px) {
+  .container h1 {
+    font-size: 1.5rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .btn.btn-primary {
+    font-size: 13px;
+    padding: 10px;
   }
 }

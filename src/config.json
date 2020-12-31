@@ -1,0 +1,7 @@
+{
+  "ssoRealmName": "{{.Env.REACT_APP_SSO_REALM_NAME}}",
+  "ssoClientId": "{{.Env.REACT_APP_SSO_CLIENT_ID}}",
+  "ssoBaseUrl": "{{.Env.REACT_APP_SSO_BASE_URL}}",
+  "apiBaseUrl": "{{.Env.REACT_APP_API_BASE_URL}}",
+  "rocketchatUrl": "{{.Env.REACT_APP_ROCKETCHAT_URL}}"
+}

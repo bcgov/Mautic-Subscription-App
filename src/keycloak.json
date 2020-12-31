@@ -1,0 +1,8 @@
+{
+  "realm": "devhub",
+  "auth-server-url": "https://dev.oidc.gov.bc.ca/auth/",
+  "ssl-required": "external",
+  "resource": "mautic-subscription-app",
+  "public-client": true,
+  "confidential-port": 0
+}

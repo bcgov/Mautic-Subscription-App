@@ -1,7 +1,7 @@
 //
 // Mautic Subscription App
 //
-// Copyright © 2018 Province of British Columbia
+// Copyright © 2018 Province of British Columbia
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,27 +15,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Created by Shelly Xue Han on 2019-01-10.
+// Created by Jason Leach on 2018-10-03.
 //
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import App from './App';
-import 'bootstrap-css-only/css/bootstrap-reboot.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import './index.css';
+import { Link } from 'react-router-dom';
+import './AuthButton.css';
 
-import serviceWorker from './serviceWorker';
-import configureStore from './configureStore';
+export const AuthButton = () => {
+  return (
+    <span>
+      <Link className="auth-button" to={"/login"}>
+        {"login"}
+      </Link>
+    </span>
+  );
+};
 
-const store = configureStore();
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-);
-
-serviceWorker();
+export default AuthButton;
