@@ -1,3 +1,4 @@
+import config from './config.json';
 
 export const APP_INFO = {
     NAME: 'Mautic Subscription App',
@@ -15,3 +16,5 @@ export const SSO_CONFIG = {
     clientId: process.env.REACT_APP_SSO_CLIENT_ID || config.ssoClientId,
     kcIDPHint: null,
 };
+
+console.log(SSO_CONFIG, process.env)

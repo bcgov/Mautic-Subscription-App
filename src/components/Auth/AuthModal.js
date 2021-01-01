@@ -5,10 +5,12 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Banner from '../UI/Banner';
 import { SSO_IDP, APP_INFO } from '../../constants';
 import './AuthModal.css';
+import Button from './Button.js';
+import AuthButton from './AuthButton';
 
-export const AuthModal = ({ isAuthenticated }) => {
+export const AuthModal = () => {
   return (
-    <Modal modalClassName="auth-modal" isOpen={!isAuthenticated} fade={false}>
+    <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
@@ -16,6 +18,7 @@ export const AuthModal = ({ isAuthenticated }) => {
       <ModalFooter>
         <p>Login with:</p>
         <div className="auth-buttons">
+          <Button/>
           <Link className="auth-button" to={{ pathname: '/login', state: { idp: SSO_IDP.GITHUB } }}>
             GitHub
           </Link>
@@ -28,8 +31,6 @@ export const AuthModal = ({ isAuthenticated }) => {
   );
 };
 
-AuthModal.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-};
+
 
 export default AuthModal;
