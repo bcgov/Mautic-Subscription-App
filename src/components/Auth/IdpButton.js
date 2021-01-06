@@ -20,30 +20,30 @@
 
 import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
+import './AuthModal.css';
 
-
-const actionForCurrentState = (keycloak) => {
+const actionForCurrentState = (keycloak, {idp} ) => {
   if (keycloak.authenticated) {
     return () => keycloak.logout();
   }
-
-  return () => keycloak.login({ idpHint: 'idir' });
+   
+  return () =>  keycloak.login({ idpHint: idp });
 };
 
-const Button = (props) => {
+const IdpButton = ({ idp }) => {
   const { keycloak } = useKeycloak();
 
   return (
-    <button
-      onClick={actionForCurrentState(keycloak)}
+    <button className="auth-button"
+      onClick={actionForCurrentState(keycloak, idp)}
     >
-    IDIR
+    { idp }
     </button>
   );
 };
 
-Button.defaultProps = {
+IdpButton.defaultProps = {
   onClick: () => { }
 };
 
-export default Button;
+export default IdpButton;

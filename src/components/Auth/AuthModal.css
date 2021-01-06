@@ -30,7 +30,8 @@
 }
 
 .modal-body {
-  height: 100px;
+  height: 80px;
+  width: 500px;
 }
 
 @media screen and (max-width: 500px) {

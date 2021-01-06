@@ -5,7 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Banner from '../UI/Banner';
 import { SSO_IDP, APP_INFO } from '../../constants';
 import './AuthModal.css';
-import Button from './Button.js';
+import IdpButton from './IdpButton.js';
 import AuthButton from './AuthButton';
 
 export const AuthModal = () => {
@@ -18,13 +18,8 @@ export const AuthModal = () => {
       <ModalFooter>
         <p>Login with:</p>
         <div className="auth-buttons">
-          <Button/>
-          <Link className="auth-button" to={{ pathname: '/login', state: { idp: SSO_IDP.GITHUB } }}>
-            GitHub
-          </Link>
-          <Link className="auth-button" to={{ pathname: '/login', state: { idp: SSO_IDP.IDIR } }}>
-            IDIR
-          </Link>
+          <IdpButton idp={SSO_IDP.IDIR}/>
+          <IdpButton idp={SSO_IDP.GITHUB}/>
         </div>
       </ModalFooter>
     </Modal>
