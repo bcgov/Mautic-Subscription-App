@@ -1,12 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Banner from '../UI/Banner';
 import { SSO_IDP, APP_INFO } from '../../constants';
 import './AuthModal.css';
 import IdpButton from './IdpButton.js';
-import AuthButton from './AuthButton';
 
 export const AuthModal = () => {
   return (
