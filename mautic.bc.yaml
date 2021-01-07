@@ -21,7 +21,13 @@ objects:
           kind: ImageStreamTag
           name: '${NAME}:latest'
       postCommit: {}
-      resources: {}
+      resources: 
+        requests:
+          cpu: 500m
+          memory: 1.5Gi
+        limits:
+          cpu: 1000m
+          memory: 3Gi
       source:
         git:
           ref: ${SOURCE_REPOSITORY_REF}
