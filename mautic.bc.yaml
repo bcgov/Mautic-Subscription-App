@@ -10,8 +10,8 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: mautic-subscription-app
-      name: mautic-subscription-app
+        build: ${NAME}
+      name: ${NAME}
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
     spec:
@@ -19,20 +19,20 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: 'mautic-subscription-app:latest'
+          name: '${NAME}:latest'
       postCommit: {}
       resources: {}
       source:
         git:
-          ref: initial-setup
-          uri: 'https://github.com/AndrewJun97/mautic-subscription-app/'
+          ref: ${SOURCE_REPOSITORY_REF}
+          uri: ${SOURCE_REPOSITORY_URL}
         type: Git
       strategy:
         sourceStrategy:
           from:
             kind: ImageStreamTag
             name: 'caddy-s2i-builder:latest'
-            namespace: de0974-tools
+            namespace: ${NAMESPACE}
         type: Source
       triggers:
         - type: ConfigChange
@@ -42,5 +42,31 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: mautic-subscription-app
-      name: mautic-subscription-app
+        build: ${NAME}
+      name: ${NAME}
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: mautic-subscription-app
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: false
+  value: -dev
+- description: Github repository URL
+  displayName: SOURCE_REPOSITORY_URL
+  name: SOURCE_REPOSITORY_URL
+  required: true
+  value: https://github.com/AndrewJun97/mautic-subscription-app
+- description: Github repository branch
+  displayName: SOURCE_REPOSITORY_REF
+  name: SOURCE_REPOSITORY_REF
+  required: true
+  value: ''
+- description: Namespace name
+  displayName: NAMESPACE
+  name: NAMESPACE
+  required: true
+  value: ''

@@ -27,7 +27,7 @@ const actionForCurrentState = (keycloak, {idp} ) => {
     return () => keycloak.logout();
   }
    
-  return () =>  keycloak.login({ idpHint: idp });
+  return () =>  keycloak.login({ idpHint: idp, redirectUri: window.location.origin + `string text /subscription` });
 };
 
 const IdpButton = ({ idp }) => {
