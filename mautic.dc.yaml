@@ -1,0 +1,84 @@
+kind: Template
+apiVersion: v1
+objects:
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: mautic-subscription-app
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          annotations:
+            openshift.io/generated-by: OpenShiftNewApp
+          creationTimestamp: null
+          labels:
+            deploymentconfig: mautic-subscription-app
+        spec:
+          containers:
+            - image: 'mautic-subscription-app:latest'
+              name: mautic-subscription-app
+              ports:
+                - containerPort: 2015
+                  protocol: TCP
+              resources: {}
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - mautic-subscription-app
+            from:
+              kind: ImageStreamTag
+              name: 'mautic-subscription-app:latest'
+          type: ImageChange
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      labels:
+        app: mautic-subscription-app
+        app.kubernetes.io/component: mautic-subscription-app
+        app.kubernetes.io/instance: mautic-subscription-app
+      name: mautic-subscription-app
+  - apiVersion: v1
+    kind: Service
+    spec:
+      ports:
+        - name: 2015-tcp
+          port: 2015
+          protocol: TCP
+          targetPort: 2015
+      selector:
+        deploymentconfig: mautic-subscription-app
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      labels:
+        app: mautic-subscription-app
+        app.kubernetes.io/component: mautic-subscription-app
+        app.kubernetes.io/instance: mautic-subscription-app
+      name: mautic-subscription-app
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mautic-subscription-app
+        app.kubernetes.io/component: mautic-subscription-app
+        app.kubernetes.io/instance: mautic-subscription-app
+      name: mautic-subscription-app
+    spec:
+      host: ""
+      port:
+        targetPort: 2015-tcp
+      to:
+        kind: ""
+        name: mautic-subscription-app
+        weight: null
+      tls:
+        termination: Edge
+    status:
+      ingress: null

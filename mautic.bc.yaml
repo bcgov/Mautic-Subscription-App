@@ -1,0 +1,46 @@
+kind: Template
+apiVersion: v1
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    spec:
+      lookupPolicy:
+        local: false
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewBuild
+      labels:
+        build: mautic-subscription-app
+      name: mautic-subscription-app
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: 'mautic-subscription-app:latest'
+      postCommit: {}
+      resources: {}
+      source:
+        git:
+          ref: initial-setup
+          uri: 'https://github.com/AndrewJun97/mautic-subscription-app/'
+        type: Git
+      strategy:
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: 'caddy-s2i-builder:latest'
+            namespace: de0974-tools
+        type: Source
+      triggers:
+        - type: ConfigChange
+        - imageChange: {}
+          type: ImageChange
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewBuild
+      labels:
+        build: mautic-subscription-app
+      name: mautic-subscription-app
