@@ -22,7 +22,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
 import './AuthModal.css';
 
-const actionForCurrentState = (keycloak, idp ) => {
+const actionForCurrentState = ( keycloak, idp ) => {
   if (keycloak.authenticated) {
     return () => keycloak.logout();
   }
@@ -37,7 +37,7 @@ const IdpButton = ( idp ) => {
     <button className="auth-button"
       onClick={actionForCurrentState(keycloak, idp)}
     >
-    { idp }
+    idp
     </button>
   );
 };
