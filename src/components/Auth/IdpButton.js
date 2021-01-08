@@ -26,17 +26,18 @@ const actionForCurrentState = ( keycloak, idp ) => {
   if (keycloak.authenticated) {
     return () => keycloak.logout();
   }
+  console.log(idp)
   return () =>  keycloak.login({ idpHint: idp.idp, redirectUri: `${window.location.origin}/subscription` });
 };
 
-const IdpButton = ( idp ) => {
+const IdpButton = ( { idp } ) => {
   const { keycloak } = useKeycloak();
 
   return (
     <button className="auth-button"
       onClick={actionForCurrentState(keycloak, idp)}
     >
-      {idp.idp}
+      {idp}
     </button>
   );
 };
