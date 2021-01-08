@@ -3,6 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
+import { useKeycloak } from '@react-keycloak/web';
 
 // const subscription = (subscriptionType) => {
 //     var form = document.createElement('form');
@@ -19,6 +20,8 @@ import Banner from '../components/UI/Banner';
 // }
 
 export const Subscription = () => {
+  const { keycloak } = useKeycloak();
+  console.log(keycloak.loadUserProfile)
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
