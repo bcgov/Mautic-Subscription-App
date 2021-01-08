@@ -4,6 +4,7 @@ import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
+import jwt_decode from "jwt-decode";
 
 // const subscription = (subscriptionType) => {
 //     var form = document.createElement('form');
@@ -19,18 +20,13 @@ import { useKeycloak } from '@react-keycloak/web';
 //     form.submit();
 // }
 const getEmail = (keycloak) => {
-  console.log(keycloak.idToken);
-  // keycloak.loadUserProfile()
-  //   .then(function(profile) {
-  //       console.log(JSON.stringify(profile, null, "  "))
-  //   }).catch(function() {
-  //       alert('Failed to load user profile');
-  //   });
+  const token = keycloak.idToken;
+  var decodedToken = jwt_decode(token);
+  console.log(decodedToken);
 };
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  console.log(keycloak)
   getEmail(keycloak)
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
