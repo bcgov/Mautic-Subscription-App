@@ -19,6 +19,7 @@ import { useKeycloak } from '@react-keycloak/web';
 //     form.submit();
 // }
 const getEmail = (keycloak) => {
+  console.log(keycloak.idToken);
   keycloak.loadUserProfile()
     .then(function(profile) {
         console.log(JSON.stringify(profile, null, "  "))
