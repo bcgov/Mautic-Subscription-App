@@ -20,16 +20,17 @@ import { useKeycloak } from '@react-keycloak/web';
 // }
 const getEmail = (keycloak) => {
   console.log(keycloak.idToken);
-  keycloak.loadUserProfile()
-    .then(function(profile) {
-        console.log(JSON.stringify(profile, null, "  "))
-    }).catch(function() {
-        alert('Failed to load user profile');
-    });
+  // keycloak.loadUserProfile()
+  //   .then(function(profile) {
+  //       console.log(JSON.stringify(profile, null, "  "))
+  //   }).catch(function() {
+  //       alert('Failed to load user profile');
+  //   });
 };
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
+  console.log(keycloak)
   getEmail(keycloak)
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
