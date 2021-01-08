@@ -18,15 +18,18 @@ import { useKeycloak } from '@react-keycloak/web';
 //     document.body.appendChild(form)
 //     form.submit();
 // }
-
-export const Subscription = () => {
-  const { keycloak } = useKeycloak();
+const getEmail = (keycloak) => {
   keycloak.loadUserProfile()
     .then(function(profile) {
         alert(JSON.stringify(profile, null, "  "))
     }).catch(function() {
         alert('Failed to load user profile');
     });
+};
+
+export const Subscription = () => {
+  const { keycloak } = useKeycloak();
+  getEmail(keycloak)
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
