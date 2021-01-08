@@ -21,7 +21,12 @@ import { useKeycloak } from '@react-keycloak/web';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  console.log(keycloak.loadUserProfile)
+  keycloak.loadUserProfile()
+    .then(function(profile) {
+        alert(JSON.stringify(profile, null, "  "))
+    }).catch(function() {
+        alert('Failed to load user profile');
+    });
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
