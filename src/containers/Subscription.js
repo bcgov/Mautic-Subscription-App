@@ -21,7 +21,7 @@ import { useKeycloak } from '@react-keycloak/web';
 const getEmail = (keycloak) => {
   keycloak.loadUserProfile()
     .then(function(profile) {
-        alert(JSON.stringify(profile, null, "  "))
+        console.log(JSON.stringify(profile, null, "  "))
     }).catch(function() {
         alert('Failed to load user profile');
     });
