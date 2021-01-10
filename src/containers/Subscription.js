@@ -20,9 +20,11 @@ import jwt_decode from "jwt-decode";
 //     form.submit();
 // }
 const getEmail = (keycloak) => {
-  const token = keycloak.idToken;
-  var decodedToken = jwt_decode(token);
-  console.log(decodedToken);
+  if (keycloak.idToken){
+    const idToken = keycloak.idToken;
+    const decodedToken = jwt_decode(idToken);
+    console.log(decodedToken);
+  }
 };
 
 export const Subscription = () => {
