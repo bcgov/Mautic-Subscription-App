@@ -36,9 +36,9 @@ export const Subscription = () => {
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
       <ModalBody>
-        Subscribe/unsubscribe from the mautic mailing list
+        Subscribe/unsubscribe from the mautic mailing list.
         <br />
-        Your Email address associated with this account is {userEmail}
+        Your associated email address is {userEmail}.
       </ModalBody>
       <ModalFooter>
         <div className="auth-buttons">
