@@ -23,7 +23,7 @@ const getEmail = (keycloak) => {
   if (keycloak.idToken){
     const idToken = keycloak.idToken;
     const decodedToken = jwt_decode(idToken);
-    console.log(decodedToken);
+    console.log(decodedToken.email);
   }
 };
 
