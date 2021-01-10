@@ -19,23 +19,23 @@ import jwt_decode from "jwt-decode";
 //     document.body.appendChild(form)
 //     form.submit();
 // }
-const getEmail = (keycloak) => {
-  if (keycloak.idToken){
-    const idToken = keycloak.idToken;
+const getEmail = (idToken) => {
+  if (idToken){
     const decodedToken = jwt_decode(idToken);
     console.log(decodedToken.email);
+    return decodedToken.email;
   }
 };
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  getEmail(keycloak)
+  const userEmail = getEmail(keycloak.idToken); 
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>Subscribe/unsubscribe from the mautic mailing list</ModalBody>
+      <ModalBody>Subscribe/unsubscribe from the mautic mailing list\n Your Email address associated with this account is {userEmail}</ModalBody>
       <ModalFooter>
         <div className="auth-buttons">
           {/* <button className="auth-button" onclick={subscription("subscribe")}>Subscribe</button> 
