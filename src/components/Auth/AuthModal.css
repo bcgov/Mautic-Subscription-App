@@ -18,6 +18,8 @@
 
 .auth-modal .modal-footer {
   display: block;
+  justify-content: center;
+  align-items: center;
 }
 
 .auth-modal .auth-buttons {
@@ -32,7 +34,8 @@
 .modal-body {
   height: 90px;
   width: 500px;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (max-width: 500px) {
