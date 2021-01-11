@@ -32,6 +32,7 @@
 .modal-body {
   height: 90px;
   width: 500px;
+  text-align: center;
 }
 
 @media screen and (max-width: 500px) {
