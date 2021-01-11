@@ -34,7 +34,13 @@ export const Subscription = () => {
   const [auth, setAuth ] = useState(false);
   
   console.log(keycloak)
-  console.log(keycloak.authenticated)
+  // Back to root route if the user is not authenticated
+  if (keycloak.authenticated == 'false'){
+    console.log(keycloak.authenticated)
+    return (
+      <Redirect to="/" />
+    )
+  }
 
   const userEmail = getEmail(keycloak.idToken); 
 
