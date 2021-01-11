@@ -5,6 +5,15 @@ import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 
 export const Unsubscribed = () => {
+  const { keycloak } = useKeycloak();
+
+  // Back to root route if the user is not authenticated
+  if (keycloak.authenticated == false){
+    return (
+      <Redirect to="/" />
+    )
+  }
+  
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
