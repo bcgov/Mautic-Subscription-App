@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
@@ -19,16 +19,18 @@ import jwt_decode from "jwt-decode";
 //     document.body.appendChild(form)
 //     form.submit();
 // }
+
 const getEmail = (idToken) => {
   if (idToken){
     const decodedToken = jwt_decode(idToken);
-    console.log(decodedToken.email);
+    console.log(decodedToken);
     return decodedToken.email;
   }
 };
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
+  
   const userEmail = getEmail(keycloak.idToken); 
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
