@@ -34,6 +34,7 @@ export const Subscription = () => {
   const [auth, setAuth ] = useState(false);
   
 
+  console.log(keycloak)
   const userEmail = getEmail(keycloak.idToken); 
 
   return (
