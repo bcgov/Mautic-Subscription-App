@@ -142,4 +142,8 @@ parameters:
   name: NAME
   required: true
   value: mautic-subscription-app
-
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: false
+  value: -dev

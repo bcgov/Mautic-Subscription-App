@@ -48,7 +48,7 @@ export const Subscription = () => {
       <ModalBody>
         Subscribe/unsubscribe from the mautic mailing list.
         <br />
-        Your associated email address is {userEmail}.
+        Your email address is <b>{userEmail}</b>.
       </ModalBody>
       <ModalFooter>
         <div className="auth-buttons">
