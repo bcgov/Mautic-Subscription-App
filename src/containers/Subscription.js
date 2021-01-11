@@ -35,7 +35,7 @@ export const Subscription = () => {
   
   console.log(keycloak)
   // Back to root route if the user is not authenticated
-  if (keycloak.authenticated == 'false'){
+  if (keycloak.authenticated == false){
     console.log(keycloak.authenticated)
     return (
       <Redirect to="/" />
