@@ -38,7 +38,7 @@ export const Subscription = () => {
   if (!keycloak.authenticated){
     console.log(keycloak.authenticated)
     return (
-      
+      console.log(keycloak)
     )
   }
 
