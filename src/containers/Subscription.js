@@ -24,7 +24,6 @@ import { Redirect } from 'react-router-dom';
 const getEmail = (idToken) => {
   if (idToken){
     const decodedToken = jwt_decode(idToken);
-    console.log(decodedToken);
     return decodedToken.email;
   }
 };
@@ -32,11 +31,9 @@ const getEmail = (idToken) => {
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
   const [auth, setAuth ] = useState(false);
-  
-  console.log(keycloak)
+
   // Back to root route if the user is not authenticated
   if (keycloak.authenticated == false){
-    console.log(keycloak.authenticated)
     return (
       <Redirect to="/" />
     )
