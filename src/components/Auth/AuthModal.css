@@ -18,6 +18,7 @@
 
 .auth-modal .modal-footer {
   display: block;
+  height: 80px;
 }
 
 .auth-modal .auth-buttons {
