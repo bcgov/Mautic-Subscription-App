@@ -50,7 +50,7 @@ objects:
     spec:
       replicas: 1
       selector:
-        deploymentconfig: mautic-subscription-app
+        deploymentconfig: ${NAME}
       strategy:
         resources: {}
       template:
@@ -59,11 +59,11 @@ objects:
             openshift.io/generated-by: OpenShiftNewApp
           creationTimestamp: null
           labels:
-            deploymentconfig: mautic-subscription-app
+            deploymentconfig: ${NAME}
         spec:
           containers:
-            - image: 'mautic-subscription-app:latest'
-              name: mautic-subscription-app
+            - image: '${NAME}:latest'
+              name: ${NAME}
               ports:
                 - containerPort: 2015
                   protocol: TCP
@@ -84,19 +84,19 @@ objects:
         - imageChangeParams:
             automatic: true
             containerNames:
-              - mautic-subscription-app
+              - ${NAME}
             from:
               kind: ImageStreamTag
-              name: 'mautic-subscription-app:latest'
+              name: '${NAME}:latest'
           type: ImageChange
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: mautic-subscription-app
-        app.kubernetes.io/component: mautic-subscription-app
-        app.kubernetes.io/instance: mautic-subscription-app
-      name: mautic-subscription-app
+        app: ${NAME}
+        app.kubernetes.io/component: ${NAME}
+        app.kubernetes.io/instance: ${NAME}
+      name: ${NAME}
   - apiVersion: v1
     kind: Service
     spec:
@@ -106,31 +106,31 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: mautic-subscription-app
+        deploymentconfig: ${NAME}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: mautic-subscription-app
-        app.kubernetes.io/component: mautic-subscription-app
-        app.kubernetes.io/instance: mautic-subscription-app
-      name: mautic-subscription-app
+        app: ${NAME}
+        app.kubernetes.io/component: ${NAME}
+        app.kubernetes.io/instance: ${NAME}
+      name: ${NAME}
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
       creationTimestamp: null
       labels:
-        app: mautic-subscription-app
-        app.kubernetes.io/component: mautic-subscription-app
-        app.kubernetes.io/instance: mautic-subscription-app
-      name: mautic-subscription-app
+        app: ${NAME}
+        app.kubernetes.io/component: ${NAME}
+        app.kubernetes.io/instance: ${NAME}
+      name: ${NAME}
     spec:
       host: ""
       port:
         targetPort: 2015-tcp
       to:
         kind: ""
-        name: mautic-subscription-app
+        name: ${NAME}
         weight: null
       tls:
         termination: Edge
@@ -142,8 +142,4 @@ parameters:
   name: NAME
   required: true
   value: mautic-subscription-app
-- description: A name suffix used for all objects
-  displayName: Suffix
-  name: SUFFIX
-  required: false
-  value: -dev
+
