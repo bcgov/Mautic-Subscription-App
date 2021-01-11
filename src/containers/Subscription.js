@@ -30,7 +30,6 @@ const getEmail = (idToken) => {
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  const [auth, setAuth ] = useState(false);
 
   // Back to root route if the user is not authenticated
   if (keycloak.authenticated == false){
