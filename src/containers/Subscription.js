@@ -5,6 +5,7 @@ import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
 import jwt_decode from "jwt-decode";
+import { Redirect } from 'react-router-dom';
 
 // const subscription = (subscriptionType) => {
 //     var form = document.createElement('form');
@@ -30,8 +31,17 @@ const getEmail = (idToken) => {
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
+  const [auth, setAuth ] = useState(false);
   
+  // Back to root route if the user is not authenticated
+  if (!keycloak.isAuthenticated){
+    return (
+      <Redirect to="/" />
+    )
+  }
+
   const userEmail = getEmail(keycloak.idToken); 
+
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
