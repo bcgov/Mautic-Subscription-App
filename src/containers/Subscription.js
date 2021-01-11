@@ -33,6 +33,7 @@ export const Subscription = () => {
   const { keycloak } = useKeycloak();
   const [auth, setAuth ] = useState(false);
   
+  console.log(keycloak)
   // Back to root route if the user is not authenticated
   if (!keycloak.isAuthenticated){
     console.log(keycloak.isAuthenticated)
