@@ -25,11 +25,7 @@ export const Subscription = () => {
   const { keycloak } = useKeycloak();
 
   // Back to root route if the user is not authenticated
-  if (keycloak.authenticated == false){
-    return (
-      <Redirect to="/" />
-    )
-  }
+  
   console.log(keycloak)
   const userEmail = keycloak.idTokenParsed; 
 
