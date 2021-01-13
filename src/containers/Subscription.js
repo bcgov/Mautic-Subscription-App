@@ -56,14 +56,14 @@ export const Subscription = () => {
           <button className="auth-button" onclick={subscription("unsubscribe")}>Unsubscribe</button>  */}
           <form action="http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1" method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
-            <input type="hidden" name="mauticform[emailsubscribe]" value="97andrewjun@gmail.com" ></input>
+            <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail} ></input>
             <input type="hidden" name="mauticform[formId]" id="mauticform_subscribe_id" value="1"></input>
             <input type="hidden" name="mauticform[return]" id="mauticform_subscribe_return" value="localhost:3000"></input>
             <input type="hidden" name="mauticform[formName]" id="mauticform_subscribe_name" value="subscribe"></input>
           </form>
           <form action="http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2" method="post">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
-            <input type="hidden" name="mauticform[emailunsubscribe]" value="97andrewjun@gmail.com"></input>
+            <input type="hidden" name="mauticform[emailunsubscribe]" value={userEmail}></input>
             <input type="hidden" name="mauticform[formId]" id="mauticform_unsubscribe_id" value="2"></input>
             <input type="hidden" name="mauticform[return]" id="mauticform_unsubscribe_return" value="localhost:3001"></input>
             <input type="hidden" name="mauticform[formName]" id="mauticform_unsubscribe_name" value="unsubscribe"></input>
