@@ -27,7 +27,7 @@ export const Subscription = () => {
   // Back to root route if the user is not authenticated
   
   console.log(keycloak)
-  const userEmail = keycloak.idTokenParsed; 
+  const userEmail = keycloak.idTokenParsed.userEmail; 
 
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
