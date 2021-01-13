@@ -4,7 +4,6 @@ import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
-import jwt_decode from "jwt-decode";
 import { Redirect } from 'react-router-dom';
 
 // const subscription = (subscriptionType) => {
@@ -21,12 +20,6 @@ import { Redirect } from 'react-router-dom';
 //     form.submit();
 // }
 
-const getEmail = (idToken) => {
-  if (idToken){
-    const decodedToken = jwt_decode(idToken);
-    return decodedToken.email;
-  }
-};
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
@@ -38,7 +31,7 @@ export const Subscription = () => {
     )
   }
   console.log(keycloak)
-  const userEmail = getEmail(keycloak.idToken); 
+  const userEmail = keycloak.idTokenParsed; 
 
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
