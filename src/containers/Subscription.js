@@ -37,7 +37,7 @@ export const Subscription = () => {
       <Redirect to="/" />
     )
   }
-
+  console.log(keycloak)
   const userEmail = getEmail(keycloak.idToken); 
 
   return (
