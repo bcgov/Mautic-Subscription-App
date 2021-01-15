@@ -60,7 +60,7 @@ parameters:
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
   required: true
-  value: https://github.com/AndrewJun97/mautic-subscription-app
+  value: https://github.com/bcgov/Mautic-Subscription-App
 - description: Github repository branch
   displayName: SOURCE_REPOSITORY_REF
   name: SOURCE_REPOSITORY_REF
@@ -71,3 +71,6 @@ parameters:
   name: NAMESPACE
   required: true
   value: ''
+  oc4 delete bc,dc mautic-subscription-app
+  oc4 process -f mautic.bc.yaml -p SOURCE_REPOSITORY_REF=initial-setup -p NAMESPACE=de0974-tools | oc4 apply -f -
+  oc4 process -f mautic.dc.yaml | oc4 apply -f -
