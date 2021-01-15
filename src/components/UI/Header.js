@@ -19,18 +19,33 @@
 //
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import AuthButton from '../Auth/AuthButton';
 import { APP_INFO } from '../../constants';
 import Banner from './Banner';
 import './Header.css';
 
-const Header = () => {
+export const Header = ({ authentication }) => {
   return (
     <header className="header">
       <Banner link="/" titleText={APP_INFO.NAME} />
-      <AuthButton/>
+      <AuthButton isAuthenticated={true} />
     </header>
   );
 };
 
-export default Header;
+Header.propTypes = {
+  authentication: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => {
+  return {
+    authentication: state.authentication,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Header);
