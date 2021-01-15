@@ -10,7 +10,7 @@ export const Subscribed = () => {
   const { keycloak } = useKeycloak();
 
   // Back to root route if the user is not authenticated
-  if (keycloak.authenticated == false){
+  if (keycloak.authenticated === false){
     return (
       <Redirect to="/" />
     )

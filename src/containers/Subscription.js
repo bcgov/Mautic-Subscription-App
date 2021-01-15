@@ -4,7 +4,6 @@ import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
-import { Redirect } from 'react-router-dom';
 
 // const subscription = (subscriptionType) => {
 //     var form = document.createElement('form');
