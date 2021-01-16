@@ -2,7 +2,7 @@
 import './App.css';
 import Layout from './hoc/Layout';
 import AuthModal from './components/Auth/AuthModal';
-import { KeycloakProvider } from '@react-keycloak/web'
+import { ReactKeycloakProvider } from '@react-keycloak/web'
 import keycloak from './keycloak'
 import { Route, Switch } from 'react-router-dom';
 import { Subscription } from './containers/Subscription'
@@ -11,7 +11,7 @@ import { Unsubscribed } from './containers/Unsubscribed'
 
 function App() {
   return (
-    <KeycloakProvider keycloak={keycloak}>
+    <ReactKeycloakProvider authClient={keycloak}>
       <Layout >
         <AuthModal />
         <Switch>
@@ -32,7 +32,7 @@ function App() {
           />
         </Switch>
       </Layout>
-    </KeycloakProvider>
+    </ReactKeycloakProvider>
   );
 }
 

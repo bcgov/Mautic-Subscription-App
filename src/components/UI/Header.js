@@ -19,33 +19,22 @@
 //
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import AuthButton from '../Auth/AuthButton';
 import { APP_INFO } from '../../constants';
 import Banner from './Banner';
 import './Header.css';
+import { useKeycloak } from '@react-keycloak/web';
 
-export const Header = ({ authentication }) => {
+export const Header = () => {
+  const { keycloak } = useKeycloak();
+
   return (
     <header className="header">
       <Banner link="/" titleText={APP_INFO.NAME} />
-      <AuthButton isAuthenticated={true} />
+      <AuthButton isAuthenticated={keycloak.authenticated} />
     </header>
   );
 };
 
-Header.propTypes = {
-  authentication: PropTypes.object.isRequired,
-};
 
-const mapStateToProps = state => {
-  return {
-    authentication: state.authentication,
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  null
-)(Header);
+export default Header;

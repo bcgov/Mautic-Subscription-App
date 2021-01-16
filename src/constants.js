@@ -16,3 +16,5 @@ export const SSO_CONFIG = {
     clientId: process.env.REACT_APP_SSO_CLIENT_ID || config.ssoClientId,
     kcIDPHint: null,
 };
+
+console.log('SOO CONFIG', SSO_CONFIG)
