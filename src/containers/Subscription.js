@@ -25,7 +25,7 @@ export const Subscription = () => {
 
   // Back to root route if the user is not authenticated
   
-  console.log(keycloak)
+  console.log(keycloak);
   const userEmail = keycloak.idTokenParsed.email; 
 
   return (
