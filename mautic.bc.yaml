@@ -45,7 +45,7 @@ objects:
             - name: 'REACT_APP_SSO_CLIENT_ID'
               value: ${REACT_APP_SSO_CLIENT_ID}
             - name: 'REACT_APP_SSO_BASE_URL'
-              value: ${https://dev.oidc.gov.bc.ca}
+              value: ${REACT_APP_SSO_BASE_URL}
         type: Source
       triggers:
         - type: ConfigChange
@@ -89,4 +89,4 @@ parameters:
 - description: REACT_APP_SSO_BASE_URL
   displayName: REACT_APP_SSO_BASE_URL
   name: REACT_APP_SSO_BASE_URL
-  required: true
+  required: true 
