@@ -24,6 +24,7 @@ import { Redirect } from 'react-router-dom';
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
   console.log(keycloak);
+  console.log(keycloak.authenticated);
 
   if (keycloak.authenticated === true) {
     const userEmail = keycloak.idTokenParsed.email; 
@@ -43,7 +44,7 @@ export const Subscription = () => {
             <button className="auth-button" onclick={subscription("unsubscribe")}>Unsubscribe</button>  */}
             <form action="http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1" method="post">
               <input className="auth-button" type="submit" value="Subscribe"/>
-              <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail} ></input>
+              <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail}></input>
               <input type="hidden" name="mauticform[formId]" id="mauticform_subscribe_id" value="1"></input>
               <input type="hidden" name="mauticform[return]" id="mauticform_subscribe_return" value=""></input>
               <input type="hidden" name="mauticform[formName]" id="mauticform_subscribe_name" value="subscribe"></input>
@@ -59,11 +60,11 @@ export const Subscription = () => {
         </ModalFooter>
       </Modal>
     );
+  } else {
+    return (
+      <Redirect to="/" />
+    )
   }
-  
-  return (
-    <Redirect to="/" />
-  )
 };
 
 
