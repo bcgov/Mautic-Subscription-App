@@ -23,17 +23,16 @@ import { Redirect } from 'react-router-dom';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-
+  console.log(keycloak);
   // Back to root route if the user is not authenticated
   if (keycloak.authenticated === false){
+    console.log('redirect')
     return (
       <Redirect to="/" />
     )
+  }else if (keycloak.authenticated === true) {
+    const userEmail = keycloak.idTokenParsed.email; 
   }
-
-  console.log(keycloak);
-  const userEmail = keycloak.idTokenParsed.email; 
-
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
@@ -42,7 +41,7 @@ export const Subscription = () => {
       <ModalBody>
         Subscribe/unsubscribe from the mautic mailing list.
         <br />
-        Your email address is <b>{userEmail}</b>.
+        {/* Your email address is <b>{userEmail}</b>. */}
       </ModalBody>
       <ModalFooter>
         <div className="auth-buttons">
@@ -50,14 +49,14 @@ export const Subscription = () => {
           <button className="auth-button" onclick={subscription("unsubscribe")}>Unsubscribe</button>  */}
           <form action="http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1" method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
-            <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail} ></input>
+            {/* <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail} ></input> */}
             <input type="hidden" name="mauticform[formId]" id="mauticform_subscribe_id" value="1"></input>
             <input type="hidden" name="mauticform[return]" id="mauticform_subscribe_return" value=""></input>
             <input type="hidden" name="mauticform[formName]" id="mauticform_subscribe_name" value="subscribe"></input>
           </form>
           <form action="http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2" method="post">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
-            <input type="hidden" name="mauticform[emailunsubscribe]" value={userEmail}></input>
+            {/* <input type="hidden" name="mauticform[emailunsubscribe]" value={userEmail}></input> */}
             <input type="hidden" name="mauticform[formId]" id="mauticform_unsubscribe_id" value="2"></input>
             <input type="hidden" name="mauticform[return]" id="mauticform_unsubscribe_return" value=""></input>
             <input type="hidden" name="mauticform[formName]" id="mauticform_unsubscribe_name" value="unsubscribe"></input>
