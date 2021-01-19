@@ -20,21 +20,15 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import App from './App';
 import 'bootstrap-css-only/css/bootstrap-reboot.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import './index.css';
 
 import serviceWorker from './serviceWorker';
-import configureStore from './configureStore';
-
-const store = configureStore();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <App />,
   document.getElementById('root')
 );
 
