@@ -12,7 +12,7 @@ import { useKeycloak } from '@react-keycloak/web';
 function App() {
   const {keycloak, initialized} = useKeycloak();
     if (!initialized) {
-        return <h3>Loading ... !!!</h3>;
+        return <div/>;
     }
 
   return (
