@@ -29,13 +29,16 @@ import { ReactKeycloakProvider } from '@react-keycloak/web'
 import keycloak from './keycloak'
 import serviceWorker from './serviceWorker';
 import configureStore from './configureStore';
+import { BrowserRouter } from 'react-router-dom';
 
 const store = configureStore();
 
 ReactDOM.render(
   <ReactKeycloakProvider initOptions={{ checkLoginIframe:false }} authClient={keycloak}>
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App /> 
+    </BrowserRouter>
   </Provider>
   </ReactKeycloakProvider>,
   document.getElementById('root')

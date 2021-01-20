@@ -5,20 +5,20 @@ import { Redirect, Route } from 'react-router-dom';
 
 
 export const PrivateRoute= ({ component: Component, ...rest }) => {
-    const { keycloak } = useKeycloak();
+    const { keycloak, initialized } = useKeycloak();
 
-    const isAuthorized = () => {
-        if (keycloak?.authenticated) {
-            return keycloak.authenticated;
-        }
-        return false;
-    }
+    // const isAuthorized = () => {
+    //     if (keycloak?.authenticated) {
+    //         return keycloak.authenticated;
+    //     }
+    //     return false;
+    // }
 
-    return (
+    return initialized && (
         <Route
             {...rest}
             render={props => {
-                return isAuthorized()
+                return keycloak.authenticated
                     ? <Component {...props} />
                     : <Redirect to={{ pathname: '/', }} />
             }}

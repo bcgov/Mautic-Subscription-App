@@ -24,6 +24,11 @@ export const Subscription = () => {
   const { keycloak } = useKeycloak();
 
   const userEmail = keycloak.idTokenParsed.email; 
+
+  const getformID = ( actionLink ) => {
+    return actionLink.charAt(actionLink.length-1)
+  }
+
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
@@ -41,14 +46,14 @@ export const Subscription = () => {
           <form action={SUBSCRIPTION_FORM.subscribe} method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
             <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail}></input>
-            <input type="hidden" name="mauticform[formId]" value="1"></input>
+            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.subscribe)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
             <input type="hidden" name="mauticform[formName]" value="subscribe"></input>
           </form>
           <form action={SUBSCRIPTION_FORM.unsubscribe} method="post">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
             <input type="hidden" name="mauticform[emailunsubscribe]" value={userEmail}></input>
-            <input type="hidden" name="mauticform[formId]" value="2"></input>
+            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.unsubscribe)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
             <input type="hidden" name="mauticform[formName]" value="unsubscribe"></input>
           </form>
