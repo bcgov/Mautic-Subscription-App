@@ -8,6 +8,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Subscription } from './containers/Subscription'
 import { Subscribed } from './containers/Subscribed'
 import { Unsubscribed } from './containers/Unsubscribed'
+import { PrivateRoute } from './utilities/PrivateRoute'
 
 function App() {
   return (
@@ -15,18 +16,18 @@ function App() {
       <Layout >
         <AuthModal />
         <Switch>
-          <Route
+          <PrivateRoute
             path="/subscription"
             component={Subscription}
             /* authentication={this.props.authentication}
             authorization={this.props.authorization}
             verifyEmail={this.props.verifyEmail} */
           />
-          <Route
+          <PrivateRoute
             path="/subscribed"
             component={Subscribed}
           />
-          <Route
+          <PrivateRoute
             path="/unsubscribed"
             component={Unsubscribed}
           />
