@@ -7,8 +7,8 @@ import { Redirect, Route } from 'react-router-dom';
 export const PrivateRoute= ({ component: Component, ...rest }) => {
     const { keycloak } = useKeycloak();
 
-
     const isAuthorized = () => {
+        console.log(keycloak)
         if (keycloak?.authenticated) {
             return keycloak.authenticated;
         }
