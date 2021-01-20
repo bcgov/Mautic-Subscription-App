@@ -16,3 +16,8 @@ export const SSO_CONFIG = {
     clientId: process.env.REACT_APP_SSO_CLIENT_ID || config.ssoClientId,
     kcIDPHint: null,
 };
+
+export const SUBSCRIPTION_FORM = {
+    subscribe: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1',
+    unsubscribe: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2',
+};
