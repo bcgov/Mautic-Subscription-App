@@ -9,13 +9,6 @@ import { Redirect } from 'react-router-dom';
 export const Subscribed = () => {
   const { keycloak } = useKeycloak();
 
-  // Back to root route if the user is not authenticated
-  if (keycloak.authenticated === false){
-    return (
-      <Redirect to="/" />
-    )
-  }
-
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
@@ -25,7 +18,5 @@ export const Subscribed = () => {
     </Modal>
   );
 };
-
-
 
 export default Subscribed;
