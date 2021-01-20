@@ -8,7 +8,6 @@ export const PrivateRoute= ({ component: Component, ...rest }) => {
     const { keycloak } = useKeycloak();
 
     const isAuthorized = () => {
-        console.log(keycloak)
         if (keycloak?.authenticated) {
             return keycloak.authenticated;
         }

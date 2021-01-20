@@ -22,9 +22,6 @@ import { useKeycloak } from '@react-keycloak/web';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  console.log(keycloak);
-  console.log(keycloak.authenticated);
-
 
   const userEmail = keycloak.idTokenParsed.email; 
   return (
