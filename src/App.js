@@ -1,18 +1,21 @@
 
 import './App.css';
 import Layout from './hoc/Layout';
-import AuthModal from './components/Auth/AuthModal';
-import { ReactKeycloakProvider } from '@react-keycloak/web'
-import keycloak from './keycloak'
-import { Route, Switch } from 'react-router-dom';
+import AuthModal from './components/Auth/AuthModal'; 
+import { Switch } from 'react-router-dom';
 import { Subscription } from './containers/Subscription'
 import { Subscribed } from './containers/Subscribed'
 import { Unsubscribed } from './containers/Unsubscribed'
 import { PrivateRoute } from './utilities/PrivateRoute'
+import { useKeycloak } from '@react-keycloak/web';
 
 function App() {
+  const {keycloak, initialized} = useKeycloak();
+    if (!initialized) {
+        return <h3>Loading ... !!!</h3>;
+    }
+
   return (
-    <ReactKeycloakProvider authClient={keycloak}>
       <Layout >
         <AuthModal />
         <Switch>
@@ -33,7 +36,6 @@ function App() {
           />
         </Switch>
       </Layout>
-    </ReactKeycloakProvider>
   );
 }
 
