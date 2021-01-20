@@ -25,16 +25,19 @@ import App from './App';
 import 'bootstrap-css-only/css/bootstrap-reboot.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import './index.css';
-
+import { ReactKeycloakProvider } from '@react-keycloak/web'
+import keycloak from './keycloak'
 import serviceWorker from './serviceWorker';
 import configureStore from './configureStore';
 
 const store = configureStore();
 
 ReactDOM.render(
+  <ReactKeycloakProvider initOptions={{ checkLoginIframe:false }} authClient={keycloak}>
   <Provider store={store}>
     <App />
-  </Provider>,
+  </Provider>
+  </ReactKeycloakProvider>,
   document.getElementById('root')
 );
 
