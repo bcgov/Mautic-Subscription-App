@@ -20,7 +20,7 @@ export const SSO_CONFIG = {
 export const SUBSCRIPTION_FORM = {
     subscribeFormName: 'subscribe',
     unsubscribeFormName: 'unsubscribe',
-    subscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1',
+    subscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5',
     unsubscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2',
 };
 
