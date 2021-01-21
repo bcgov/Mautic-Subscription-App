@@ -18,6 +18,10 @@ export const SSO_CONFIG = {
 };
 
 export const SUBSCRIPTION_FORM = {
-    subscribe: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1',
-    unsubscribe: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2',
+    subscribeFormName: 'subscribe',
+    unsubscribeFormName: 'unsubscribe',
+    subscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1',
+    unsubscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2',
 };
+
+

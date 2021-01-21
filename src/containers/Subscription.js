@@ -45,17 +45,17 @@ export const Subscription = () => {
           <button className="auth-button" onclick={subscription("unsubscribe")}>Unsubscribe</button>  */}
           <form action={SUBSCRIPTION_FORM.subscribe} method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
-            <input type="hidden" name="mauticform[emailsubscribe]" value={userEmail}></input>
-            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.subscribe)}></input>
+            <input type="hidden" name="mauticform[email]" value={userEmail}></input>
+            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.subscribeActionURL)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
-            <input type="hidden" name="mauticform[formName]" value="subscribe"></input>
+            <input type="hidden" name="mauticform[formName]" value={SUBSCRIPTION_FORM.subscribeFormName}></input>
           </form>
           <form action={SUBSCRIPTION_FORM.unsubscribe} method="post">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
-            <input type="hidden" name="mauticform[emailunsubscribe]" value={userEmail}></input>
-            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.unsubscribe)}></input>
+            <input type="hidden" name="mauticform[email]" value={userEmail}></input>
+            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.unsubscribeActionURL)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
-            <input type="hidden" name="mauticform[formName]" value="unsubscribe"></input>
+            <input type="hidden" name="mauticform[formName]" value={SUBSCRIPTION_FORM.unsubscribeFormName}></input>
           </form>
         </div>
       </ModalFooter>
