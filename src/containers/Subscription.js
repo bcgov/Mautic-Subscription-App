@@ -43,14 +43,14 @@ export const Subscription = () => {
         <div className="auth-buttons">
           {/* <button className="auth-button" onclick={subscription("subscribe")}>Subscribe</button> 
           <button className="auth-button" onclick={subscription("unsubscribe")}>Unsubscribe</button>  */}
-          <form action={SUBSCRIPTION_FORM.subscribe} method="post">
+          <form action={SUBSCRIPTION_FORM.subscribeActionURL} method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
             <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.subscribeActionURL)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
             <input type="hidden" name="mauticform[formName]" value={SUBSCRIPTION_FORM.subscribeFormName}></input>
           </form>
-          <form action={SUBSCRIPTION_FORM.unsubscribe} method="post">
+          <form action={SUBSCRIPTION_FORM.unsubscribeActionURL} method="post">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
             <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.unsubscribeActionURL)}></input>
