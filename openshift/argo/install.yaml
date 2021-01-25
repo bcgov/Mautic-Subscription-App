@@ -289,6 +289,13 @@ objects:
           app: argo-server
       spec:
         containers:
+          - resources: 
+              limits: 
+                cpu: 500m
+                memory: 1Gi
+              requests:
+                cpu: 1
+                memory: 1.5Gi 
         - args:
           - server
           - --namespaced
