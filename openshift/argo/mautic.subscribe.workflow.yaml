@@ -1,0 +1,100 @@
+metadata:
+  name: mautic-subscribe-workflow
+  namespace: de0974-tools
+spec:
+  templates:
+    - name: main
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      steps:
+        - - name: clone
+            template: clone
+            arguments:
+              parameters:
+                - name: repo
+                  value: 'https://github.com/bcgov/Mautic-Subscription-App'
+                - name: branch
+                  value: initial-setup
+        - - name: build-deploy-mautic
+            template: build-deploy-mautic
+            arguments: {}
+    - name: clone
+      arguments: {}
+      inputs:
+        parameters:
+          - name: repo
+          - name: branch
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/alpine/git:v2.26.2'
+        args:
+          - clone
+          - '--depth'
+          - '1'
+          - '--branch'
+          - '{{inputs.parameters.branch}}'
+          - '--single-branch'
+          - '{{inputs.parameters.repo}}'
+        workingDir: /mnt/vol
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+    - name: build-deploy-mautic
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/openshift/origin-cli:latest'
+        command:
+          - sh
+          - '-c'
+        args:
+          - >-
+            oc project de0974-tools; oc process -f mautic.bc.yaml -p SOURCE_REPOSITORY_REF=initial-setup
+            -p NAMESPACE=de0974-tools -p
+            REACT_APP_SSO_BASE_URL=https://dev.oidc.gov.bc.ca -p
+            REACT_APP_SSO_CLIENT_ID=mautic-subscription-app -p
+            REACT_APP_SSO_REALM_NAME=devhub | oc apply -f - ; oc start-build -w
+            mautic-subscription-app
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+  entrypoint: main
+  arguments: {}
+  serviceAccountName: workflow-creator
+  volumeClaimTemplates:
+    - metadata:
+        name: work
+        creationTimestamp: null
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 128Mi
+        storageClassName: netapp-block-standard
+      status: {}
+  imagePullSecrets:
+    - name: dockerhub-secret-mautic
+
