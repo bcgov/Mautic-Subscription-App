@@ -62,7 +62,7 @@ objects:
             deploymentconfig: ${NAME}
         spec:
           containers:
-            - image: '${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
+            - image: '${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
               name: ${NAME}
               ports:
                 - containerPort: 2015
