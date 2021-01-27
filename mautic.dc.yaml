@@ -146,6 +146,7 @@ parameters:
   displayName: PR
   name: PR
   required: true
+  value: '4'
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
