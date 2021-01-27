@@ -146,12 +146,12 @@ parameters:
   displayName: PR
   name: PR
   required: true
-  value: 'PR-4'
+  value: 'pr-4'
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
   required: true
-  value: -dev
+  value: dev
 - description: A name used for all objects
   displayName: IMAGE_NAME
   name: NAME
