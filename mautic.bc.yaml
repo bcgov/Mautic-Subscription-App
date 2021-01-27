@@ -47,10 +47,6 @@ objects:
             - name: 'REACT_APP_SSO_BASE_URL'
               value: ${REACT_APP_SSO_BASE_URL}
         type: Source
-      triggers:
-        - type: ConfigChange
-        - imageChange: {}
-          type: ImageChange
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild

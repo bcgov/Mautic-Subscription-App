@@ -62,7 +62,7 @@ objects:
             deploymentconfig: ${NAME}
         spec:
           containers:
-            - image: '${NAME}:latest'
+            - image: '${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
               name: ${NAME}
               ports:
                 - containerPort: 2015
@@ -147,3 +147,23 @@ parameters:
   name: SUFFIX
   required: false
   value: -dev
+- description: A name used for all objects
+  displayName: IMAGE_NAME
+  name: NAME
+  required: true
+  value: mautic-subscription-app
+- description: A name used for all objects
+  displayName: IMAGE_REGISTRY
+  name: NAME
+  required: true
+  value: docker-registry.default.svc:5000
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true
+  value: latest
+- description: A name used for all objects
+  displayName: IMAGE_NAMESPACE
+  name: IMAGE_NAMESPACE
+  required: true
+  value: de0974-tools
