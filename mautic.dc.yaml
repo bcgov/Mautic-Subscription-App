@@ -87,7 +87,7 @@ objects:
               - ${NAME}
             from:
               kind: ImageStreamTag
-              name: '${NAME}:latest'
+              name: '${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
           type: ImageChange
     metadata:
       annotations:
