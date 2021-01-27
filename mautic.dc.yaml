@@ -154,12 +154,12 @@ parameters:
   value: dev
 - description: A name used for all objects
   displayName: IMAGE_NAME
-  name: NAME
+  name: IMAGE_NAME
   required: true
   value: mautic-subscription-app
 - description: A name used for all objects
   displayName: IMAGE_REGISTRY
-  name: NAME
+  name: IMAGE_REGISTRY
   required: true
   value: docker-registry.default.svc:5000
 - description: A name used for all objects
