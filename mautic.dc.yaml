@@ -40,17 +40,17 @@ objects:
     kind: ConfigMap
     metadata:
       creationTimestamp: null
-      name: caddy-${NAME}${SUFFIX}
+      name: caddy-${NAME}-${PR}-${SUFFIX}
       labels:
-        app: ${NAME}${SUFFIX}
-        deploymentconfig: ${NAME}${SUFFIX}
-        app-name: ${NAME}${SUFFIX}
+        app: ${NAME}-${PR}-${SUFFIX}
+        deploymentconfig: ${NAME}-${PR}-${SUFFIX}
+        app-name: ${NAME}-${PR}-${SUFFIX}
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     spec:
       replicas: 1
       selector:
-        deploymentconfig: ${NAME}
+        deploymentconfig: ${NAME}-${PR}-${SUFFIX}
       strategy:
         resources: {}
       template:
@@ -59,44 +59,44 @@ objects:
             openshift.io/generated-by: OpenShiftNewApp
           creationTimestamp: null
           labels:
-            deploymentconfig: ${NAME}
+            deploymentconfig: ${NAME}-${PR}-${SUFFIX}
         spec:
           containers:
-            - image: '${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
-              name: ${NAME}
+            - image: '${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}-${PR}-${SUFFIX}:${IMAGE_TAG}'
+              name: ${NAME}-${PR}-${SUFFIX}
               ports:
                 - containerPort: 2015
                   protocol: TCP
               resources: {}
               volumeMounts:
-              - name: caddy-${NAME}${SUFFIX}
+              - name: caddy-${NAME}-${PR}-${SUFFIX}
                 mountPath: /opt/app-root/etc/Caddyfile
                 readOnly: true
                 subPath: Caddyfile
           volumes:
-          - name: caddy-${NAME}${SUFFIX}
+          - name: caddy-${NAME}-${PR}-${SUFFIX}
             configMap:
               defaultMode: 420
-              name: caddy-${NAME}${SUFFIX}
+              name: caddy-${NAME}-${PR}-${SUFFIX}
       test: false
       triggers:
         - type: ConfigChange
         - imageChangeParams:
             automatic: true
             containerNames:
-              - ${NAME}
+              - ${NAME}-${PR}-${SUFFIX}
             from:
               kind: ImageStreamTag
-              name: '${NAME}:latest'
+              name: '${NAME}-${PR}-${SUFFIX}:latest'
           type: ImageChange
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}
+        app: ${NAME}-${PR}-${SUFFIX}
+        app.kubernetes.io/component: ${NAME}-${PR}-${SUFFIX}
+        app.kubernetes.io/instance: ${NAME}-${PR}-${SUFFIX}
+      name: ${NAME}-${PR}-${SUFFIX}
   - apiVersion: v1
     kind: Service
     spec:
@@ -106,31 +106,31 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${NAME}
+        deploymentconfig: ${NAME}-${PR}-${SUFFIX}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}
+        app: ${NAME}-${PR}-${SUFFIX}
+        app.kubernetes.io/component: ${NAME}-${PR}-${SUFFIX}
+        app.kubernetes.io/instance: ${NAME}-${PR}-${SUFFIX}
+      name: ${NAME}-${PR}-${SUFFIX}
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
       creationTimestamp: null
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}
+        app: ${NAME}-${PR}-${SUFFIX}
+        app.kubernetes.io/component: ${NAME}-${PR}-${SUFFIX}
+        app.kubernetes.io/instance: ${NAME}-${PR}-${SUFFIX}
+      name: ${NAME}-${PR}-${SUFFIX}
     spec:
       host: ""
       port:
         targetPort: 2015-tcp
       to:
         kind: ""
-        name: ${NAME}
+        name: ${NAME}-${PR}-${SUFFIX}
         weight: null
       tls:
         termination: Edge
@@ -142,10 +142,14 @@ parameters:
   name: NAME
   required: true
   value: mautic-subscription-app
+- description: Pull Request Number
+  displayName: PR
+  name: PR
+  required: true
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
-  required: false
+  required: true
   value: -dev
 - description: A name used for all objects
   displayName: IMAGE_NAME

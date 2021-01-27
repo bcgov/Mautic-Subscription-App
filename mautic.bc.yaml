@@ -10,8 +10,8 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: ${NAME}
-      name: ${NAME}
+        build: ${NAME}-${PR}-${SUFFIX}
+      name: ${NAME}-${PR}-${SUFFIX}
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
     spec:
@@ -19,7 +19,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: '${NAME}:latest'
+          name: '${NAME}-${PR}-${SUFFIX}:latest'
       postCommit: {}
       resources: 
         requests:
@@ -51,14 +51,19 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: ${NAME}
-      name: ${NAME}
+        build: ${NAME}-${PR}-${SUFFIX}
+      name: ${NAME}-${PR}-${SUFFIX}
 parameters:
 - description: A name used for all objects
   displayName: Name
   name: NAME
   required: true
   value: mautic-subscription-app
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: true
+  value: -dev
 - description: Github repository URL
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
