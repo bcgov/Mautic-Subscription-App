@@ -210,6 +210,48 @@ objects:
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
+    name: edit
+    namespace: ${TOOLS_NAMESPACE}
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: workflow-creator
+    namespace: ${DEV_NAMESPACE}
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: edit
+    namespace: ${TOOLS_NAMESPACE}
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: workflow-creator
+    namespace: ${TEST_NAMESPACE}
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: edit
+    namespace: ${TOOLS_NAMESPACE}
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: workflow-creator
+    namespace: ${PROD_NAMESPACE}
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
     name: argo-binding
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -297,10 +339,10 @@ objects:
             limits:
               cpu: 1000m 
               memory: 200Mi
-        - args:
+          args:
           - server
           - --namespaced
-          image: argoproj/argocli:v2.10.0
+          image: docker.io/argoproj/argocli:v2.10.0
           name: argo-server
           ports:
           - containerPort: 2746
@@ -344,7 +386,7 @@ objects:
           - --namespaced
           command:
           - workflow-controller
-          image: argoproj/workflow-controller:v2.10.0
+          image: docker.io/argoproj/workflow-controller:v2.10.0
           name: workflow-controller
         nodeSelector:
           kubernetes.io/os: linux
@@ -377,4 +419,23 @@ parameters:
 - name: CLUSTER
   required: true
 
-
+- description: Tools Namespace
+  displayName: Tools Namespace
+  name: TOOLS_NAMESPACE
+  required: true
+  value: de0974-tools
+- description: Test Namespace
+  displayName: Test Namespace
+  name: Test_NAMESPACE
+  required: true
+  value: de0974-test
+- description: Dev Namespace
+  displayName: Dev Namespace
+  name: DEV_NAMESPACE
+  required: true
+  value: de0974-dev
+- description: Prod Namespace
+  displayName: Prod Namespace
+  name: PROD_NAMESPACE
+  required: true
+  value: de0974-prod
