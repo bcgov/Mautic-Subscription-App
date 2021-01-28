@@ -5,7 +5,7 @@ spec:
   templates:
     - name: main
       arguments: {}
-      inputs:
+      inputs: {}
       outputs: {}
       metadata: {}
       steps:
@@ -20,9 +20,13 @@ spec:
         - - name: build-deploy-mautic-tools
             template: build-deploy-mautic-tools
             arguments: {}
-        - - name: deploy-mautic-dev
-            template: deploy-mautic-dev
-            arguments: {}    
+        # - - name: deploy-mautic-dev
+        #     template: deploy-mautic-dev
+        #     arguments: {}    
+        # - - name: deploy-mautic-test
+        #     template: deploy-mautic-test
+        #     arguments: {}  
+
     - name: clone
       arguments: {}
       inputs:
@@ -67,13 +71,16 @@ spec:
           - '-c'
         args:
           - >-
-            oc projects; oc project de0974-tools; 
-            oc process -f mautic.bc.yaml -p SOURCE_REPOSITORY_REF=initial-setup
-            -p NAMESPACE=de0974-tools -p REACT_APP_SSO_BASE_URL=https://dev.oidc.gov.bc.ca 
+            oc process -f mautic.bc.yaml 
+            -p SOURCE_REPOSITORY_REF=improvements
+            -p NAMESPACE=de0974-tools 
+            -p REACT_APP_SSO_BASE_URL=https://dev.oidc.gov.bc.ca 
             -p REACT_APP_SSO_CLIENT_ID=mautic-subscription-app 
-            -p REACT_APP_SSO_REALM_NAME=devhub 
+            -p REACT_APP_SSO_REALM_NAME=devhub
+            -p PR={{workflow.parameters.PR}} 
+            -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
-            oc start-build -w mautic-subscription-app
+            oc start-build -w mautic-subscription-app-{{workflow.parameters.PR}}-{{workflow.parameters.SUFFIX}}
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -99,7 +106,11 @@ spec:
           - '-c'
         args: 
           - >-
-            oc process -f mautic.dc.yaml -n de0974-dev | oc apply -f - -n de0974-dev
+            oc process -f mautic.dc.yaml 
+            -p PR={{workflow.parameters.PR}} 
+            -p SUFFIX={{workflow.parameters.SUFFIX}} 
+            -n de0974-dev 
+            | oc apply -f - -n de0974-dev
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -111,6 +122,37 @@ spec:
         volumeMounts:
           - name: work
             mountPath: /mnt/vol
+
+    - name: deploy-mautic-test
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/openshift/origin-cli:latest'
+        command:
+          - sh
+          - '-c'
+        args: 
+          - >-
+            oc process -f mautic.dc.yaml 
+            -p PR={{workflow.parameters.PR}} 
+            -p SUFFIX={{workflow.parameters.SUFFIX}} 
+            -n de0974-test 
+            | oc apply -f - -n de0974-test
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
   entrypoint: main
   arguments: {}
   serviceAccountName: workflow-creator
@@ -124,7 +166,7 @@ spec:
         resources:
           requests:
             storage: 128Mi
-        storageClassName: netapp-block-standard
+        storageClassName: netapp-file-standard
       status: {}
   imagePullSecrets:
     - name: dockerhub-secret-mautic
