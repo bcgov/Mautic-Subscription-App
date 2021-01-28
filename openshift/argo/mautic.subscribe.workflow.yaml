@@ -4,11 +4,8 @@ metadata:
 spec:
   templates:
     - name: main
-      arguments: 
-        parameters:
-        - name: PR
-          value: ''
-      inputs: {}
+      arguments: {}
+      inputs:
       outputs: {}
       metadata: {}
       steps:
@@ -19,10 +16,10 @@ spec:
                 - name: repo
                   value: 'https://github.com/bcgov/Mautic-Subscription-App'
                 - name: branch
-                  value: initial-setup
-        # - - name: build-deploy-mautic-tools
-        #     template: build-deploy-mautic-tools
-        #     arguments: {}
+                  value: improvements
+        - - name: build-deploy-mautic-tools
+            template: build-deploy-mautic-tools
+            arguments: {}
         - - name: deploy-mautic-dev
             template: deploy-mautic-dev
             arguments: {}    
@@ -74,7 +71,8 @@ spec:
             oc process -f mautic.bc.yaml -p SOURCE_REPOSITORY_REF=initial-setup
             -p NAMESPACE=de0974-tools -p REACT_APP_SSO_BASE_URL=https://dev.oidc.gov.bc.ca 
             -p REACT_APP_SSO_CLIENT_ID=mautic-subscription-app 
-            -p REACT_APP_SSO_REALM_NAME=devhub | oc apply -f - ; 
+            -p REACT_APP_SSO_REALM_NAME=devhub 
+            | oc apply -f - ; 
             oc start-build -w mautic-subscription-app
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
@@ -101,8 +99,6 @@ spec:
           - '-c'
         args: 
           - >-
-            oc projects;
-            ls -l;
             oc process -f mautic.dc.yaml -n de0974-dev | oc apply -f - -n de0974-dev
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
