@@ -10,6 +10,11 @@ Do not include any periods, slashes, spaces or other characters inappropriate fo
 Perform the installion like this: 
 `oc process -f install.yaml --param-file=install.param | oc apply -n [NAMESPACE] -f -`
 
+And to allow the service account `workflow-creator` to have edit access to the dev, test, and prod namespaces, run the commands:
+`oc process -f serviceaccount.access.dev.yaml --param-file=install.param --ignore-unknown-parameters=true | oc apply -n de0974-dev -f -`
+`oc process -f serviceaccount.access.test.yaml --param-file=install.param --ignore-unknown-parameters=true | oc apply -n de0974-test -f -`
+`oc process -f serviceaccount.access.prod.yaml --param-file=install.param --ignore-unknown-parameters=true | oc apply -n de0974-prod -f -`
+
 This will produce a number of new objects relating to argo in your namespace. 
 Of particular note is the route, which allows you to access the UI.
 You may find that using the link directs you to a blank white page. If so, add `/workflows` to the end of the url and try again.
