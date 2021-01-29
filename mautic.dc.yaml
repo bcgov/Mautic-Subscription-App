@@ -43,6 +43,7 @@ objects:
       name: caddy-${NAME}${SUFFIX}
       labels:
         app: ${NAME}${SUFFIX}
+        group: ${NAME}
         deploymentconfig: ${NAME}${SUFFIX}
         app-name: ${NAME}${SUFFIX}
   - apiVersion: apps.openshift.io/v1
@@ -81,14 +82,6 @@ objects:
       test: false
       triggers: 
         - type: ConfigChange
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}${SUFFIX}
-            from:
-              kind: ImageStreamTag
-              name: '${NAME}${SUFFIX}:latest'
-          type: ImageChange
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
@@ -96,6 +89,7 @@ objects:
         app: ${NAME}${SUFFIX}
         app.kubernetes.io/component: ${NAME}${SUFFIX}
         app.kubernetes.io/instance: ${NAME}${SUFFIX}
+        group: ${NAME}
       name: ${NAME}${SUFFIX}
   - apiVersion: v1
     kind: Service
