@@ -210,30 +210,31 @@ objects:
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
-    name: edit
-    namespace: ${TEST_NAMESPACE}
+    name: system:image-puller
+    namespace: ${NAMESPACE}-tools
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: edit
+    name: system:image-puller
   subjects:
   - kind: ServiceAccount
-    name: workflow-creator
-    namespace: ${TOOLS_NAMESPACE}
+    name: default
+    namespace: ${NAMESPACE}-test
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
-    name: edit
-    namespace: ${PROD_NAMESPACE}
+    name: system:image-puller
+    namespace: ${NAMESPACE}-tools
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: edit
+    name: system:image-puller
   subjects:
   - kind: ServiceAccount
-    name: workflow-creator
-    namespace: ${TOOLS_NAMESPACE}
+    name: default
+    namespace: ${NAMESPACE}-dev
+
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
@@ -405,19 +406,7 @@ parameters:
 - name: CLUSTER
   required: true
 
-- description: Tools Namespace
-  displayName: Tools Namespace
-  name: TOOLS_NAMESPACE
-  required: true
-- description: Test Namespace
-  displayName: Test Namespace
-  name: TEST_NAMESPACE
-  required: true
-- description: Dev Namespace
-  displayName: Dev Namespace
-  name: DEV_NAMESPACE
-  required: true
-- description: Prod Namespace
-  displayName: Prod Namespace
-  name: PROD_NAMESPACE
+- description: Namespace
+  displayName: Namespace
+  name: NAMESPACE
   required: true
