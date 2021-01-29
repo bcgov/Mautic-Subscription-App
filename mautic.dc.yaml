@@ -155,7 +155,7 @@ parameters:
   displayName: IMAGE_TAG
   name: IMAGE_TAG
   required: true
-  value: latest
+  value: dev
 - description: A name used for all objects
   displayName: IMAGE_NAMESPACE
   name: IMAGE_NAMESPACE
