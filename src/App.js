@@ -10,10 +10,6 @@ import { PrivateRoute } from './utilities/PrivateRoute'
 import { useKeycloak } from '@react-keycloak/web';
 
 function App() {
-  // const {keycloak, initialized} = useKeycloak();
-  //   if (!initialized) {
-  //       return <div/>;
-  //   }
 
   return (
       <Layout >
@@ -21,9 +17,6 @@ function App() {
           <PrivateRoute
             path="/subscription"
             component={Subscription}
-            /* authentication={this.props.authentication}
-            authorization={this.props.authorization}
-            verifyEmail={this.props.verifyEmail} */
           />
           <PrivateRoute
             path="/subscribed"
