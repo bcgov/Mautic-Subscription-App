@@ -43,6 +43,7 @@ objects:
       name: caddy-${NAME}${SUFFIX}
       labels:
         app: ${NAME}${SUFFIX}
+        group: ${NAME}
         deploymentconfig: ${NAME}${SUFFIX}
         app-name: ${NAME}${SUFFIX}
   - apiVersion: apps.openshift.io/v1
@@ -50,7 +51,7 @@ objects:
     spec:
       replicas: 1
       selector:
-        deploymentconfig: ${NAME}
+        deploymentconfig: ${NAME}${SUFFIX}
       strategy:
         resources: {}
       template:
@@ -59,11 +60,11 @@ objects:
             openshift.io/generated-by: OpenShiftNewApp
           creationTimestamp: null
           labels:
-            deploymentconfig: ${NAME}
+            deploymentconfig: ${NAME}${SUFFIX}
         spec:
           containers:
-            - image: '${NAME}:latest'
-              name: ${NAME}
+            - image: '${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
+              name: ${NAME}${SUFFIX}
               ports:
                 - containerPort: 2015
                   protocol: TCP
@@ -79,24 +80,17 @@ objects:
               defaultMode: 420
               name: caddy-${NAME}${SUFFIX}
       test: false
-      triggers:
+      triggers: 
         - type: ConfigChange
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}
-            from:
-              kind: ImageStreamTag
-              name: '${NAME}:latest'
-          type: ImageChange
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}
+        app: ${NAME}${SUFFIX}
+        app.kubernetes.io/component: ${NAME}${SUFFIX}
+        app.kubernetes.io/instance: ${NAME}${SUFFIX}
+        group: ${NAME}
+      name: ${NAME}${SUFFIX}
   - apiVersion: v1
     kind: Service
     spec:
@@ -106,31 +100,31 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${NAME}
+        deploymentconfig: ${NAME}${SUFFIX}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}
+        app: ${NAME}${SUFFIX}
+        app.kubernetes.io/component: ${NAME}${SUFFIX}
+        app.kubernetes.io/instance: ${NAME}${SUFFIX}
+      name: ${NAME}${SUFFIX}
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
       creationTimestamp: null
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}
+        app: ${NAME}${SUFFIX}
+        app.kubernetes.io/component: ${NAME}${SUFFIX}
+        app.kubernetes.io/instance: ${NAME}${SUFFIX}
+      name: ${NAME}${SUFFIX}
     spec:
       host: ""
       port:
         targetPort: 2015-tcp
       to:
         kind: ""
-        name: ${NAME}
+        name: ${NAME}${SUFFIX}
         weight: null
       tls:
         termination: Edge
@@ -145,5 +139,25 @@ parameters:
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
-  required: false
+  required: true
   value: -dev
+- description: A name used for all objects
+  displayName: IMAGE_NAME
+  name: IMAGE_NAME
+  required: true
+  value: mautic-subscription-app
+- description: A name used for all objects
+  displayName: IMAGE_REGISTRY
+  name: IMAGE_REGISTRY
+  required: true
+  value: image-registry.openshift-image-registry.svc:5000
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true
+  value: dev
+- description: A name used for all objects
+  displayName: IMAGE_NAMESPACE
+  name: IMAGE_NAMESPACE
+  required: true
+  value: de0974-tools

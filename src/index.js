@@ -20,7 +20,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import App from './App';
 import 'bootstrap-css-only/css/bootstrap-reboot.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
@@ -28,15 +27,15 @@ import './index.css';
 import { ReactKeycloakProvider } from '@react-keycloak/web'
 import keycloak from './keycloak'
 import serviceWorker from './serviceWorker';
-import configureStore from './configureStore';
+import { BrowserRouter } from 'react-router-dom';
 
-const store = configureStore();
+
 
 ReactDOM.render(
   <ReactKeycloakProvider initOptions={{ checkLoginIframe:false }} authClient={keycloak}>
-  <Provider store={store}>
-    <App />
-  </Provider>
+    <BrowserRouter>
+      <App /> 
+    </BrowserRouter>
   </ReactKeycloakProvider>,
   document.getElementById('root')
 );

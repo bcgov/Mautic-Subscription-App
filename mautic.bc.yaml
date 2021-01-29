@@ -11,6 +11,7 @@ objects:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
         build: ${NAME}
+        group: ${NAME}
       name: ${NAME}
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
@@ -19,7 +20,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: '${NAME}:latest'
+          name: '${IMAGE_NAME}:${IMAGE_TAG}'
       postCommit: {}
       resources: 
         requests:
@@ -47,22 +48,23 @@ objects:
             - name: 'REACT_APP_SSO_BASE_URL'
               value: ${REACT_APP_SSO_BASE_URL}
         type: Source
-      triggers:
-        - type: ConfigChange
-        - imageChange: {}
-          type: ImageChange
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: ${NAME}
-      name: ${NAME}
+        build: ${NAME}${SUFFIX}
+      name: ${NAME}${SUFFIX}
 parameters:
 - description: A name used for all objects
   displayName: Name
   name: NAME
   required: true
   value: mautic-subscription-app
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: true
+  value: -dev
 - description: Github repository URL
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
@@ -90,3 +92,13 @@ parameters:
   displayName: REACT_APP_SSO_BASE_URL
   name: REACT_APP_SSO_BASE_URL
   required: true 
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true
+  value: dev
+- description: A name used for all objects
+  displayName: IMAGE_NAME
+  name: IMAGE_NAME
+  required: true
+  value: mautic-subscription-app
