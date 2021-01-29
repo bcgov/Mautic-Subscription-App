@@ -1,0 +1,104 @@
+kind: Template
+apiVersion: v1
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    spec:
+      lookupPolicy:
+        local: false
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewBuild
+      labels:
+        build: ${NAME}
+        group: ${NAME}
+      name: ${NAME}
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: '${IMAGE_NAME}:${IMAGE_TAG}'
+      postCommit: {}
+      resources: 
+        requests:
+          cpu: 500m
+          memory: 1.5Gi
+        limits:
+          cpu: 1000m
+          memory: 3Gi
+      source:
+        git:
+          ref: ${SOURCE_REPOSITORY_REF}
+          uri: ${SOURCE_REPOSITORY_URL}
+        type: Git
+      strategy:
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: 'caddy-s2i-builder:latest'
+            namespace: ${NAMESPACE}
+          env:
+            - name: 'REACT_APP_SSO_REALM_NAME'
+              value: ${REACT_APP_SSO_REALM_NAME}
+            - name: 'REACT_APP_SSO_CLIENT_ID'
+              value: ${REACT_APP_SSO_CLIENT_ID}
+            - name: 'REACT_APP_SSO_BASE_URL'
+              value: ${REACT_APP_SSO_BASE_URL}
+        type: Source
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewBuild
+      labels:
+        build: ${NAME}${SUFFIX}
+      name: ${NAME}${SUFFIX}
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: mautic-subscription-app
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: true
+  value: -dev
+- description: Github repository URL
+  displayName: SOURCE_REPOSITORY_URL
+  name: SOURCE_REPOSITORY_URL
+  required: true
+  value: https://github.com/bcgov/Mautic-Subscription-App
+- description: Github repository branch
+  displayName: SOURCE_REPOSITORY_REF
+  name: SOURCE_REPOSITORY_REF
+  required: true
+  value: ''
+- description: Namespace name
+  displayName: NAMESPACE
+  name: NAMESPACE
+  required: true
+  value: ''
+- description: REACT_APP_SSO_REALM_NAME
+  displayName: REACT_APP_SSO_REALM_NAME
+  name: REACT_APP_SSO_REALM_NAME
+  required: true
+- description: REACT_APP_SSO_CLIENT_ID
+  displayName: REACT_APP_SSO_CLIENT_ID
+  name: REACT_APP_SSO_CLIENT_ID
+  required: true
+- description: REACT_APP_SSO_BASE_URL
+  displayName: REACT_APP_SSO_BASE_URL
+  name: REACT_APP_SSO_BASE_URL
+  required: true 
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true
+  value: dev
+- description: A name used for all objects
+  displayName: IMAGE_NAME
+  name: IMAGE_NAME
+  required: true
+  value: mautic-subscription-app
