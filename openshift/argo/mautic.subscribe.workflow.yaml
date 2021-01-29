@@ -20,12 +20,12 @@ spec:
         - - name: build-deploy-mautic-tools
             template: build-deploy-mautic-tools
             arguments: {}
-        # - - name: deploy-mautic-dev
-        #     template: deploy-mautic-dev
-        #     arguments: {}    
-        # - - name: deploy-mautic-test
-        #     template: deploy-mautic-test
-        #     arguments: {}  
+        - - name: deploy-mautic-dev
+            template: deploy-mautic-dev
+            arguments: {}    
+        - - name: deploy-mautic-test
+            template: deploy-mautic-test
+            arguments: {}  
 
     - name: clone
       arguments: {}
@@ -77,10 +77,9 @@ spec:
             -p REACT_APP_SSO_BASE_URL=https://dev.oidc.gov.bc.ca 
             -p REACT_APP_SSO_CLIENT_ID=mautic-subscription-app 
             -p REACT_APP_SSO_REALM_NAME=devhub
-            -p PR={{workflow.parameters.PR}} 
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
-            oc start-build -w mautic-subscription-app-{{workflow.parameters.PR}}-{{workflow.parameters.SUFFIX}}
+            oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}}
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -107,7 +106,6 @@ spec:
         args: 
           - >-
             oc process -f mautic.dc.yaml 
-            -p PR={{workflow.parameters.PR}} 
             -p SUFFIX={{workflow.parameters.SUFFIX}} 
             -n de0974-dev 
             | oc apply -f - -n de0974-dev
@@ -137,7 +135,6 @@ spec:
         args: 
           - >-
             oc process -f mautic.dc.yaml 
-            -p PR={{workflow.parameters.PR}} 
             -p SUFFIX={{workflow.parameters.SUFFIX}} 
             -n de0974-test 
             | oc apply -f - -n de0974-test
@@ -167,7 +164,7 @@ spec:
           requests:
             storage: 128Mi
         storageClassName: netapp-file-standard
-      status: {}
+      status: {} 
   imagePullSecrets:
     - name: dockerhub-secret-mautic
 
