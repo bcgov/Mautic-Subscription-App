@@ -1,6 +1,20 @@
 kind: Template
 apiVersion: v1
 objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      name: ${NAME}
+      labels:
+        app: ${NAME}${SUFFIX}
+        group: ${NAME}
+        deploymentconfig: ${NAME}${SUFFIX}
+        app-name: ${NAME}${SUFFIX}
+    spec:
+      lookupPolicy:
+        local: false
+    status: {}
   - apiVersion: v1
     data:
       Caddyfile: |
