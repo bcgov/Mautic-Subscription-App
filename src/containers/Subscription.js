@@ -41,8 +41,6 @@ export const Subscription = () => {
       </ModalBody>
       <ModalFooter>
         <div className="auth-buttons">
-          {/* <button className="auth-button" onclick={subscription("subscribe")}>Subscribe</button> 
-          <button className="auth-button" onclick={subscription("unsubscribe")}>Unsubscribe</button>  */}
           <form action={SUBSCRIPTION_FORM.subscribeActionURL} method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
