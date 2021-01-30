@@ -1,5 +1,5 @@
 metadata:
-  name: mautic-subscribe-workflow
+  name: mautic-subscribe-workflow-promote
   namespace: de0974-tools
 spec:
   templates:
@@ -12,7 +12,7 @@ spec:
         - - name: clone
             template: clone
             arguments: {}
-        - - name: Retag image 
+        - - name: re-tag-image 
             template: re-tag-image
             arguments: {}
         - - name: deploy-mautic-dev
@@ -62,7 +62,7 @@ spec:
         args:
           - >-
             echo "tagging image to {{workflow.parameters.TARGET_NAMESPACE}}"
-            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} \
+            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
             {{workflow.parameters.TARGET_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
@@ -89,11 +89,11 @@ spec:
           - '-c'
         args: 
           - >-
-            oc process -f openshift/mautic.dc.yaml \
-            -p SUFFIX={{workflow.parameters.SUFFIX}} \
-            -p IMAGE_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} \
-            -p IMAGE_NAME={{workflow.parameters.NAME}} \
-            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} \
+            oc process -f openshift/mautic.dc.yaml 
+            -p SUFFIX={{workflow.parameters.SUFFIX}} 
+            -p IMAGE_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} 
+            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
