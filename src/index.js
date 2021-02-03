@@ -32,7 +32,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 
 ReactDOM.render(
-  <ReactKeycloakProvider initOptions={{ checkLoginIframe:false }} authClient={keycloak}>
+  <ReactKeycloakProvider initOptions={{ checkLoginIframe: true }} authClient={keycloak}>
     <BrowserRouter>
       <App /> 
     </BrowserRouter>

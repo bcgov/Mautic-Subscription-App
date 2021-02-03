@@ -61,8 +61,8 @@ spec:
           - '-c'
         args:
           - >-
-            echo "tagging image to {{workflow.parameters.TARGET_NAMESPACE}}"
-            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} \
+            echo "tagging image to {{workflow.parameters.TARGET_NAMESPACE}}";
+            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
             {{workflow.parameters.TARGET_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
