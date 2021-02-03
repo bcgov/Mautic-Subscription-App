@@ -18,9 +18,9 @@ spec:
         - - name: deploy-mautic-dev
             template: deploy-mautic-dev
             arguments: {}    
-        - - name: deploy-mautic-test
-            template: deploy-mautic-test
-            arguments: {}  
+        # - - name: deploy-mautic-test
+        #     template: deploy-mautic-test
+        #     arguments: {}  
 
     - name: clone
       arguments: {}
@@ -66,8 +66,8 @@ spec:
             oc process -f openshift/mautic.bc.yaml 
             -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
             -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} \
-            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} \
+            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p REACT_APP_SSO_BASE_URL={{workflow.parameters.SSO_BASE_URL}}
             -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
             -p REACT_APP_SSO_REALM_NAME={{SSO_REALM_NAME}}
@@ -101,9 +101,9 @@ spec:
           - >-
             oc process -f openshift/mautic.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} \
-            -p IMAGE_NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}} \
-            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} \
+            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p IMAGE_NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}} 
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -n {{workflow.parameters.DEV_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
@@ -118,34 +118,34 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
-    - name: deploy-mautic-test
-      arguments: {}
-      inputs: {}
-      outputs: {}
-      metadata: {}
-      container:
-        name: ''
-        image: 'docker.io/openshift/origin-cli:latest'
-        command:
-          - sh
-          - '-c'
-        args: 
-          - >-
-            oc process -f mautic.dc.yaml 
-            -p SUFFIX={{workflow.parameters.SUFFIX}} 
-            -n {{workflow.parameters.TEST_NAMESPACE}}
-            | oc apply -f - -n {{workflow.parameters.TEST_NAMESPACE}}
-        workingDir: /mnt/vol/Mautic-Subscription-App
-        resources:
-          limits:
-            cpu: 100m
-            memory: 512Mi
-          requests:
-            cpu: 50m
-            memory: 256Mi
-        volumeMounts:
-          - name: work
-            mountPath: /mnt/vol
+    # - name: deploy-mautic-test
+    #   arguments: {}
+    #   inputs: {}
+    #   outputs: {}
+    #   metadata: {}
+    #   container:
+    #     name: ''
+    #     image: 'docker.io/openshift/origin-cli:latest'
+    #     command:
+    #       - sh
+    #       - '-c'
+    #     args: 
+    #       - >-
+    #         oc process -f mautic.dc.yaml 
+    #         -p SUFFIX={{workflow.parameters.SUFFIX}} 
+    #         -n {{workflow.parameters.TEST_NAMESPACE}}
+    #         | oc apply -f - -n {{workflow.parameters.TEST_NAMESPACE}}
+    #     workingDir: /mnt/vol/Mautic-Subscription-App
+    #     resources:
+    #       limits:
+    #         cpu: 100m
+    #         memory: 512Mi
+    #       requests:
+    #         cpu: 50m
+    #         memory: 256Mi
+    #     volumeMounts:
+    #       - name: work
+    #         mountPath: /mnt/vol
 
   entrypoint: main
   arguments: {}
