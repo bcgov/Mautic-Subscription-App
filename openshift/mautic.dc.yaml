@@ -88,11 +88,16 @@ objects:
                 mountPath: /opt/app-root/etc/Caddyfile
                 readOnly: true
                 subPath: Caddyfile
+              - name: config-volume
+                mountPath: /etc/config
           volumes:
           - name: caddy-${NAME}${SUFFIX}
             configMap:
               defaultMode: 420
               name: caddy-${NAME}${SUFFIX}
+          - name: config-volume
+            configMap:
+              name: test-config
       test: false
       triggers: 
         - type: ConfigChange
