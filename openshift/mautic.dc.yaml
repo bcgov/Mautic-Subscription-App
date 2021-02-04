@@ -177,7 +177,8 @@ parameters:
   required: true
   value: dev
 - description: A name used for all objects
-  displayName: IMAGE_NAMESPACE
-  name: IMAGE_NAMESPACE
+  displayName: TARGET_NAMESPACE
+  name: TAGET_NAMESPACE
   required: true
-  value: de0974-tools
+  value: de0974-dev
+
