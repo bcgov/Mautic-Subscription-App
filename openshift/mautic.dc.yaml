@@ -97,10 +97,10 @@ objects:
             configMap:
               defaultMode: 420
               name: caddy-${NAME}${SUFFIX}
-          - name: config-form-volume
+          - name: form-config-volume
             configMap:
               name: mautic-form-config
-          - name: config-sso-volume
+          - name: sso-config-volume
             configMap:
               name: mautic-sso-config
       test: false
