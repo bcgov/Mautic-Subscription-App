@@ -70,7 +70,7 @@ spec:
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p REACT_APP_SSO_BASE_URL={{workflow.parameters.SSO_BASE_URL}}
             -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
-            -p REACT_APP_SSO_REALM_NAME={{SSO_REALM_NAME}}
+            -p REACT_APP_SSO_REALM_NAME=devhub
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
             oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}};

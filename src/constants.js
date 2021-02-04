@@ -10,18 +10,3 @@ export const SSO_IDP = {
     IDIR: 'idir',
 };
 
-export const SSO_CONFIG = {
-    baseURL: process.env.REACT_APP_SSO_BASE_URL || config.ssoBaseUrl,
-    realmName: process.env.REACT_APP_SSO_REALM_NAME || config.ssoRealmName,
-    clientId: process.env.REACT_APP_SSO_CLIENT_ID || config.ssoClientId,
-    kcIDPHint: null,
-};
-
-export const SUBSCRIPTION_FORM = {
-    subscribeFormName: 'subscribe',
-    unsubscribeFormName: 'unsubscribe',
-    subscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5',
-    unsubscribeActionURL: 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2',
-};
-
-
