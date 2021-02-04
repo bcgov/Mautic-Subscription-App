@@ -178,7 +178,7 @@ parameters:
   value: dev
 - description: A name used for all objects
   displayName: TARGET_NAMESPACE
-  name: TAGET_NAMESPACE
+  name: TARGET_NAMESPACE
   required: true
   value: de0974-dev
 
