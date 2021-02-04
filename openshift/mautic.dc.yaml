@@ -88,17 +88,21 @@ objects:
                 mountPath: /opt/app-root/etc/Caddyfile
                 readOnly: true
                 subPath: Caddyfile
-              - name: config-volume
+              - name: form-config-volume
                 mountPath: /src/config
+              - name: sso-config-volume
+              mountPath: /src/config
           volumes:
           - name: caddy-${NAME}${SUFFIX}
             configMap:
               defaultMode: 420
               name: caddy-${NAME}${SUFFIX}
-          - name: config-volume
+          - name: config-form-volume
             configMap:
-              # name: /api/v1/namespaces/de0974-tools/configmaps/test-config
-              name: test-config
+              name: mautic-form-config
+          - name: config-sso-volume
+            configMap:
+              name: mautic-sso-config
       test: false
       triggers: 
         - type: ConfigChange
