@@ -89,7 +89,7 @@ objects:
                 readOnly: true
                 subPath: Caddyfile
               - name: config-volume
-                mountPath: /etc/config
+                mountPath: /src/config
           volumes:
           - name: caddy-${NAME}${SUFFIX}
             configMap:
