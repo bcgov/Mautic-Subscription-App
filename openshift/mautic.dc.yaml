@@ -77,7 +77,7 @@ objects:
             deploymentconfig: ${NAME}${SUFFIX}
         spec:
           containers:
-            - image: '${IMAGE_NAME}:${IMAGE_TAG}'
+            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
               name: ${NAME}${SUFFIX}
               ports:
                 - containerPort: 2015
