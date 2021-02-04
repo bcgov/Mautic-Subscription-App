@@ -21,12 +21,12 @@ const fetch = (path, method = 'GET') => {
 /**
  * react hook to get our app config from a static path
  */
-export const useConfig = () => {
+export const useConfig = (filePath) => {
   const [ config, setConfig ] = useState(null);
 
   useEffect(() => {
     if(!config) {
-      fetch('/config/form.json').then(response => {
+      fetch(filePath).then(response => {
         setConfig(JSON.parse(response.body))
       });
     }
