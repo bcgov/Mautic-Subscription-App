@@ -40,13 +40,6 @@ objects:
             kind: ImageStreamTag
             name: 'caddy-s2i-builder:latest'
             namespace: ${NAMESPACE}
-          env:
-            - name: 'REACT_APP_SSO_REALM_NAME'
-              value: ${REACT_APP_SSO_REALM_NAME}
-            - name: 'REACT_APP_SSO_CLIENT_ID'
-              value: ${REACT_APP_SSO_CLIENT_ID}
-            - name: 'REACT_APP_SSO_BASE_URL'
-              value: ${REACT_APP_SSO_BASE_URL}
         type: Source
     metadata:
       annotations:
