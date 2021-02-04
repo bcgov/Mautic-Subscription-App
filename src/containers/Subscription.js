@@ -23,7 +23,7 @@ import { useConfig } from '../hooks/useConfig';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  const config = useConfig();
+  const config = useConfig('/config/form.json');
   const userEmail = keycloak.idTokenParsed.email; 
 
   const getformID = ( actionLink ) => {
