@@ -1,10 +1,12 @@
 import Keycloak from 'keycloak-js';
 import { SSO_CONFIG } from './constants.js'
 
+const config = useConfig('/config/sso.json');
+
 const keycloak = new Keycloak({
-  url: `${SSO_CONFIG.baseURL}/auth`,
-  realm: SSO_CONFIG.realmName,
-  clientId: SSO_CONFIG.clientId
+  url: `${config.baseURL}/auth`,
+  realm: config.realmName,
+  clientId: config.clientId
 });
 
 // keycloak.init({ checkLoginIframe: true });
