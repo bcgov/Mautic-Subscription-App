@@ -1,0 +1,5 @@
+{   "baseURL": "https://dev.oidc.gov.bc.ca",
+    "realmName": "devhub",
+    "clientId": "mautic-subscription-app",
+    "kcIDPHint": null
+}
