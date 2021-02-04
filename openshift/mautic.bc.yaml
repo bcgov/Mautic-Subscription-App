@@ -73,10 +73,6 @@ parameters:
   name: NAMESPACE
   required: true
   value: ''
-- description: REACT_APP_SSO_REALM_NAME
-  displayName: REACT_APP_SSO_REALM_NAME
-  name: REACT_APP_SSO_REALM_NAME
-  required: true
 - description: REACT_APP_SSO_CLIENT_ID
   displayName: REACT_APP_SSO_CLIENT_ID
   name: REACT_APP_SSO_CLIENT_ID
