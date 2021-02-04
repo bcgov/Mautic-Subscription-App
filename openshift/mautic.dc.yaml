@@ -97,7 +97,7 @@ objects:
               name: caddy-${NAME}${SUFFIX}
           - name: config-volume
             configMap:
-              name: test-config
+              name: /api/v1/namespaces/de0974-tools/configmaps/test-config
       test: false
       triggers: 
         - type: ConfigChange
