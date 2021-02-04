@@ -1,4 +1,5 @@
 import Keycloak from 'keycloak-js';
+import { useConfig } from '../hooks/useConfig';
 
 const config = useConfig('/config/sso.json');
 
