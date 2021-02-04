@@ -75,7 +75,7 @@ spec:
             | oc apply -f - ; 
             oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}};
             oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
-            de0974-tools/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
+            de0974-dev/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -105,8 +105,8 @@ spec:
             oc process -f openshift/mautic.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
-            -p IMAGE_NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
+            -p TARGET_NAMESPACE=de0974-dev
             -n {{workflow.parameters.DEV_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
