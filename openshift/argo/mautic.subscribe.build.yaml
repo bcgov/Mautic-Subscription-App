@@ -73,7 +73,9 @@ spec:
             -p REACT_APP_SSO_REALM_NAME={{SSO_REALM_NAME}}
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
-            oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}}
+            oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}};
+            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
+            de0974-tools/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
