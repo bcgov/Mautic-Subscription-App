@@ -164,7 +164,6 @@ parameters:
   displayName: Suffix
   name: SUFFIX
   required: true
-  value: -dev
 - description: A name used for all objects
   displayName: IMAGE_NAME
   name: IMAGE_NAME
@@ -179,10 +178,9 @@ parameters:
   displayName: IMAGE_TAG
   name: IMAGE_TAG
   required: true
-  value: dev
 - description: A name used for all objects
   displayName: TARGET_NAMESPACE
   name: TARGET_NAMESPACE
   required: true
-  value: de0974-dev
+
 
