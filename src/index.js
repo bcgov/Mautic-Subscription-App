@@ -25,18 +25,25 @@ import 'bootstrap-css-only/css/bootstrap-reboot.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import './index.css';
 import { ReactKeycloakProvider } from '@react-keycloak/web'
-import keycloak from './keycloak'
+import DynamicKeycloakConfig from './hoc/DynamicKeycloakConfig';
 import serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 
 
 
 ReactDOM.render(
-  <ReactKeycloakProvider initOptions={{ checkLoginIframe: true }} authClient={keycloak}>
-    <BrowserRouter>
-      <App /> 
-    </BrowserRouter>
-  </ReactKeycloakProvider>,
+  <DynamicKeycloakConfig>
+    {(keycloak) => {
+      return (
+        <ReactKeycloakProvider initOptions={{ checkLoginIframe: true }} authClient={keycloak}>
+          <BrowserRouter>
+            <App /> 
+          </BrowserRouter>
+        </ReactKeycloakProvider>
+      )
+    }}
+  </DynamicKeycloakConfig>
+  ,
   document.getElementById('root')
 );
 

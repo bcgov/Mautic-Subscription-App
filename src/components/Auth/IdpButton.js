@@ -29,7 +29,7 @@ const actionForCurrentState = ( keycloak, idp ) => {
 };
 
 const IdpButton = ( { idp } ) => {
-  const { keycloak } = useKeycloak();
+  const { keycloak, initialized } = useKeycloak();
 
   return (
     <button className="auth-button"

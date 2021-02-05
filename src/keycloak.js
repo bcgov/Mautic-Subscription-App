@@ -1,14 +1,12 @@
-import Keycloak from 'keycloak-js';
-import { useConfig } from './hooks/useConfig';
+// import Keycloak from 'keycloak-js';
 
-const config = useConfig('/config/sso.json');
 
-const keycloak = new Keycloak({
-  url: `${config.baseURL}/auth`,
-  realm: config.realmName,
-  clientId: config.clientId
-});
+// const keycloak = new Keycloak({
+//   url: `${config.baseURL}/auth`,
+//   realm: config.realmName,
+//   clientId: config.clientId
+// });
 
-// keycloak.init({ checkLoginIframe: true });
+// // keycloak.init({ checkLoginIframe: true });
 
-export default keycloak;
+// export default keycloak;
