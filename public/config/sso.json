@@ -1,5 +1,5 @@
 {   
-    "url": "https://dev.oidc.gov.bc.ca",
+    "url": "https://dev.oidc.gov.bc.ca/auth",
     "realm": "devhub",
     "clientId": "mautic-subscription-app"
 }
