@@ -15,8 +15,8 @@ spec:
         - - name: re-tag-image 
             template: re-tag-image
             arguments: {}
-        - - name: deploy-mautic-dev
-            template: deploy-mautic-dev
+        - - name: deploy-mautic
+            template: deploy-mautic
             arguments: {}    
 
 
@@ -76,7 +76,7 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
-    - name: deploy-mautic-dev
+    - name: deploy-mautic
       arguments: {}
       inputs: {}
       outputs: {}
@@ -89,11 +89,15 @@ spec:
           - '-c'
         args: 
           - >-
+            oc delete configmap mautic-form-config;
+            oc delete configmap mautic-sso-config;
+            oc create configmap mautic-form-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/form.json;
+            oc create configmap mautic-sso-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/sso.json;
             oc process -f openshift/mautic.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}} 
-            -p IMAGE_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} 
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
+            -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
