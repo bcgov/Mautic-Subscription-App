@@ -72,9 +72,9 @@ spec:
             -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
-            oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}};
+            oc start-build -w {{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}};
             oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
-            de0974-dev/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
+            {{workflow.parameters.DEV_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -108,7 +108,7 @@ spec:
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
-            -p TARGET_NAMESPACE=de0974-dev
+            -p TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}}
             -n {{workflow.parameters.DEV_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
