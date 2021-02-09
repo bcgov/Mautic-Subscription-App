@@ -1,3 +1,5 @@
+// Keeping this code for reference
+
 // import Keycloak from 'keycloak-js';
 
 

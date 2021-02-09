@@ -6,21 +6,6 @@ import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 
-// const subscription = (subscriptionType) => {
-//     var form = document.createElement('form');
-//     form.setAttribute('method', 'post');
-//     form.setAttribute('email','97andrewjun@gmail.com')
-//     if (subscriptionType === 'subscribe'){
-//       form.setAttribute('action', 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1');
-//     } else {
-//       form.setAttribute('action', 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2');
-//     }
-    
-//     document.body.appendChild(form)
-//     form.submit();
-// }
-
-
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
   const config = useConfig('/config/form.json');
