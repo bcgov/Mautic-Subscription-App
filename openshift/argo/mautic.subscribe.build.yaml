@@ -12,8 +12,11 @@ spec:
         - - name: clone
             template: clone
             arguments: {}
-        - - name: build-mautic-subscription-app-tools
-            template: build-mautic-subscription-app-tools
+        - - name: get-keycloak-sa-secret
+            template: get-keycloak-sa-secret
+            arguments: {}
+        - - name: create-keycloak-client
+            template: create-keycloak-client
             arguments: {}
         - - name: deploy-mautic-subscription-app-dev
             template: deploy-mautic-subscription-app-dev
@@ -124,8 +127,6 @@ spec:
             -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
-            -p REACT_APP_SSO_BASE_URL={{workflow.parameters.SSO_BASE_URL}}
-            -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
             oc start-build -w {{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}};
