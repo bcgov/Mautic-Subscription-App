@@ -47,6 +47,65 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
+    - name: get-keycloak-sa-secret
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/openshift/origin-cli:latest'
+        command:
+          - sh
+          - '-c'
+        args:
+          - >-
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} | base64 --decode > SSO_SA_CLIENT_ID.txt;
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} | base64 --decode > SSO_SA_PASSWORD.txt
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
+    - name: create-keycloak-client
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/giantswarm/tiny-tools'
+        command:
+          - sh
+          - '-c'
+        args:
+          - >-
+            NAMESPACE=de0974-dev;
+            KC_URL=https://dev.oidc.gov.bc.ca/auth;
+            KC_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt`;
+            KC_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt`;
+            keycloak-client-creation/kc-create-client.sh
+            
+            jq --arg SSO_SA_CLIENT_ID "$SSO_SA_CLIENT_ID" '.clientId = $SSO_SA_CLIENT_ID' public/config/sso_example.json > public/config/sso.json
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
     - name: build-mautic-subscription-app-tools
       arguments: {}
       inputs: {}
