@@ -4,25 +4,11 @@ import { APP_INFO, SUBSCRIPTION_FORM } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
-
-// const subscription = (subscriptionType) => {
-//     var form = document.createElement('form');
-//     form.setAttribute('method', 'post');
-//     form.setAttribute('email','97andrewjun@gmail.com')
-//     if (subscriptionType === 'subscribe'){
-//       form.setAttribute('action', 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1');
-//     } else {
-//       form.setAttribute('action', 'http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2');
-//     }
-    
-//     document.body.appendChild(form)
-//     form.submit();
-// }
-
+import { useConfig } from '../hooks/useConfig';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-
+  const config = useConfig('/config/form.json');
   const userEmail = keycloak.idTokenParsed.email; 
 
   const getformID = ( actionLink ) => {
@@ -40,22 +26,25 @@ export const Subscription = () => {
         Your email address is <b>{userEmail}</b>.
       </ModalBody>
       <ModalFooter>
+        {config ? (
         <div className="auth-buttons">
-          <form action={SUBSCRIPTION_FORM.subscribeActionURL} method="post">
+          <form action={config.subscribeActionURL} method="post">
             <input className="auth-button" type="submit" value="Subscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.subscribeActionURL)}></input>
+            <input type="hidden" name="mauticform[formId]" value={getformID(config.subscribeActionURL)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
-            <input type="hidden" name="mauticform[formName]" value={SUBSCRIPTION_FORM.subscribeFormName}></input>
+            <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
           </form>
-          <form action={SUBSCRIPTION_FORM.unsubscribeActionURL} method="post">
+          <form action={config.unsubscribeActionURL} method="post">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-            <input type="hidden" name="mauticform[formId]" value={getformID(SUBSCRIPTION_FORM.unsubscribeActionURL)}></input>
+            <input type="hidden" name="mauticform[formId]" value={getformID(config.unsubscribeActionURL)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
-            <input type="hidden" name="mauticform[formName]" value={SUBSCRIPTION_FORM.unsubscribeFormName}></input>
+            <input type="hidden" name="mauticform[formName]" value={config.unsubscribeFormName}></input>
           </form>
         </div>
+        ): <div>loading...</div>
+      }
       </ModalFooter>
     </Modal>
   );

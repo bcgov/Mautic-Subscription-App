@@ -1,0 +1,139 @@
+metadata:
+  name: mautic-subscribe-workflow
+  namespace: de0974-tools
+spec:
+  templates:
+    - name: main
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      steps:
+        - - name: clone
+            template: clone
+            arguments: {}
+        - - name: build-mautic-subscription-app-tools
+            template: build-mautic-subscription-app-tools
+            arguments: {}
+        - - name: deploy-mautic-subscription-app-dev
+            template: deploy-mautic-subscription-app-dev
+            arguments: {}    
+
+    - name: clone
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/alpine/git:v2.26.2'
+        args:
+          - clone
+          - '--depth'
+          - '1'
+          - '--branch'
+          - '{{workflow.parameters.BRANCH}}'
+          - '--single-branch'
+          - '{{workflow.parameters.REPO}}'
+        workingDir: /mnt/vol
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
+    - name: build-mautic-subscription-app-tools
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/openshift/origin-cli:latest'
+        command:
+          - sh
+          - '-c'
+        args:
+          - >-
+            oc process -f openshift/mautic.bc.yaml 
+            -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
+            -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
+            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
+            -p REACT_APP_SSO_BASE_URL={{workflow.parameters.SSO_BASE_URL}}
+            -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
+            -p SUFFIX={{workflow.parameters.SUFFIX}}
+            | oc apply -f - ; 
+            oc start-build -w {{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}};
+            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
+            {{workflow.parameters.DEV_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
+    - name: deploy-mautic-subscription-app-dev
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/openshift/origin-cli:latest'
+        command:
+          - sh
+          - '-c'
+        args: 
+          - >-
+            oc delete configmap mautic-form-config;
+            oc delete configmap mautic-sso-config;
+            oc create configmap mautic-form-config -n {{workflow.parameters.DEV_NAMESPACE}} --from-file=public/config/form.json;
+            oc create configmap mautic-sso-config -n {{workflow.parameters.DEV_NAMESPACE}} --from-file=public/config/sso.json;
+            oc process -f openshift/mautic.dc.yaml 
+            -p SUFFIX={{workflow.parameters.SUFFIX}}
+            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
+            -p TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}}
+            -n {{workflow.parameters.DEV_NAMESPACE}}
+            | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
+  entrypoint: main
+  arguments: {}
+  serviceAccountName: workflow-creator
+  volumeClaimTemplates:
+    - metadata:
+        name: work
+        creationTimestamp: null
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 128Mi
+        storageClassName: netapp-file-standard
+      status: {}
+  imagePullSecrets:
+    - name: dockerhub-secret-mautic

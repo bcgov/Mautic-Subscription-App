@@ -7,10 +7,8 @@ import { Subscription } from './containers/Subscription'
 import { Subscribed } from './containers/Subscribed'
 import { Unsubscribed } from './containers/Unsubscribed'
 import { PrivateRoute } from './utilities/PrivateRoute'
-import { useKeycloak } from '@react-keycloak/web';
 
 function App() {
-
   return (
       <Layout >
         <Switch>

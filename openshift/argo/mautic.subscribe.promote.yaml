@@ -1,5 +1,5 @@
 metadata:
-  name: mautic-subscribe-workflow
+  name: mautic-subscribe-workflow-promote
   namespace: de0974-tools
 spec:
   templates:
@@ -12,15 +12,13 @@ spec:
         - - name: clone
             template: clone
             arguments: {}
-        - - name: build-deploy-mautic-tools
-            template: build-deploy-mautic-tools
+        - - name: re-tag-image 
+            template: re-tag-image
             arguments: {}
-        - - name: deploy-mautic-dev
-            template: deploy-mautic-dev
+        - - name: deploy-mautic
+            template: deploy-mautic
             arguments: {}    
-        - - name: deploy-mautic-test
-            template: deploy-mautic-test
-            arguments: {}  
+
 
     - name: clone
       arguments: {}
@@ -50,7 +48,7 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
-    - name: build-deploy-mautic-tools
+    - name: re-tag-image
       arguments: {}
       inputs: {}
       outputs: {}
@@ -63,15 +61,9 @@ spec:
           - '-c'
         args:
           - >-
-            oc process -f mautic.bc.yaml 
-            -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
-            -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
-            -p REACT_APP_SSO_BASE_URL={{workflow.parameters.SSO_BASE_URL}}
-            -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
-            -p REACT_APP_SSO_REALM_NAME={{SSO_REALM_NAME}}
-            -p SUFFIX={{workflow.parameters.SUFFIX}}
-            | oc apply -f - ; 
-            oc start-build -w mautic-subscription-app{{workflow.parameters.SUFFIX}}
+            echo "tagging image to {{workflow.parameters.TARGET_NAMESPACE}}";
+            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
+            {{workflow.parameters.TARGET_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -84,7 +76,7 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
-    - name: deploy-mautic-dev
+    - name: deploy-mautic
       arguments: {}
       inputs: {}
       outputs: {}
@@ -97,39 +89,17 @@ spec:
           - '-c'
         args: 
           - >-
-            oc process -f mautic.dc.yaml 
+            oc delete configmap mautic-form-config;
+            oc delete configmap mautic-sso-config;
+            oc create configmap mautic-form-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/form.json;
+            oc create configmap mautic-sso-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/sso.json;
+            oc process -f openshift/mautic.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}} 
-            -n {{workflow.parameters.DEV_NAMESPACE}}
-            | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
-        workingDir: /mnt/vol/Mautic-Subscription-App
-        resources:
-          limits:
-            cpu: 100m
-            memory: 512Mi
-          requests:
-            cpu: 50m
-            memory: 256Mi
-        volumeMounts:
-          - name: work
-            mountPath: /mnt/vol
-
-    - name: deploy-mautic-test
-      arguments: {}
-      inputs: {}
-      outputs: {}
-      metadata: {}
-      container:
-        name: ''
-        image: 'docker.io/openshift/origin-cli:latest'
-        command:
-          - sh
-          - '-c'
-        args: 
-          - >-
-            oc process -f mautic.dc.yaml 
-            -p SUFFIX={{workflow.parameters.SUFFIX}} 
-            -n {{workflow.parameters.TEST_NAMESPACE}}
-            | oc apply -f - -n {{workflow.parameters.TEST_NAMESPACE}}
+            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
+            -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
+            -n {{workflow.parameters.TARGET_NAMESPACE}}
+            | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
