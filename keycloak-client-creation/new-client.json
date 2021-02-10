@@ -1,7 +1,7 @@
 {
-    "clientId": "devhub-web-#{PR}",
-    "name": "Devhub Front End App for PR #{PR}",
-    "description": "Devhub Front End Application, temperaily for PR #{PR}",
+    "clientId": "mautic-subscription-app-#{PR}",
+    "name": "Mautic Subscription app for PR #{PR}",
+    "description": "Mautic Subscription Application, temperaily for PR #{PR}",
     "rootUrl": "",
     "surrogateAuthRequired": false,
     "enabled": true,
