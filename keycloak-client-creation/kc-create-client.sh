@@ -9,7 +9,7 @@
 # KC_URL <string>
 # KC_CLIENT_ID <string>
 # KC_CLIENT_SECRET <string>
-set -Eeuo pipefail
+set -euf -o pipefail
 # set -x
 
 if [ "$1" == "" ]; then
