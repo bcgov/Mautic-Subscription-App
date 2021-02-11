@@ -56,10 +56,10 @@ objects:
       creationTimestamp: null
       name: caddy-${NAME}${SUFFIX}
       labels:
-        app: ${NAME}${SUFFIX}
+        app: ${NAME}
         group: ${NAME}
-        deploymentconfig: ${NAME}${SUFFIX}
-        app-name: ${NAME}${SUFFIX}
+        deploymentconfig: ${NAME}
+        app-name: ${NAME}
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     spec:
@@ -110,9 +110,9 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}${SUFFIX}
-        app.kubernetes.io/component: ${NAME}${SUFFIX}
-        app.kubernetes.io/instance: ${NAME}${SUFFIX}
+        app: ${NAME}$
+        app.kubernetes.io/component: ${NAME}$
+        app.kubernetes.io/instance: ${NAME}$
         group: ${NAME}
       name: ${NAME}${SUFFIX}
   - apiVersion: v1
@@ -129,18 +129,18 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}${SUFFIX}
-        app.kubernetes.io/component: ${NAME}${SUFFIX}
-        app.kubernetes.io/instance: ${NAME}${SUFFIX}
+        app: ${NAME}
+        app.kubernetes.io/component: ${NAME}
+        app.kubernetes.io/instance: ${NAME}
       name: ${NAME}${SUFFIX}
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
       creationTimestamp: null
       labels:
-        app: ${NAME}${SUFFIX}
-        app.kubernetes.io/component: ${NAME}${SUFFIX}
-        app.kubernetes.io/instance: ${NAME}${SUFFIX}
+        app: ${NAME}
+        app.kubernetes.io/component: ${NAME}
+        app.kubernetes.io/instance: ${NAME}
       name: ${NAME}${SUFFIX}
     spec:
       host: ""
