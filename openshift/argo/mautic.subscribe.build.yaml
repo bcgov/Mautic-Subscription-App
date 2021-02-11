@@ -90,13 +90,7 @@ spec:
           - '-c'
         args:
           - >-
-            NAMESPACE=de0974-dev;
-            KC_URL=https://dev.oidc.gov.bc.ca/auth;
-            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt`;
-            KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt`;
-            REALM=`devhub`;
-            ls keycloak-client-creation;
-            ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} {{workflow.parameters.REDIRECT_URI}};
+            NAMESPACE=de0974-dev KC_URL=https://dev.oidc.gov.bc.ca/auth KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} {{workflow.parameters.REDIRECT_URI}};
             
             jq --arg SSO_SA_CLIENT_ID "$SSO_SA_CLIENT_ID" '.clientId = $SSO_SA_CLIENT_ID' public/config/sso_example.json > public/config/sso.json
         workingDir: /mnt/vol/Mautic-Subscription-App
