@@ -30,11 +30,11 @@ KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_S
  }
 
 # check if client exists:
-CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "devhub-web-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
+CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
 
 # Remove client:
 if [ "${CLIENT_ID}" != "" ]; then
-    echo "Delete 'devhub-web-$PR_NUMBER' client..."
+    echo "Delete '$NAME-$PR_NUMBER' client..."
     curl -sX DELETE -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients/${CLIENT_ID}"
 fi
 

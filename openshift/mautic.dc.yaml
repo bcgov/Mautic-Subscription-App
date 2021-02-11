@@ -7,10 +7,10 @@ objects:
       creationTimestamp: null
       name: ${NAME}
       labels:
-        app: ${NAME}${SUFFIX}
+        app: ${NAME}
         group: ${NAME}
-        deploymentconfig: ${NAME}${SUFFIX}
-        app-name: ${NAME}${SUFFIX}
+        deploymentconfig: ${NAME}
+        app-name: ${NAME}
     spec:
       lookupPolicy:
         local: false

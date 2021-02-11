@@ -18,6 +18,9 @@ spec:
         - - name: create-keycloak-client
             template: create-keycloak-client
             arguments: {}
+        - - name: build-mautic-subscription-app-tools
+            template: build-mautic-subscription-app-tools
+            arguments: {}    
         - - name: deploy-mautic-subscription-app-dev
             template: deploy-mautic-subscription-app-dev
             arguments: {}    
@@ -63,8 +66,8 @@ spec:
           - '-c'
         args:
           - >-
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} | base64 --decode > SSO_SA_CLIENT_ID.txt;
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} | base64 --decode > SSO_SA_PASSWORD.txt
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools | base64 --decode > SSO_SA_CLIENT_ID.txt;
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt
 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
@@ -91,7 +94,8 @@ spec:
           - '-c'
         args:
           - >-
-            NAMESPACE=de0974-dev KEYCLOAK_URL=https://dev.oidc.gov.bc.ca/auth KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} {{workflow.parameters.REDIRECT_URI}};
+            NAME={{workflow.parameters.NAME}} NAMESPACE={{workflow.parameters.DEV_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub 
+            ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} https://{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}{{workflow.parameters.DEV_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
             
             jq --arg SSO_SA_CLIENT_ID "$SSO_SA_CLIENT_ID" '.clientId = $SSO_SA_CLIENT_ID' public/config/sso_example.json > public/config/sso.json
         workingDir: /mnt/vol/Mautic-Subscription-App
@@ -154,8 +158,8 @@ spec:
           - '-c'
         args: 
           - >-
-            oc delete configmap mautic-form-config;
-            oc delete configmap mautic-sso-config;
+            oc delete configmap mautic-form-config -n {{workflow.parameters.DEV_NAMESPACE}};
+            oc delete configmap mautic-sso-config -n {{workflow.parameters.DEV_NAMESPACE}};
             oc create configmap mautic-form-config -n {{workflow.parameters.DEV_NAMESPACE}} --from-file=public/config/form.json;
             oc create configmap mautic-sso-config -n {{workflow.parameters.DEV_NAMESPACE}} --from-file=public/config/sso.json;
             oc process -f openshift/mautic.dc.yaml 

@@ -26,12 +26,6 @@ REDIRECT_URI="$2"
 
 echo "Request to $KEYCLOAK_URL"
 
-echo $KEYCLOAK_URL
-echo $KEYCLOAK_CLIENT_ID
-echo $KEYCLOAK_CLIENT_SECRET
-echo $REALM_NAME
-echo $PR_NUMBER
-
 # get auth token:
 KEYCLOAK_ACCESS_TOKEN=$(curl --fail -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/auth/realms/$REALM_NAME/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' | jq -r '.access_token')
 
@@ -40,10 +34,10 @@ KEYCLOAK_ACCESS_TOKEN=$(curl --fail -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_C
  }
 
 # check if client exists:
-CLIENT_ID=$(curl --fail -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" | jq -r --arg CLIENT "devhub-web-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
+CLIENT_ID=$(curl --fail -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" | jq -r --arg CLIENT "$NAME-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
 # Create client:
 if [ "${CLIENT_ID}" == "" ]; then
-    echo "Creating 'devhub-web-$PR_NUMBER' client..."
+    echo "Creating '$NAME-$PR_NUMBER' client..."
     payload=$(cat keycloak-client-creation/new-client.json | sed -e "s|#{PR}|${PR_NUMBER}|g")
 
     echo $payload |  sed -e "s|#{REDIRECT_URI}|${REDIRECT_URI}|g" | \
@@ -52,4 +46,4 @@ if [ "${CLIENT_ID}" == "" ]; then
 fi
 
 # return the client-id:
-echo "devhub-web-$PR_NUMBER"
+echo "$NAME-$PR_NUMBER"
