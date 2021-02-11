@@ -110,9 +110,9 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}$
-        app.kubernetes.io/component: ${NAME}$
-        app.kubernetes.io/instance: ${NAME}$
+        app: ${NAME}
+        app.kubernetes.io/component: ${NAME}
+        app.kubernetes.io/instance: ${NAME}
         group: ${NAME}
       name: ${NAME}${SUFFIX}
   - apiVersion: v1
