@@ -92,8 +92,9 @@ spec:
           - >-
             NAMESPACE=de0974-dev;
             KC_URL=https://dev.oidc.gov.bc.ca/auth;
-            KC_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt`;
-            KC_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt`;
+            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt`;
+            KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt`;
+            REALM=`devhub`;
             ls keycloak-client-creation;
             ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} {{workflow.parameters.REDIRECT_URI}};
             
