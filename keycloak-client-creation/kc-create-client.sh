@@ -6,7 +6,7 @@
 # - jq
 # environment variables
 # NAMESPACE <string>
-# KC_URL <string>
+# KEYCLOAK_URL <string>
 # KEYCLOAK_CLIENT_ID <string>
 # KEYCLOAK_CLIENT_SECRET <string>
 # REALM_NAME <string>
