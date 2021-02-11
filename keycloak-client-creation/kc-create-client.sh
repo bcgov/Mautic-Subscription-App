@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Reference:
 # https://www.keycloak.org/docs-api/3.3/rest-api/#_identity_providers_resource

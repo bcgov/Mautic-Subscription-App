@@ -94,8 +94,8 @@ spec:
             KC_URL=https://dev.oidc.gov.bc.ca/auth;
             KC_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt`;
             KC_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt`;
-            ls -la keycloak-client-creation;
-            ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} {{workflow.parameters.REDIRECT_URI}};
+            cd keycloak-client-creation;
+            ./kc-create-client.sh {{workflow.parameters.PR}} {{workflow.parameters.REDIRECT_URI}};
             
             jq --arg SSO_SA_CLIENT_ID "$SSO_SA_CLIENT_ID" '.clientId = $SSO_SA_CLIENT_ID' public/config/sso_example.json > public/config/sso.json
         workingDir: /mnt/vol/Mautic-Subscription-App
