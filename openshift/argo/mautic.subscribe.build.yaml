@@ -66,6 +66,7 @@ spec:
           - '-c'
         args:
           - >-
+            oc delete all,configmap -l app=mautic-subscription-app -n {{workflow.parameters.DEV_NAMESPACE}}
             oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools | base64 --decode > SSO_SA_CLIENT_ID.txt;
             oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt
 
