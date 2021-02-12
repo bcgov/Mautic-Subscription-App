@@ -91,7 +91,7 @@ objects:
               - name: form-config-volume
                 mountPath: /src/form-config
               - name: sso-config-volume
-                mountPath: /src/config/sso.json
+                mountPath: /src/sso-config
           volumes:
           - name: caddy-${NAME}${SUFFIX}
             configMap:
