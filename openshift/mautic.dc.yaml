@@ -90,8 +90,10 @@ objects:
                 subPath: Caddyfile
               - name: form-config-volume
                 mountPath: /src/form-config
+                subPath: form-config
               - name: sso-config-volume
                 mountPath: /src/sso-config
+                subPath: sso-config
           volumes:
           - name: caddy-${NAME}${SUFFIX}
             configMap:
