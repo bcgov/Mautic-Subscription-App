@@ -19,16 +19,16 @@ objects:
     data:
       form.json: |+
         {
-          "subscribeFormName": ${SUBSCRIBE_FORM},
-          "unsubscribeFormName": ${UNSUBSCRIBE_FORM},
-          "subscribeActionURL": ${SUBSCRIBE_URL},
-          "unsubscribeActionURL": ${UNSUBSCRIBE_URL}
+          "subscribeFormName": "${SUBSCRIBE_FORM}",
+          "unsubscribeFormName": "${UNSUBSCRIBE_FORM}",
+          "subscribeActionURL": "${SUBSCRIBE_URL}",
+          "unsubscribeActionURL": "${UNSUBSCRIBE_URL}"
         }
       sso.json: |-
         {
-          "url": ${SSO_URL},
-          "realm": ${SSO_REALM},
-          "clientId": ${SSO_CLIENT_ID}
+          "url": "${SSO_URL}",
+          "realm": "${SSO_REALM}",
+          "clientId": "${SSO_CLIENT_ID}"
         }
     kind: ConfigMap
     metadata:
