@@ -23,6 +23,7 @@ import React from 'react';
 import './AuthModal.css';
 
 const actionForCurrentState = ( keycloak, idp ) => {
+  console.log(keycloak)
   return () =>  {
     keycloak.login({ idpHint: idp, redirectUri: `${window.location.origin}/subscription` });
   }
