@@ -35,6 +35,7 @@ objects:
       creationTimestamp: null
       name: mautic-config
       namespace: ${TARGET_NAMESPACE}
+      app: ${NAME}
   - apiVersion: v1
     data:
       Caddyfile: |
