@@ -3,7 +3,7 @@
 # Reference:
 # https://www.keycloak.org/docs-api/3.3/rest-api/#_identity_providers_resource
 
-set -Eeuo pipefail
+set -euf -o pipefail
 #set -x
 
 if [ "$1" == "" ]; then
