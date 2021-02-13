@@ -1,5 +1,5 @@
 metadata:
-  name: mautic-subscribe-workflow
+  name: mautic-subscribe-build
   namespace: de0974-tools
 spec:
   templates:
