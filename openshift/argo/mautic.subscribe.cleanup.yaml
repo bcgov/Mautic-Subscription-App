@@ -15,9 +15,9 @@ spec:
         - - name: get-keycloak-sa-secret
             template: get-keycloak-sa-secret
             arguments: {}
-        - - name: delete-keycloak-client
-            template: delete-keycloak-client
-            arguments: {}
+        # - - name: delete-keycloak-client
+        #     template: delete-keycloak-client
+        #     arguments: {}
 
     - name: clone
       arguments: {}
@@ -62,7 +62,9 @@ spec:
           - >-
             oc delete all,configmap,pvc,secret -l app={{workflow.parameters.NAME}} -n {{workflow.parameters.TARGET_NAMESPACE}};
             oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools | base64 --decode > SSO_SA_CLIENT_ID.txt;
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt;
+            NAME={{workflow.parameters.NAME}} NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub 
+            ./keycloak-client-creation/kc-delete-client.sh {{workflow.parameters.PR}} {{workflow.parameters.TARGET_NAMESPACE}};
 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
