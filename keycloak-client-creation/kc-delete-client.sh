@@ -32,7 +32,7 @@ KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_S
 
 # check if client exists:
 CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
-
+echo $CLIENT_ID
 # Remove client:
 if [ "${CLIENT_ID}" != "" ]; then
     echo "Delete '$NAME-$PR_NUMBER' client..."
