@@ -33,8 +33,7 @@ KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_S
  _curl(){
      curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$@"
  }
-
-echo 'now check'
+echo $(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json"
 # check if client exists:
 CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
 echo $CLIENT_ID
