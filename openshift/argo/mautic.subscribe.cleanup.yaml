@@ -90,7 +90,7 @@ spec:
         args:
           - >-
             cat SSO_SA_CLIENT_ID.txt | base64 --decode > SSO_SA_CLIENT_ID.txt;
-            cat SSO_SA_PASSWORD.txt | base64 --decode > SSO_SA_CLIENT_ID;
+            cat SSO_SA_PASSWORD.txt | base64 --decode > SSO_SA_PASSWORD.txt;
             NAME={{workflow.parameters.NAME}} NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub 
             ./keycloak-client-creation/kc-delete-client.sh {{workflow.parameters.PR}} {{workflow.parameters.TARGET_NAMESPACE}};
         workingDir: /mnt/vol/Mautic-Subscription-App
