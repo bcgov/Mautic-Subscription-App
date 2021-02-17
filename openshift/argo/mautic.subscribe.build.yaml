@@ -1,5 +1,5 @@
 metadata:
-  name: mautic-subscribe-workflow
+  name: mautic-subscribe-build
   namespace: de0974-tools
 spec:
   templates:
@@ -12,9 +12,15 @@ spec:
         - - name: clone
             template: clone
             arguments: {}
+        - - name: get-keycloak-sa-secret
+            template: get-keycloak-sa-secret
+            arguments: {}
+        - - name: create-keycloak-client
+            template: create-keycloak-client
+            arguments: {}
         - - name: build-mautic-subscription-app-tools
             template: build-mautic-subscription-app-tools
-            arguments: {}
+            arguments: {}    
         - - name: deploy-mautic-subscription-app-dev
             template: deploy-mautic-subscription-app-dev
             arguments: {}    
@@ -47,6 +53,65 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
+    - name: get-keycloak-sa-secret
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/openshift/origin-cli:latest'
+        command:
+          - sh
+          - '-c'
+        args:
+          - >-
+            oc delete all,configmap -l app={{workflow.parameters.NAME}} -n {{workflow.parameters.DEV_NAMESPACE}};
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools | base64 --decode > SSO_SA_CLIENT_ID.txt;
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt
+
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
+    - name: create-keycloak-client
+      arguments: {}
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ''
+        image: 'docker.io/giantswarm/tiny-tools'
+        command:
+          - sh
+          - '-c'
+        args:
+          - >-
+            NAME={{workflow.parameters.NAME}} NAMESPACE={{workflow.parameters.DEV_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub 
+            ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} https://{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}-{{workflow.parameters.DEV_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
+            
+            jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}"' "public/config/sso_example.json" > public/config/sso.json;
+
+        workingDir: /mnt/vol/Mautic-Subscription-App
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        volumeMounts:
+          - name: work
+            mountPath: /mnt/vol
+
     - name: build-mautic-subscription-app-tools
       arguments: {}
       inputs: {}
@@ -65,8 +130,6 @@ spec:
             -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
-            -p REACT_APP_SSO_BASE_URL={{workflow.parameters.SSO_BASE_URL}}
-            -p REACT_APP_SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             | oc apply -f - ; 
             oc start-build -w {{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}};
@@ -97,8 +160,8 @@ spec:
           - '-c'
         args: 
           - >-
-            oc delete configmap mautic-form-config;
-            oc delete configmap mautic-sso-config;
+            oc delete configmap mautic-form-config -n {{workflow.parameters.DEV_NAMESPACE}};
+            oc delete configmap mautic-sso-config -n {{workflow.parameters.DEV_NAMESPACE}};
             oc create configmap mautic-form-config -n {{workflow.parameters.DEV_NAMESPACE}} --from-file=public/config/form.json;
             oc create configmap mautic-sso-config -n {{workflow.parameters.DEV_NAMESPACE}} --from-file=public/config/sso.json;
             oc process -f openshift/mautic.dc.yaml 

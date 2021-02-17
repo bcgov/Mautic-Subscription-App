@@ -73,14 +73,6 @@ parameters:
   name: NAMESPACE
   required: true
   value: ''
-- description: REACT_APP_SSO_CLIENT_ID
-  displayName: REACT_APP_SSO_CLIENT_ID
-  name: REACT_APP_SSO_CLIENT_ID
-  required: true
-- description: REACT_APP_SSO_BASE_URL
-  displayName: REACT_APP_SSO_BASE_URL
-  name: REACT_APP_SSO_BASE_URL
-  required: true 
 - description: A name used for all objects
   displayName: IMAGE_TAG
   name: IMAGE_TAG
