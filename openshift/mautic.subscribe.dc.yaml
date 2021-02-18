@@ -36,6 +36,8 @@ objects:
       name: mautic-config
       namespace: ${TARGET_NAMESPACE}
       app: ${NAME}
+      labels:
+        app: ${NAME}
   - apiVersion: v1
     data:
       Caddyfile: |
