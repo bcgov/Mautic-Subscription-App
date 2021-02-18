@@ -11,9 +11,10 @@ Perform the installion like this:
 `oc process -f install.yaml --param-file=install.param | oc apply -n [NAMESPACE] -f -`
 
 And to allow the service account `workflow-creator` to have edit access to the dev, test, and prod namespaces, run the commands:
-`oc process -f serviceaccount.access.dev.yaml --param-file=install.param --ignore-unknown-parameters=true | oc apply -n de0974-dev -f -`
-`oc process -f serviceaccount.access.test.yaml --param-file=install.param --ignore-unknown-parameters=true | oc apply -n de0974-test -f -`
-`oc process -f serviceaccount.access.prod.yaml --param-file=install.param --ignore-unknown-parameters=true | oc apply -n de0974-prod -f -`
+`oc process -f serviceaccount.access.tools.yaml -p TOOLS_NAMESPACE=[TOOLS_NAMESPACE] | oc apply -n [TOOLS_NAMESPACE] -f -`
+`oc process -f serviceaccount.access.dev.yaml -p TOOLS_NAMESPACE=[TOOLS_NAMESPACE] -p DEV_NAMESPACE=[DEV_NAMESPACE] | oc apply -n [DEV_NAMESPACE] -f -`
+`oc process -f serviceaccount.access.dev.yaml -p TOOLS_NAMESPACE=[TOOLS_NAMESPACE] -p TEST_NAMESPACE=[TEST_NAMESPACE] | oc apply -n [TEST_NAMESPACE] -f -`
+`oc process -f serviceaccount.access.dev.yaml -p TOOLS_NAMESPACE=[TOOLS_NAMESPACE] -p PROD_NAMESPACE=[PROD_NAMESPACE] | oc apply -n [PROD_NAMESPACE] -f -`
 
 This will produce a number of new objects relating to argo in your namespace. 
 Of particular note is the route, which allows you to access the UI.
