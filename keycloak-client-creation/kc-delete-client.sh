@@ -17,12 +17,7 @@ REALM_NAME=devhub
 PR_NUMBER="$1"
 NAMESPACE="$2"
 
-echo $KEYCLOAK_URL
-echo $KEYCLOAK_CLIENT_ID
-echo $KEYCLOAK_CLIENT_SECRET
-echo $REALM_NAME
-echo $NAME
-echo $PR_NUMBER
+# This step is done on the argo workflow
 # # oc get secret for sso service account:
 # KEYCLOAK_CLIENT_ID=$(oc -n $NAMESPACE get secret/sso-service-account --template={{.data.KEYCLOAK_CLIENT_ID}} | base64 --decode)
 # KEYCLOAK_CLIENT_SECRET=$(oc -n $NAMESPACE get secret/sso-service-account --template={{.data.KEYCLOAK_CLIENT_SECRET}} | base64 --decode)
