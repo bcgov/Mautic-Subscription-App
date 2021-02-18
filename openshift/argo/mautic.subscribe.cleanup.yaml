@@ -1,5 +1,5 @@
 metadata:
-  name: mautic-subscribe-promote
+  name: mautic-subscribe-cleanup
   namespace: de0974-tools
 spec:
   templates:
@@ -12,13 +12,12 @@ spec:
         - - name: clone
             template: clone
             arguments: {}
-        - - name: re-tag-image 
-            template: re-tag-image
+        - - name: get-keycloak-sa-secret
+            template: get-keycloak-sa-secret
             arguments: {}
-        - - name: deploy-mautic
-            template: deploy-mautic
-            arguments: {}    
-
+        - - name: delete-keycloak-client
+            template: delete-keycloak-client
+            arguments: {}
 
     - name: clone
       arguments: {}
@@ -48,7 +47,7 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
-    - name: re-tag-image
+    - name: get-keycloak-sa-secret
       arguments: {}
       inputs: {}
       outputs: {}
@@ -61,9 +60,10 @@ spec:
           - '-c'
         args:
           - >-
-            echo "tagging image to {{workflow.parameters.TARGET_NAMESPACE}}";
-            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
-            {{workflow.parameters.TARGET_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
+            oc delete all,configmap,pvc,secret -l app={{workflow.parameters.NAME}} -n {{workflow.parameters.TARGET_NAMESPACE}};
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools > SSO_SA_CLIENT_ID.txt;
+            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools > SSO_SA_PASSWORD.txt
+
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -76,30 +76,23 @@ spec:
           - name: work
             mountPath: /mnt/vol
 
-    - name: deploy-mautic
+    - name: delete-keycloak-client
       arguments: {}
       inputs: {}
       outputs: {}
       metadata: {}
       container:
         name: ''
-        image: 'docker.io/openshift/origin-cli:latest'
+        image: 'docker.io/giantswarm/tiny-tools'
         command:
           - sh
           - '-c'
-        args: 
+        args:
           - >-
-            oc delete configmap mautic-form-config;
-            oc delete configmap mautic-sso-config;
-            oc create configmap mautic-form-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/form.json;
-            oc create configmap mautic-sso-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/sso.json;
-            oc process -f openshift/mautic.subscribe.dc.yaml 
-            -p SUFFIX={{workflow.parameters.SUFFIX}} 
-            -p IMAGE_NAME={{workflow.parameters.NAME}} 
-            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
-            -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
-            -n {{workflow.parameters.TARGET_NAMESPACE}}
-            | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
+            cat SSO_SA_CLIENT_ID.txt | base64 --decode > SSO_SA_CLIENT_ID_DECODED.txt;
+            cat SSO_SA_PASSWORD.txt | base64 --decode > SSO_SA_PASSWORD_DECODED.txt;
+            NAME={{workflow.parameters.NAME}} NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID_DECODED.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD_DECODED.txt` REALM_NAME=devhub 
+            ./keycloak-client-creation/kc-delete-client.sh {{workflow.parameters.PR}} {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -129,4 +122,3 @@ spec:
       status: {}
   imagePullSecrets:
     - name: dockerhub-secret-mautic
-
