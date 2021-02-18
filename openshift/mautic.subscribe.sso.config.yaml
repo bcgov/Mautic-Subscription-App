@@ -9,7 +9,7 @@ objects:
     metadata:
       creationTimestamp: null
       name: sso-service-account
-      namespace: de0974-tools
+      namespace: ${TOOLS_NAMESPACE}
 parameters:
 - description: SSO client id
   displayName: SSO_CLIENT_ID
@@ -18,4 +18,8 @@ parameters:
 - description: SSO secret
   displayName: SSO_SECRET
   name: SSO_SECRET
+  required: true
+- description: A name used for all objects
+  displayName: TOOLS_NAMESPACE
+  name: TOOLS_NAMESPACE
   required: true
