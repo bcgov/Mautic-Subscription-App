@@ -127,7 +127,7 @@ spec:
           - >-
             oc process -f openshift/mautic.subscribe.bc.yaml 
             -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
-            -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
+            -p TOOLS_NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p SUFFIX={{workflow.parameters.SUFFIX}}
