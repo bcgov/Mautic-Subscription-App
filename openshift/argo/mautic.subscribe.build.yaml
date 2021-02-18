@@ -170,7 +170,7 @@ spec:
             -p UNSUBSCRIBE_FORM={{workflow.parameters.UNSUBSCRIBE_FORM}}
             -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
-            -p SSO_URL={{workflow.parameters.SSO_URL}}
+            -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
             -p SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
             -n {{workflow.parameters.DEV_NAMESPACE}}

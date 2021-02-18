@@ -26,7 +26,7 @@ objects:
         }
       sso.json: |-
         {
-          "url": "${SSO_URL}",
+          "url": "${KEYCLOAK_URL}/auth",
           "realm": "${SSO_REALM}",
           "clientId": "${SSO_CLIENT_ID}"
         }
@@ -214,9 +214,9 @@ parameters:
   displayName: UNSUBSCRIBE_URL
   name: UNSUBSCRIBE_URL
   required: true
-- description: SSO URL
-  displayName: SSO_URL
-  name: SSO_URL
+- description: Keycloak URL
+  displayName: KEYCLOAK_URL
+  name: KEYCLOAK_URL
   required: true
 - description: SSO REALM
   displayName: SSO_REALM
