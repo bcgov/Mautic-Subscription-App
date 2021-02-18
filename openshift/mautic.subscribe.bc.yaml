@@ -45,6 +45,7 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
+        app: ${NAME}
         build: ${NAME}${SUFFIX}
       name: ${NAME}${SUFFIX}
 parameters:
@@ -57,7 +58,6 @@ parameters:
   displayName: Suffix
   name: SUFFIX
   required: true
-  value: -dev
 - description: Github repository URL
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
@@ -77,7 +77,6 @@ parameters:
   displayName: IMAGE_TAG
   name: IMAGE_TAG
   required: true
-  value: dev
 - description: A name used for all objects
   displayName: IMAGE_NAME
   name: IMAGE_NAME

@@ -160,12 +160,19 @@ spec:
           - '-c'
         args: 
           - >-
-            oc delete configmap mautic-form-config;
-            oc process -f openshift/mautic.subscribe.dc.yaml 
+            oc delete configmap mautic-config;
+            oc process -f openshift/mautic.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}}
+            -p SUBSCRIBE_FORM={{workflow.parameters.SUBSCRIBE_FORM}}
+            -p UNSUBSCRIBE_FORM={{workflow.parameters.UNSUBSCRIBE_FORM}}
+            -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
+            -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
+            -p SSO_URL={{workflow.parameters.SSO_URL}}
+            -p SSO_REALM={{workflow.parameters.SSO_REALM}}
+            -p SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
             -n {{workflow.parameters.DEV_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App

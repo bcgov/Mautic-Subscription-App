@@ -89,8 +89,6 @@ spec:
           - '-c'
         args: 
           - >-
-            oc delete configmap mautic-form-config;
-            oc delete configmap mautic-sso-config;
             oc create configmap mautic-form-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/form.json;
             oc create configmap mautic-sso-config -n {{workflow.parameters.TARGET_NAMESPACE}} --from-file=public/config/sso.json;
             oc process -f openshift/mautic.subscribe.dc.yaml 
