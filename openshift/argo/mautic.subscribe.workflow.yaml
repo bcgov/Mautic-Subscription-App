@@ -71,7 +71,7 @@ spec:
           - '-c'
         args:
           - >-
-            oc process -f mautic.bc.yaml 
+            oc process -f mautic.subscribe.bc.yaml 
             -p SOURCE_REPOSITORY_REF=improvements
             -p NAMESPACE=de0974-tools 
             -p REACT_APP_SSO_BASE_URL=https://dev.oidc.gov.bc.ca 
@@ -105,7 +105,7 @@ spec:
           - '-c'
         args: 
           - >-
-            oc process -f mautic.dc.yaml 
+            oc process -f mautic.subscribe.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}} 
             -n de0974-dev 
             | oc apply -f - -n de0974-dev
@@ -134,7 +134,7 @@ spec:
           - '-c'
         args: 
           - >-
-            oc process -f mautic.dc.yaml 
+            oc process -f mautic.subscribe.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}} 
             -n de0974-test 
             | oc apply -f - -n de0974-test

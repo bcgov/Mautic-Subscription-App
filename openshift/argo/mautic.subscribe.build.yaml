@@ -60,7 +60,7 @@ spec:
           - '-c'
         args:
           - >-
-            oc process -f openshift/mautic.bc.yaml 
+            oc process -f openshift/mautic.subscribe.bc.yaml 
             -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
             -p NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
@@ -98,7 +98,7 @@ spec:
         args: 
           - >-
             oc delete configmap mautic-form-config;
-            oc process -f openshift/mautic.dc.yaml 
+            oc process -f openshift/mautic.subscribe.dc.yaml 
             -p SUFFIX={{workflow.parameters.SUFFIX}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
