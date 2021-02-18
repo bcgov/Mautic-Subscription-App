@@ -39,7 +39,7 @@ objects:
           from:
             kind: ImageStreamTag
             name: 'caddy-s2i-builder:latest'
-            namespace: ${NAMESPACE}
+            namespace: ${TOOLS_NAMESPACE}
         type: Source
     metadata:
       annotations:
@@ -68,9 +68,9 @@ parameters:
   name: SOURCE_REPOSITORY_REF
   required: true
   value: ''
-- description: Namespace name
-  displayName: NAMESPACE
-  name: NAMESPACE
+- description: Tools namespace name
+  displayName: TOOLS_NAMESPACE
+  name: TOOLS_NAMESPACE
   required: true
   value: ''
 - description: A name used for all objects
