@@ -6,11 +6,15 @@
 set -euf -o pipefail
 #set -x
 
-if [ $PR == "" ]; then
-    echo "Skip this step in test or prod enviroments"
+if [ echo PR | grep '-test' ]; then
+    echo "This is test"
     exit 0
 fi
 
+if [ echo PR | grep '-prod' ]; then
+    echo "This is test"
+    exit 0
+fi
 echo $PR
 
 # This step is done on the argo workflow
