@@ -177,7 +177,6 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: mautic-subscription-app
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
@@ -186,7 +185,6 @@ parameters:
   displayName: IMAGE_NAME
   name: IMAGE_NAME
   required: true
-  value: mautic-subscription-app
 - description: A name used for all objects
   displayName: IMAGE_REGISTRY
   name: IMAGE_REGISTRY
