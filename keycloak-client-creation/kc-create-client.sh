@@ -13,13 +13,8 @@
 set -euf -o pipefail
 # set -x
 
-if [ echo $1 | grep '-test' ]; then
-    echo "This is test"
-    exit 0
-fi
-
-if [ echo $1 | grep '-prod' ]; then
-    echo "This is test"
+if [ "$1" == "" ]; then
+    echo "Skip this step in test or prod enviroments"
     exit 0
 fi
 
