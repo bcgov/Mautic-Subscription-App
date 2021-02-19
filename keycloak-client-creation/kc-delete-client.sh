@@ -6,12 +6,12 @@
 set -euf -o pipefail
 #set -x
 
-if [ echo PR | grep '-test' ]; then
+if [ echo $TARGET_NAMESPACE | grep '-test' ]; then
     echo "This is test"
     exit 0
 fi
 
-if [ echo PR | grep '-prod' ]; then
+if [ echo $TARGET_NAMESPACE | grep '-prod' ]; then
     echo "This is test"
     exit 0
 fi
