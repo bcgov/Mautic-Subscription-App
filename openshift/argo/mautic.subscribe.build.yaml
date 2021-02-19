@@ -174,7 +174,7 @@ spec:
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
             -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
-            -p SSO_CLIENT_ID={{workflow.parameters.SSO_CLIENT_ID}}
+            -p SSO_CLIENT_ID={{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}
             -n {{workflow.parameters.DEV_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
