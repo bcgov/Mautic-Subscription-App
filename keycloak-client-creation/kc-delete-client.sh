@@ -29,7 +29,7 @@ CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" 
 echo $CLIENT_ID
 # Remove client:
 if [ "${CLIENT_ID}" != "" ]; then
-    echo "Delete '$NAME-$PR_NUMBER' client..."
+    echo "Delete '$NAME-$PR' client..."
     curl -sX DELETE -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients/${CLIENT_ID}"
 fi
 
