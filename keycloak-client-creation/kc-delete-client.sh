@@ -6,16 +6,9 @@
 set -euf -o pipefail
 #set -x
 
-if [ echo $TARGET_NAMESPACE | grep -e '-test' ]; then
-    echo "This is test"
-    exit 0
+if echo $TARGET_NAMESPACE | grep -e '-test' -e '-prod' 
+    then exit 0
 fi
-
-if [ echo $TARGET_NAMESPACE | grep -e '-prod' ]; then
-    echo "This is test"
-    exit 0
-fi
-echo $PR
 
 # This step is done on the argo workflow
 # # oc get secret for sso service account:
