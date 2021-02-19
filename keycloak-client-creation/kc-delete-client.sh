@@ -12,7 +12,6 @@ if [ $PR == "" ]; then
 fi
 
 echo $PR
-echo $TEST_RANDOM
 
 # This step is done on the argo workflow
 # # oc get secret for sso service account:
