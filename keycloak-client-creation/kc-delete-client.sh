@@ -6,14 +6,11 @@
 set -euf -o pipefail
 #set -x
 
-if [ "$1" == "" ]; then
+if [ $PR == "" ]; then
     echo "Skip this step in test or prod enviroments"
     exit 0
 fi
 
-# get sso variables:
-PR_NUMBER="$1"
-NAMESPACE="$2"
 
 # This step is done on the argo workflow
 # # oc get secret for sso service account:
@@ -30,7 +27,7 @@ KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_S
  }
 echo $(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json")
 # check if client exists:
-CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
+CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR" '.[] | select(.clientId==$CLIENT) | .id')
 echo $CLIENT_ID
 # Remove client:
 if [ "${CLIENT_ID}" != "" ]; then
