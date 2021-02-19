@@ -96,8 +96,9 @@ spec:
           - '-c'
         args:
           - >-
-            NAME={{workflow.parameters.NAME}} NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub 
-            ./keycloak-client-creation/kc-create-client.sh {{workflow.parameters.PR}} https://{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}-{{workflow.parameters.TARGET_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
+            NAME={{workflow.parameters.NAME}} TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} 
+            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME=devhub PR={{workflow.parameters.PR}}
+            ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}-{{workflow.parameters.DEV_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
             
             jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}"' "public/config/sso_example.json" > public/config/sso.json;
 
