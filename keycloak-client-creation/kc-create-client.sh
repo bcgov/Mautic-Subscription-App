@@ -5,7 +5,7 @@
 # dependancies
 # - jq
 # environment variables
-# NAMESPACE <string>
+# TARGET_NAMESPACE <string>
 # KEYCLOAK_URL <string>
 # KEYCLOAK_CLIENT_ID <string>
 # KEYCLOAK_CLIENT_SECRET <string>
