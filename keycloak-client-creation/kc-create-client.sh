@@ -35,7 +35,7 @@ CLIENT_ID=$(curl --fail -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/cli
 if [ "${CLIENT_ID}" == "" ]; then
     echo "Creating '$NAME-$PR' client..."
     payload=$(cat keycloak-client-creation/new-client.json | sed -e "s|#{PR}|${PR}|g")
-
+    payload=$(echo payload | sed -e "s|#{NAME}|${NAME}|g")
     echo $payload |  sed -e "s|#{REDIRECT_URI}|${REDIRECT_URI}|g" | \
    
     curl --fail -i -sX POST -d '@-' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients"
