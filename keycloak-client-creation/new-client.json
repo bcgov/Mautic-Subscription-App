@@ -1,5 +1,5 @@
 {
-    "clientId": "mautic-subscription-app-#{PR}",
+    "clientId": "mautic-subscription-#{PR}",
     "name": "Mautic Subscription app for PR #{PR}",
     "description": "Mautic Subscription Application, temperaily for PR #{PR}",
     "rootUrl": "",
