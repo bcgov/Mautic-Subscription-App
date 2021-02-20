@@ -1,6 +1,6 @@
-## Setting up Mautic on Openshift
+## Setting up Mautic Subscription App on Openshift
 
-To Run:
+To use Argo, check out the [README](./openshift/argo/README.md) at openshift/argo.
 
 1. **Process and apply the mariadb secret.yaml**
 
