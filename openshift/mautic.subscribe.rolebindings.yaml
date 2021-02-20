@@ -6,7 +6,7 @@ objects:
     kind: RoleBinding
     metadata:
       name: system:image-puller-dev
-      namespace: ${NAMESPACE}-tools
+      namespace: ${LICENSE_PLATE}-tools
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -14,13 +14,13 @@ objects:
     subjects:
     - kind: ServiceAccount
       name: default
-      namespace: ${NAMESPACE}-dev
+      namespace: ${LICENSE_PLATE}-dev
 
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
       name: system:image-puller-test
-      namespace: ${NAMESPACE}-tools
+      namespace: ${LICENSE_PLATE}-tools
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -28,13 +28,13 @@ objects:
     subjects:
     - kind: ServiceAccount
       name: default
-      namespace: ${NAMESPACE}-test
+      namespace: ${LICENSE_PLATE}-test
 
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
       name: system:image-puller-prod
-      namespace: ${NAMESPACE}-tools
+      namespace: ${LICENSE_PLATE}-tools
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -42,10 +42,10 @@ objects:
     subjects:
     - kind: ServiceAccount
       name: default
-      namespace: ${NAMESPACE}-prod
+      namespace: ${LICENSE_PLATE}-prod
 
 parameters:
-- description: Namespace name
-  displayName: NAMESPACE
-  name: NAMESPACE
+- description: Licenseplate name
+  displayName: LICENSE_PLATE
+  name: LICENSE_PLATE
   required: true
