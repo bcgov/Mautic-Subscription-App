@@ -98,9 +98,9 @@ spec:
           - >-
             NAME={{workflow.parameters.NAME}} TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} 
             KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.REALM_NAME}} 
-            ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}-{{workflow.parameters.TARGET_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
+            ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}-{{workflow.parameters.TARGET_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
             
-            jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}"' "public/config/sso_example.json" > public/config/sso.json;
+            jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}"' "public/config/sso_example.json" > public/config/sso.json;
 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
@@ -155,7 +155,6 @@ spec:
           - >-
             oc delete configmap mautic-config;
             oc process -f openshift/mautic.subscribe.dc.yaml 
-            -p SUFFIX={{workflow.parameters.SUFFIX}}
             -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
@@ -165,7 +164,7 @@ spec:
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
             -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
-            -p SSO_CLIENT_ID={{workflow.parameters.NAME}}{{workflow.parameters.SUFFIX}}
+            -p SSO_CLIENT_ID={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App

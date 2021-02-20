@@ -77,7 +77,7 @@ objects:
     kind: ConfigMap
     metadata:
       creationTimestamp: null
-      name: caddy-${NAME}${SUFFIX}
+      name: caddy-${NAME}-${IMAGE_TAG}
       labels:
         app: ${NAME}
         group: ${NAME}
@@ -88,7 +88,7 @@ objects:
     spec:
       replicas: 1
       selector:
-        deploymentconfig: ${NAME}${SUFFIX}
+        deploymentconfig: ${NAME}-${IMAGE_TAG}
       strategy:
         resources: {}
       template:
@@ -97,27 +97,27 @@ objects:
             openshift.io/generated-by: OpenShiftNewApp
           creationTimestamp: null
           labels:
-            deploymentconfig: ${NAME}${SUFFIX}
+            deploymentconfig: ${NAME}-${IMAGE_TAG}
         spec:
           containers:
             - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
-              name: ${NAME}${SUFFIX}
+              name: ${NAME}-${IMAGE_TAG}
               ports:
                 - containerPort: 2015
                   protocol: TCP
               resources: {}
               volumeMounts:
-              - name: caddy-${NAME}${SUFFIX}
+              - name: caddy-${NAME}-${IMAGE_TAG}
                 mountPath: /opt/app-root/etc/Caddyfile
                 readOnly: true
                 subPath: Caddyfile
               - name: config-volume
                 mountPath: /opt/app-root/src/config
           volumes:
-          - name: caddy-${NAME}${SUFFIX}
+          - name: caddy-${NAME}-${IMAGE_TAG}
             configMap:
               defaultMode: 420
-              name: caddy-${NAME}${SUFFIX}
+              name: caddy-${NAME}-${IMAGE_TAG}
           - name: config-volume
             configMap:
               name: mautic-config
@@ -132,7 +132,7 @@ objects:
         app.kubernetes.io/component: ${NAME}
         app.kubernetes.io/instance: ${NAME}
         group: ${NAME}
-      name: ${NAME}${SUFFIX}
+      name: ${NAME}-${IMAGE_TAG}
   - apiVersion: v1
     kind: Service
     spec:
@@ -142,7 +142,7 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${NAME}${SUFFIX}
+        deploymentconfig: ${NAME}-${IMAGE_TAG}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
@@ -150,7 +150,7 @@ objects:
         app: ${NAME}
         app.kubernetes.io/component: ${NAME}
         app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}${SUFFIX}
+      name: ${NAME}-${IMAGE_TAG}
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
@@ -159,14 +159,14 @@ objects:
         app: ${NAME}
         app.kubernetes.io/component: ${NAME}
         app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}${SUFFIX}
+      name: ${NAME}-${IMAGE_TAG}
     spec:
       host: ""
       port:
         targetPort: 2015-tcp
       to:
         kind: ""
-        name: ${NAME}${SUFFIX}
+        name: ${NAME}-${IMAGE_TAG}
         weight: null
       tls:
         termination: Edge
@@ -176,10 +176,6 @@ parameters:
 - description: A name used for all objects
   displayName: Name
   name: NAME
-  required: true
-- description: A name suffix used for all objects
-  displayName: Suffix
-  name: SUFFIX
   required: true
 - description: A name used for all objects
   displayName: IMAGE_NAME
