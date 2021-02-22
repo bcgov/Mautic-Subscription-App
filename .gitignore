@@ -20,7 +20,7 @@
 .env
 .eslintcache
 infra-process-apply-template
-openshift/openshift.param
+/openshift/openshift.param
 
 npm-debug.log*
 yarn-debug.log*
