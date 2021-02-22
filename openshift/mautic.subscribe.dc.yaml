@@ -127,7 +127,7 @@ objects:
       labels:
         app: ${NAME}
         name: ${NAME}-${IMAGE_TAG}
-      name: ${NAME}-pr${IMAGE_TAG}
+      name: ${NAME}-${IMAGE_TAG}
   - apiVersion: v1
     kind: Service
     spec:
