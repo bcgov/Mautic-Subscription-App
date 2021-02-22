@@ -10,8 +10,8 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: ${NAME}
-        group: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
+        app: ${NAME}
       name: ${NAME}
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
@@ -46,7 +46,7 @@ objects:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
         app: ${NAME}
-        build: ${NAME}-${IMAGE_TAG}
+        name: ${NAME}-${IMAGE_TAG}
       name: ${NAME}-${IMAGE_TAG}
 parameters:
 - description: A name used for all objects

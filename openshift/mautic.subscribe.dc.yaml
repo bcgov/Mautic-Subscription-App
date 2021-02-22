@@ -8,9 +8,7 @@ objects:
       name: ${NAME}
       labels:
         app: ${NAME}
-        group: ${NAME}
-        deploymentconfig: ${NAME}
-        app-name: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
     spec:
       lookupPolicy:
         local: false
@@ -38,6 +36,7 @@ objects:
       app: ${NAME}
       labels:
         app: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
   - apiVersion: v1
     data:
       Caddyfile: |
@@ -80,9 +79,7 @@ objects:
       name: caddy-${NAME}-${IMAGE_TAG}
       labels:
         app: ${NAME}
-        group: ${NAME}
-        deploymentconfig: ${NAME}
-        app-name: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     spec:
@@ -129,9 +126,7 @@ objects:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
         app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-        group: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
       name: ${NAME}-${IMAGE_TAG}
   - apiVersion: v1
     kind: Service
@@ -148,8 +143,7 @@ objects:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
         app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
       name: ${NAME}-${IMAGE_TAG}
   - apiVersion: route.openshift.io/v1
     kind: Route
@@ -157,8 +151,7 @@ objects:
       creationTimestamp: null
       labels:
         app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
+        name: ${NAME}-${IMAGE_TAG}
       name: ${NAME}-${IMAGE_TAG}
     spec:
       host: ""
