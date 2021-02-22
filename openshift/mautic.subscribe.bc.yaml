@@ -20,7 +20,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: '${IMAGE_NAME}:${IMAGE_TAG}'
+          name: '${NAME}:${IMAGE_TAG}'
       postCommit: {}
       resources: 
         requests:
@@ -71,8 +71,4 @@ parameters:
 - description: A name used for all objects
   displayName: IMAGE_TAG
   name: IMAGE_TAG
-  required: true
-- description: A name used for all objects
-  displayName: IMAGE_NAME
-  name: IMAGE_NAME
   required: true
