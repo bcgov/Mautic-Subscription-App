@@ -60,8 +60,8 @@ spec:
           - '-c'
         args:
           - >-
-            oc delete all,configmap,pvc,secret,service -l app-name={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}} -n {{workflow.parameters.TARGET_NAMESPACE}};
-            oc delete imagestream {{workflow.parameters.NAME}};
+            oc delete all,configmap,pvc,secret,service -l app-name={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}} -n {{workflow.parameters.TARGET_NAMESPACE}};
+            oc delete imagestream {{workflow.parameters.APP_NAME}};
             oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools > SSO_SA_CLIENT_ID.txt;
             oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools > SSO_SA_PASSWORD.txt
 
@@ -92,7 +92,7 @@ spec:
           - >-
             cat SSO_SA_CLIENT_ID.txt | base64 --decode > SSO_SA_CLIENT_ID_DECODED.txt;
             cat SSO_SA_PASSWORD.txt | base64 --decode > SSO_SA_PASSWORD_DECODED.txt;
-            NAME={{workflow.parameters.NAME}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID_DECODED.txt` 
+            NAME={{workflow.parameters.APP_NAME}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID_DECODED.txt` 
             KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD_DECODED.txt` REALM_NAME={{workflow.parameters.REALM_NAME}} TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
             PR={{workflow.parameters.IMAGE_TAG}}
             ./keycloak-client-creation/kc-delete-client.sh

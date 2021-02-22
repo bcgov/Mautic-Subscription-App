@@ -10,9 +10,9 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        name: ${NAME}-${IMAGE_TAG}
-        app: ${NAME}
-      name: ${NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+      name: ${APP_NAME}
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
     spec:
@@ -20,7 +20,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: '${NAME}:${IMAGE_TAG}'
+          name: '${APP_NAME}:${IMAGE_TAG}'
       postCommit: {}
       resources: 
         requests:
@@ -45,13 +45,13 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        app: ${NAME}
-        name: ${NAME}-${IMAGE_TAG}
-      name: ${NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}
 parameters:
 - description: A name used for all objects
-  displayName: Name
-  name: NAME
+  displayName: App Name
+  name: APP_NAME
   required: true
 - description: Github repository URL
   displayName: SOURCE_REPOSITORY_URL

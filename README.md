@@ -69,34 +69,54 @@ the service account password can be found labelled as `secret` under the credent
 Now argo should be set up to run the workflows.
 #### Build and Deploy
 To build the subscription app in the tools namespace and deploy to the dev namespace, run the command:
-`argo submit openshift/argo/mautic.subscribe.build.yaml -p PR=pr-[pr_number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p DEV_NAMESPACE=de0974-dev -p NAME=[app-name] -p TOOLS_NAMESPACE=[tools-namespace] -p HOST_ADDRESS=[host-address]  -p KEYCLOAK_URL=[keycloak-url] -p SUBSCRIBE_FORM=[subscribe-form-name]-p UNSUBSCRIBE_FORM=[unsubscribe-form-name]-p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url]`
+`argo submit openshift/argo/mautic.subscribe.build.yaml -p PR=pr-[pr_number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p DEV_NAMESPACE=de0974-dev -p APP_NAME=[app-name] -p TOOLS_NAMESPACE=[tools-namespace] -p HOST_ADDRESS=[host-address]  -p KEYCLOAK_URL=[keycloak-url] -p SUBSCRIBE_FORM=[subscribe-form-name]-p UNSUBSCRIBE_FORM=[unsubscribe-form-name]-p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url]`
 
 - Example: 
 
-    `argo submit openshift/argo/mautic.subscribe.build.yaml -p PR=pr-1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p DEV_NAMESPACE=de0974-dev  -p NAME=mautic-subscription -p IMAGE_TAG=1 -p TOOLS_NAMESPACE=de0974-tools -p HOST_ADDRESS=apps.silver.devops.gov.bc.ca  -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2  -p SSO_REALM=devhub`
+    `argo submit openshift/argo/mautic.subscribe.build.yaml -p PR=pr-1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p DEV_NAMESPACE=de0974-dev  -p APP_NAME=mautic-subscription -p IMAGE_TAG=1 -p TOOLS_NAMESPACE=de0974-tools -p HOST_ADDRESS=apps.silver.devops.gov.bc.ca  -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2  -p SSO_REALM=devhub`
 
 
 To promote the app in higher environments, run the command:
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=[pr-number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p NAME=[app-name] -p IMAGE_TAG=[environment-name] -p TOOLS_NAMESPACE=[tools-namespace] -p HOST_ADDRESS=[host-address] -p KEYCLOAK_URL=[keycloak-url] -p SUBSCRIBE_FORM=[subscribe-form-name]-p UNSUBSCRIBE_FORM=[unsubscribe-form-name]-p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url]`
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=[pr-number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p APP_NAME=[app-name] -p IMAGE_TAG=[environment-name] -p TOOLS_NAMESPACE=[tools-namespace] -p HOST_ADDRESS=[host-address] -p KEYCLOAK_URL=[keycloak-url] -p SUBSCRIBE_FORM=[subscribe-form-name]-p UNSUBSCRIBE_FORM=[unsubscribe-form-name]-p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url]`
 
 - Example promoting the app to the test namespace: 
 
-    `argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=pr-1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p NAME=mautic-subscription -p IMAGE_TAG=test -p TOOLS_NAMESPACE=de0974-tools -p HOST_ADDRESS=apps.silver.devops.gov.bc.ca -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2`
+    `argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=pr-1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p APP_NAME=mautic-subscription -p IMAGE_TAG=test -p TOOLS_NAMESPACE=de0974-tools -p HOST_ADDRESS=apps.silver.devops.gov.bc.ca -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2`
 
 #### Cleanup
 
 To cleanup the artifacts in a namespace, run the command:
-`argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=[image-tag] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p NAME=[app-name]-p KEYCLOAK_URL=[keycloak-url]`
+`argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=[image-tag] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p APP_NAME=[app-name]-p KEYCLOAK_URL=[keycloak-url]`
 
 - Example cleaning up the dev namespace:
 
-    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
 
 - Example cleaning up the test namespace:
 
-    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=test -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p NAME=mautic-subscription -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=test -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
 
 ## Using openshift commands
+#### Setting up openshift parameters
+Fill out the values for the given parameter file in openshift/openshift-param.
+Example:
+```
+NAME=mautic-subscription
+SOURCE_REPOSITORY_URL=https://github.com/bcgov/Mautic-Subscription-App
+SOURCE_REPOSITORY_REF=clean-state
+TOOLS_NAMESPACE=de0974-tools
+DEV_NAMESPACE=de0974-dev
+TEST_NAMESPACE=de0974-test
+PROD_NAMESPACE=de0974-prod
+IMAGE_TAG=pr2
+IMAGE_REGISTRY=image-registry.openshift-image-registry.svc:5000
+SUBSCRIBE_FORM=subscribe
+UNSUBSCRIBE_FORM=unsubscribe
+SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5
+UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2
+KEYCLOAK_URL=https://dev.oidc.gov.bc.ca
+SSO_REALM=devhub
+```
 #### Setting up keycloak clients
 For each deployment in the dev namespace there must be a keycloak client created for it. The keycloak Client ID should match the deployment config name.
 
