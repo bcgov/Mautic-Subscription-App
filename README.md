@@ -45,12 +45,15 @@ To promote the app in higher environments, run the command:
 #### Cleanup
 
 To cleanup the artifacts in a namespace, run the command:
-`argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p PR=[pr-number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p NAME=[app-name]-p KEYCLOAK_URL=[keycloak-url]`
+`argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=[image-tag] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p NAME=[app-name]-p KEYCLOAK_URL=[keycloak-url]`
 
 - Example cleaning up the dev namespace:
 
-    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p PR=1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=1 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
 
+- Example cleaning up the test namespace:
+
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=test -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p NAME=mautic-subscription -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
 
 --------------
 Change cleanup code to only delete pr in dev, and test/prod in test/prod
