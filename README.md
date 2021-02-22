@@ -132,5 +132,3 @@ To clean up a deployment and its artifact in a namespace, run the command:
 
 Example:
 `oc delete all,configmap,pvc,secret,service -l app-name=mautic-subscription-PR1 -n de0974-dev`
-
-            oc delete all,configmap,pvc,secret,service -l app-name={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}} -n {{workflow.parameters.TARGET_NAMESPACE}};
