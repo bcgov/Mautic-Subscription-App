@@ -97,24 +97,40 @@ To cleanup the artifacts in a namespace, run the command:
 
 
 ## Using openshift commands
-#### Creating the build
-Create the build using the command:
-oc process -f openshift/mautic.subscribe.bc.yaml -p NAME=[app-name] -p SOURCE_REPOSITORY_REF=[git-brach] -p TOOLS_NAMESPACE=[tools-namespace] -p IMAGE_TAG=[image-tag] | oc apply -f - 
-
-#### Deploying the app
-To deploy the app in the dev/test/prod namespace run the command:
-`oc tag [tools-namespace]/[app-name]:[image-tag] [target-namespace]/[app-name]:[image-tag]`
-
-Note for best practice, the pr number can be used as the image tag in the dev namespace but in the test/prod namespaces the image tag should be test/prod
-
-Example to deploy the app in the dev namespace:
-`oc tag de0974-tools/mautic-subscription:1 de0974-dev/mautic-subscription:1`
-
-Example to deploy the app in the test namespace:
-`oc tag de0974-tools/mautic-subscription:1 de0974-dev/mautic-subscription:test`
-
 #### Setting up keycloak clients
 For each deployment in the dev namespace there must be a keycloak client created for it.
 
 For the test and prod namespaces, one keycloak client for each of the namespaces must be created.
 
+
+#### Creating the build
+Create the build using the command:
+oc process -f openshift/mautic.subscribe.bc.yaml -p NAME=[app-name] -p SOURCE_REPOSITORY_REF=[git-brach] -p TOOLS_NAMESPACE=[tools-namespace] -p IMAGE_TAG=[image-tag] | oc apply -f - 
+
+#### Deploying the app
+Before deploying the app in the dev/test/prod namespaces run the following command to retag the image from the tools namespace:
+`oc tag [tools-namespace]/[app-name]:[image-tag] [target-namespace]/[app-name]:[image-tag]`
+
+Note for best practice, the pr number can be used as the image tag in the dev namespace but in the test/prod namespaces the image tag should be test/prod
+
+Example to retag the image to the dev namespace:
+`oc tag de0974-tools/mautic-subscription:1 de0974-dev/mautic-subscription:1`
+
+Example to retag the image to the test namespace:
+`oc tag de0974-tools/mautic-subscription:1 de0974-dev/mautic-subscription:test`
+
+After retagging the image, deploy the app in the target namespaces using the commands:
+`oc delete configmap mautic-config-[image-tag]` 
+and
+`oc process -f openshift/mautic.subscribe.dc.yaml -p NAME=[app-name]
+            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
+            -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
+            -p SUBSCRIBE_FORM={{workflow.parameters.SUBSCRIBE_FORM}}
+            -p UNSUBSCRIBE_FORM={{workflow.parameters.UNSUBSCRIBE_FORM}}
+            -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
+            -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
+            -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
+            -p SSO_REALM={{workflow.parameters.REALM_NAME}}
+            -p SSO_CLIENT_ID={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}
+            -n {{workflow.parameters.TARGET_NAMESPACE}}
+            | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}

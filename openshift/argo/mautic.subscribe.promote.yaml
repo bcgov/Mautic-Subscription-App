@@ -156,7 +156,6 @@ spec:
             oc delete configmap mautic-config;
             oc process -f openshift/mautic.subscribe.dc.yaml 
             -p NAME={{workflow.parameters.NAME}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
             -p SUBSCRIBE_FORM={{workflow.parameters.SUBSCRIBE_FORM}}

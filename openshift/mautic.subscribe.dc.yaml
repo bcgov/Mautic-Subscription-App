@@ -31,7 +31,7 @@ objects:
     kind: ConfigMap
     metadata:
       creationTimestamp: null
-      name: mautic-config
+      name: mautic-config-${IMAGE_TAG}
       namespace: ${TARGET_NAMESPACE}
       app: ${NAME}
       labels:
@@ -97,7 +97,7 @@ objects:
             deploymentconfig: ${NAME}-${IMAGE_TAG}
         spec:
           containers:
-            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
+            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${NAME}:${IMAGE_TAG}'
               name: ${NAME}-${IMAGE_TAG}
               ports:
                 - containerPort: 2015
@@ -117,7 +117,7 @@ objects:
               name: caddy-${NAME}-${IMAGE_TAG}
           - name: config-volume
             configMap:
-              name: mautic-config
+              name: mautic-config-${IMAGE_TAG}
       test: false
       triggers: 
         - type: ConfigChange
@@ -169,10 +169,6 @@ parameters:
 - description: A name used for all objects
   displayName: Name
   name: NAME
-  required: true
-- description: A name used for all objects
-  displayName: IMAGE_NAME
-  name: IMAGE_NAME
   required: true
 - description: A name used for all objects
   displayName: IMAGE_REGISTRY

@@ -131,7 +131,6 @@ spec:
             -p NAME={{workflow.parameters.NAME}}
             -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
             -p TOOLS_NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.PR}} 
             | oc apply -f - ; 
             oc start-build -w {{workflow.parameters.NAME}}-{{workflow.parameters.PR}};
@@ -165,7 +164,6 @@ spec:
             oc delete configmap mautic-config;
             oc process -f openshift/mautic.subscribe.dc.yaml 
             -p NAME={{workflow.parameters.NAME}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.PR}} 
             -p TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}}
             -p SUBSCRIBE_FORM={{workflow.parameters.SUBSCRIBE_FORM}}
