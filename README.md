@@ -6,7 +6,6 @@ Start by granting imagepull access to the tools namespace for the dev, test, and
 
     `oc process -f openshift/mautic.subscribe.rolebindings.yaml -p LICENSE_PLATE=de0974 | oc apply -f -`
 
-
 ## Setting up caddy s2i
 Create a new build config for caddy using the command: 
 `oc process -f https://raw.githubusercontent.com/bcgov/s2i-caddy-nodejs/master/openshift/templates/build.yaml | oc apply -f -`
