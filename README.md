@@ -46,7 +46,7 @@ And to allow the service account `workflow-creator` to have edit access to the d
 To allow argo to create keycloak clients in the dev namespace, a service account must be created in the dev namespace in keycloak.
 
 Create a keycloak client with the following properties:
-
+```
 Client-ID: [client-id-name]
 Enabled: On
 Consent Required: Off
@@ -57,7 +57,8 @@ Implicit Flow Enabled: Off
 Direct Access Grants Enabled: On
 Service Accounts Enabled: On
 Authorization Enabled: Off
-
+Web Origins: *
+```
 and add an empty Valid Redirect URI.
 
 After creating a keycloak service account client, create a secret with the service account credentials using the command:
@@ -98,11 +99,25 @@ To cleanup the artifacts in a namespace, run the command:
 
 ## Using openshift commands
 #### Setting up keycloak clients
-For each deployment in the dev namespace there must be a keycloak client created for it.
+For each deployment in the dev namespace there must be a keycloak client created for it. The keycloak Client ID should match the deployment config name.
 
-For the test and prod namespaces, one keycloak client for each of the namespaces must be created.
+For the test and prod namespaces, one keycloak client for each of the namespaces must be created. Ex// `mautic-subscription-test` and `mautic-subscription-prod`
 
-
+A keycloak client should be created with the following properties:
+```
+Client-ID: [client-id-name]
+Enabled: On
+Consent Required: Off
+Client Protocol: openid-connect
+Access Type: public
+Standard Flow Enabled: On
+Implicit Flow Enabled: Off
+Direct Access Grants Enabled: Off
+Service Accounts Enabled: Off
+Authorization Enabled: Off
+Valid Redirect URI: https://[app-name]-[target-namespace].[host-address]/*
+Web Origins: *
+```
 #### Creating the build
 Create the build using the command:
 oc process -f openshift/mautic.subscribe.bc.yaml -p NAME=[app-name] -p SOURCE_REPOSITORY_REF=[git-brach] -p TOOLS_NAMESPACE=[tools-namespace] -p IMAGE_TAG=[image-tag] | oc apply -f - 
@@ -124,6 +139,7 @@ After retagging the image, deploy the app in the target namespaces using the com
 and
 `oc process -f openshift/mautic.subscribe.dc.yaml -p NAME=[app-name] -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p SUBSCRIBE_FORM=[subscribe-form-name] -p UNSUBSCRIBE_FORM=[unsubscribe-form-name] -p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url] -p KEYCLOAK_URL=[keycloak-url] -p SSO_REALM=[sso-realm-name] -p SSO_CLIENT_ID=[keycloak-client-id] -n [target-namespace] | oc apply -f - -n [target-namespace]`
 
+oc process -f openshift/mautic.subscribe.dc.yaml --from-file=openshift-param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev
 Example deploying to dev:
 `oc process -f openshift/mautic.subscribe.dc.yaml -p NAME=mautic-subscription -p IMAGE_TAG=10 -p TARGET_NAMESPACE=de0974-dev -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2  -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca/auth -p SSO_REALM=devhub -p SSO_CLIENT_ID=Mautic-Service-Account -n de0974-dev | oc apply -f - -n de0974-dev`
 #### Cleaning up
