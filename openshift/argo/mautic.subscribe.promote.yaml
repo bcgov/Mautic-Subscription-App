@@ -164,7 +164,7 @@ spec:
             -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
             -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
-            -p SSO_REALM={{workflow.parameters.SSO_REALM}}
+            -p SSO_REALM={{workflow.parameters.REALM_NAME}}
             -p SSO_CLIENT_ID={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
