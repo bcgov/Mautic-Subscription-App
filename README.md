@@ -122,15 +122,15 @@ Example to retag the image to the test namespace:
 After retagging the image, deploy the app in the target namespaces using the commands:
 `oc delete configmap mautic-config-[image-tag]` 
 and
-`oc process -f openshift/mautic.subscribe.dc.yaml -p NAME=[app-name]
-            -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
-            -p TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}}
-            -p SUBSCRIBE_FORM={{workflow.parameters.SUBSCRIBE_FORM}}
-            -p UNSUBSCRIBE_FORM={{workflow.parameters.UNSUBSCRIBE_FORM}}
-            -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
-            -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
-            -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
-            -p SSO_REALM={{workflow.parameters.REALM_NAME}}
-            -p SSO_CLIENT_ID={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}
-            -n {{workflow.parameters.TARGET_NAMESPACE}}
-            | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
+`oc process -f openshift/mautic.subscribe.dc.yaml -p NAME=[app-name] -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p SUBSCRIBE_FORM=[subscribe-form-name] -p UNSUBSCRIBE_FORM=[unsubscribe-form-name] -p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url] -p KEYCLOAK_URL=[keycloak-url] -p SSO_REALM=[sso-realm-name] -p SSO_CLIENT_ID=[keycloak-client-id] -n [target-namespace] | oc apply -f - -n [target-namespace]`
+
+Example deploying to dev:
+`oc process -f openshift/mautic.subscribe.dc.yaml -p NAME=mautic-subscription -p IMAGE_TAG=10 -p TARGET_NAMESPACE=de0974-dev -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2  -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca/auth -p SSO_REALM=devhub -p SSO_CLIENT_ID=Mautic-Service-Account -n de0974-dev | oc apply -f - -n de0974-dev`
+#### Cleaning up
+To clean up a deployment and its artifact in a namespace, run the command:
+`oc delete all,configmap,pvc,secret,service -l app-name=[app-name] -n [target-namespace]`
+
+Example:
+`oc delete all,configmap,pvc,secret,service -l app-name=mautic-subscription-PR1 -n de0974-dev`
+
+            oc delete all,configmap,pvc,secret,service -l app-name={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}} -n {{workflow.parameters.TARGET_NAMESPACE}};
