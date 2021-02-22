@@ -20,7 +20,8 @@
 .env
 .eslintcache
 infra-process-apply-template
-
+openshift/mautic.subscription.param
+openshift/argo/argo.workflow.param
 
 npm-debug.log*
 yarn-debug.log*

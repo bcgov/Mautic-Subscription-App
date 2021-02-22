@@ -98,6 +98,7 @@ objects:
         spec:
           containers:
             - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${APP_NAME}:${IMAGE_TAG}'
+              imagePullPolicy: Always
               name: ${APP_NAME}-${IMAGE_TAG}
               ports:
                 - containerPort: 2015
