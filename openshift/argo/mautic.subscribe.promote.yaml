@@ -39,9 +39,9 @@ spec:
           - '--depth'
           - '1'
           - '--branch'
-          - '{{workflow.parameters.BRANCH}}'
+          - '{{workflow.parameters.SOURCE_REPOSITORY_REF}}'
           - '--single-branch'
-          - '{{workflow.parameters.REPO}}'
+          - '{{workflow.parameters.SOURCE_REPOSITORY_URL}}'
         workingDir: /mnt/vol
         resources:
           limits:
@@ -97,7 +97,7 @@ spec:
         args:
           - >-
             NAME={{workflow.parameters.APP_NAME}} TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} 
-            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.REALM_NAME}} 
+            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.SSO_REALM}} 
             ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}-{{workflow.parameters.TARGET_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
             
             jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}"' "public/config/sso_example.json" > public/config/sso.json;
@@ -163,8 +163,9 @@ spec:
             -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
             -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
-            -p SSO_REALM={{workflow.parameters.REALM_NAME}}
+            -p SSO_REALM={{workflow.parameters.SSO_REALM}}
             -p SSO_CLIENT_ID={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}
+            -p IMAGE_REGISTRY={{workflow.parameters.IMAGE_REGISTRY}}
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App

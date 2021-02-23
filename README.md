@@ -49,7 +49,7 @@ Example:
 #### Installing Argo and setting up the environment
 To use Argo, start by updating the parameters in the `openshift/argo/install.param` file. Do not include any periods, slashes, spaces or other characters inappropriate for a URL. 
 
-Perform the argo installation like this: 
+Perform the argo installation using the command: 
 `oc process -f install.yaml --param-file=install.param | oc apply -n [tools-namespace] -f -`
 - Example: 
 
@@ -112,8 +112,11 @@ To build the subscription app in the tools namespace and deploy to the dev names
 `argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p IMAGE_TAG=pr10`
 
 To promote the app in higher environments, run the command:
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=[pr-number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p APP_NAME=[app-name] -p IMAGE_TAG=[environment-name] -p TOOLS_NAMESPACE=[tools-namespace] -p HOST_ADDRESS=[host-address] -p KEYCLOAK_URL=[keycloak-url] -p SUBSCRIBE_FORM=[subscribe-form-name]-p UNSUBSCRIBE_FORM=[unsubscribe-form-name]-p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url]`
 
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p TARGET_NAMESPACE=[target-namespace] -p IMAGE_TAG=[image-tag] -p PR=pr[pr-number] -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
+
+- Example promoting to test namespace:
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p TARGET_NAMESPACE=de0974-test -p IMAGE_TAG=test -p PR=pr10 -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
 - Example promoting the app to the test namespace: 
 
     `argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=pr2 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p APP_NAME=mautic-subscription -p IMAGE_TAG=test -p TOOLS_NAMESPACE=de0974-tools -p HOST_ADDRESS=apps.silver.devops.gov.bc.ca -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2`
