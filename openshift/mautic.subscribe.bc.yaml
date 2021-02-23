@@ -57,17 +57,14 @@ parameters:
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
   required: true
-  value: https://github.com/bcgov/Mautic-Subscription-App
 - description: Github repository branch
   displayName: SOURCE_REPOSITORY_REF
   name: SOURCE_REPOSITORY_REF
   required: true
-  value: ''
 - description: Tools namespace name
   displayName: TOOLS_NAMESPACE
   name: TOOLS_NAMESPACE
   required: true
-  value: ''
 - description: A name used for all objects
   displayName: IMAGE_TAG
   name: IMAGE_TAG

@@ -175,7 +175,6 @@ parameters:
   displayName: IMAGE_REGISTRY
   name: IMAGE_REGISTRY
   required: true
-  value: image-registry.openshift-image-registry.svc:5000
 - description: A name used for all objects
   displayName: IMAGE_TAG
   name: IMAGE_TAG

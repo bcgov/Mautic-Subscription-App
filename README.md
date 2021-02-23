@@ -26,8 +26,28 @@ For more information on the caddy s2i builder, visit [here](https://github.com/b
 This guide will go over two strategies that can be used to build and deploy the Mautic Subscription App: `using Argo` and `using openshift commands`
 
 ## Using Argo
+Start by creating a `argo.workflow.param` file with the parameters in the `openshift/argo/argo.workflow.param.example` file. 
+Example:
+```
+{
+    "APP_NAME":"mautic-subscription",
+    "SOURCE_REPOSITORY_URL":"https://github.com/bcgov/Mautic-Subscription-App",
+    "SOURCE_REPOSITORY_REF":"clean-state",
+    "TOOLS_NAMESPACE":"de0974-tools",
+    "DEV_NAMESPACE":"de0974-dev",
+    "TEST_NAMESPACE":"de0974-test",
+    "PROD_NAMESPACE":"de0974-prod",
+    "IMAGE_REGISTRY":"image-registry.openshift-image-registry.svc:5000",
+    "SUBSCRIBE_FORM":"subscribe",
+    "UNSUBSCRIBE_FORM":"unsubscribe",
+    "SUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5",
+    "UNSUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2",
+    "SSO_REALM":"devhub",
+    "HOST_ADDRESS":"apps.silver.devops.gov.bc.ca"
+}
+```
 #### Installing Argo and setting up the environment
-To use Argo, Start by updating the parameters in the `openshift/argo/install.param` file. Do not include any periods, slashes, spaces or other characters inappropriate for a URL. 
+To use Argo, start by updating the parameters in the `openshift/argo/install.param` file. Do not include any periods, slashes, spaces or other characters inappropriate for a URL. 
 
 Perform the argo installation like this: 
 `oc process -f install.yaml --param-file=install.param | oc apply -n [tools-namespace] -f -`
@@ -65,6 +85,24 @@ After creating a keycloak service account client, create a secret with the servi
 
 the service account password can be found labelled as `secret` under the credentials tab of the keycloak service account client
 
+For the test and prod namespaces, one keycloak client for each of the namespaces must be created. Ex// `mautic-subscription-test` and `mautic-subscription-prod`
+
+Keycloak clients for the test and prod environments should be created with the following properties:
+```
+Client-ID: [client-id-name]
+Enabled: On
+Consent Required: Off
+Client Protocol: openid-connect
+Access Type: public
+Standard Flow Enabled: On
+Implicit Flow Enabled: Off
+Direct Access Grants Enabled: Off
+Service Accounts Enabled: Off
+Authorization Enabled: Off
+Valid Redirect URI: https://[app-name]-[image-tag]-[target-namespace].[host-address]/*
+Web Origins: *
+```
+
 Now argo should be set up to run the workflows.
 #### Build and Deploy
 To build the subscription app in the tools namespace and deploy to the dev namespace, run the command:
@@ -74,6 +112,7 @@ To build the subscription app in the tools namespace and deploy to the dev names
 
     `argo submit openshift/argo/mautic.subscribe.build.yaml -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p DEV_NAMESPACE=de0974-dev  -p APP_NAME=mautic-subscription -p IMAGE_TAG=pr2 -p TOOLS_NAMESPACE=de0974-tools -p HOST_ADDRESS=apps.silver.devops.gov.bc.ca  -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p SUBSCRIBE_FORM=subscribe -p UNSUBSCRIBE_FORM=unsubscribe -p SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5 -p UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2  -p SSO_REALM=devhub`
 
+argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p IMAGE_TAG=pr10
 
 To promote the app in higher environments, run the command:
 `argo submit openshift/argo/mautic.subscribe.promote.yaml -p PR=[pr-number] -p BRANCH=[git-branch] -p REALM_NAME=[sso-realm-name] -p REPO=[git-repo] -p TARGET_NAMESPACE=[target-namespace] -p APP_NAME=[app-name] -p IMAGE_TAG=[environment-name] -p TOOLS_NAMESPACE=[tools-namespace] -p HOST_ADDRESS=[host-address] -p KEYCLOAK_URL=[keycloak-url] -p SUBSCRIBE_FORM=[subscribe-form-name]-p UNSUBSCRIBE_FORM=[unsubscribe-form-name]-p SUBSCRIBE_URL=[subscribe-form-url] -p UNSUBSCRIBE_URL=[unsubscribe-form-url]`
@@ -97,7 +136,7 @@ To cleanup the artifacts in a namespace, run the command:
 
 ## Using openshift commands
 #### Setting up openshift parameters
-Fill out the values for the given parameter file in openshift/openshift-param.
+Start by creating a `mautic.subscription.param` file with the parameters in the `openshift/mautic.subscription.param.example` file. 
 Example:
 ```
 NAME=mautic-subscription
@@ -121,7 +160,7 @@ For each deployment in the dev namespace there must be a keycloak client created
 
 For the test and prod namespaces, one keycloak client for each of the namespaces must be created. Ex// `mautic-subscription-test` and `mautic-subscription-prod`
 
-A keycloak client should be created with the following properties:
+Keycloak clients for the test and prod environments should be created with the following properties:
 ```
 Client-ID: [client-id-name]
 Enabled: On
