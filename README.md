@@ -188,12 +188,12 @@ Web Origins: *
 ```
 #### Creating the build
 Create the build using the commands:
-`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/openshift-param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - `
+`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - `
 and
 `oc start-build -w [app-name]-[image-tag]`
 
 - Example:
-`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/openshift-param --ignore-unknown-parameters=true -p IMAGE_TAG=pr2 | oc apply -f - `
+`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr2 | oc apply -f - `
 `oc start-build -w mautic-subscription-pr2`
 
 #### Retag Images
@@ -213,14 +213,14 @@ After retagging the image, delete the previously configured configmap if there i
 `oc delete configmap mautic-config-[image-tag]` 
 
 Then deploy the app in the target namespaces using the command:
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/openshift-param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] | oc apply -f - -n [target-namespace]`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] | oc apply -f - -n [target-namespace]`
 
 - Example deploying to dev:
 `oc delete configmap mautic-config-pr2`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/openshift-param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr2 -p IMAGE_TAG=pr2 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca | oc apply -f - -n de0974-dev`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr2 -p IMAGE_TAG=pr2 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca | oc apply -f - -n de0974-dev`
 
 - Example deploying to test:
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/openshift-param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-test -p SSO_CLIENT_ID=mautic-subscription-test -p IMAGE_TAG=test -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca | oc apply -f - -n de0974-test`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-test -p SSO_CLIENT_ID=mautic-subscription-test -p IMAGE_TAG=test -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca | oc apply -f - -n de0974-test`
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:
