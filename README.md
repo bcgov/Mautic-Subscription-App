@@ -30,6 +30,10 @@ Start by creating a `argo.workflow.param` file with the parameters in the `opens
 
 Of particular note are the parameters SUBSCRIBE_FORM, UNSUBSCRIBE_FORM, SUBSCRIBE_URL, and UNSUBSCRIBE_URL.
 
+The SUBSCRIBE_FORM and UNSUBSCRIBE_FORM parameters are the names of the subscribe and unsubscribe forms. Under Components -> Forms in the Mautic App, you can find the names of each form listed under the `Name` column.
+
+The SUBSCRIBE_URL and UNSUBSCRIBE_URL are the subscribe and unsubscribe form URLs. They are expressed in the following format: ```<mautic-app-url>/form/submit?formId=[form-id]``` where the `form-id` are listed under the `ID` column in Components -> Forms in the Mautic App
+
 Example:
 ```
 {
