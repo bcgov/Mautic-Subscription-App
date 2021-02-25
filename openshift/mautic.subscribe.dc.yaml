@@ -155,7 +155,7 @@ objects:
         name: ${APP_NAME}-${IMAGE_TAG}
       name: ${APP_NAME}-${IMAGE_TAG}
     spec:
-      host: "testing"
+      host: ""
       port:
         targetPort: 2015-tcp
       to:
