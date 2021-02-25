@@ -12,5 +12,6 @@
     "SUBSCRIBE_URL":"",
     "UNSUBSCRIBE_URL":"",
     "SSO_REALM":"",
-    "HOST_ADDRESS":""
+    "HOST_ADDRESS":"",
+    "HOST_URL":""
 }

@@ -166,6 +166,7 @@ spec:
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
             -p SSO_CLIENT_ID={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}
             -p IMAGE_REGISTRY={{workflow.parameters.IMAGE_REGISTRY}}
+            -p HOST_URL={{workflow.parameters.HOST_URL}}
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App
