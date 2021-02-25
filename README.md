@@ -119,6 +119,8 @@ To submit a workflow, a previously submitted workflow with the same name must be
 
 For example, if there is a submitted workflow called `mautic-subscribe-build`, you must delete the workflow using the command `argo delete mautic-subscribe-build` 
 
+Alternatively, you can delete all argo workflows using `argo delete --all`
+
 To build the subscription app in the tools namespace and deploy to the dev namespace, run the commands:
 `argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=[keycloak-url] -p IMAGE_TAG=[image-tag]`
 
