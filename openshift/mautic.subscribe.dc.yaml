@@ -165,6 +165,26 @@ objects:
       tls:
         termination: Edge
     status:
+      ingress: null  
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}
+    spec:
+      host: ${HOST_URL}
+      port:
+        targetPort: 2015-tcp
+      to:
+        kind: ""
+        name: ${APP_NAME}-${IMAGE_TAG}
+        weight: null
+      tls:
+        termination: Edge
+    status:
       ingress: null
 parameters:
 - description: A name used for all objects
@@ -211,4 +231,9 @@ parameters:
   displayName: SSO_CLIENT_ID
   name: SSO_CLIENT_ID
   required: true 
+- description: Host URL
+  displayName: HOST_URL
+  name: HOST_URL
+  required: true 
+  value: ''
 

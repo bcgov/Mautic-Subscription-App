@@ -50,7 +50,6 @@ Example:
     "SUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5",
     "UNSUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2",
     "SSO_REALM":"devhub",
-    "HOST_ADDRESS":"apps.silver.devops.gov.bc.ca"
 }
 ```
 #### Installing Argo and setting up the environment
@@ -192,12 +191,12 @@ Web Origins: *
 ```
 #### Creating the build
 Create the build using the commands:
-`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - `
+`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - -n [tools-namespace]`
 and
 `oc start-build -w [app-name]-[image-tag]`
 
 - Example:
-`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr2 | oc apply -f - `
+`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr2 | oc apply -f - -n de0974-tools`
 `oc start-build -w mautic-subscription-pr2`
 
 #### Retag Images
@@ -217,14 +216,17 @@ After retagging the image, delete the previously configured configmap if there i
 `oc delete configmap mautic-config-[image-tag]` 
 
 Then deploy the app in the target namespaces using the command:
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] | oc apply -f - -n [target-namespace]`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] -p HOST_URL=[host-url]| oc apply -f - -n [target-namespace]`
+
+Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespace].[host-address]/` if not provided.
+The HOST_URL is optional for deployments to dev and test namespaces but should be specified for the prod namespace to provide a relevant URL for users.
 
 - Example deploying to dev:
 `oc delete configmap mautic-config-pr2`
 `oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr2 -p IMAGE_TAG=pr2 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca | oc apply -f - -n de0974-dev`
 
-- Example deploying to test:
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-test -p SSO_CLIENT_ID=mautic-subscription-test -p IMAGE_TAG=test -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca | oc apply -f - -n de0974-test`
+- Example deploying to prod:
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p HOST_URL=https://platform.subscription.gov.bc.ca | oc apply -f - -n de0974-prod`
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:
