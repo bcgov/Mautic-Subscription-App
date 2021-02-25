@@ -113,7 +113,11 @@ Web Origins: *
 
 Now argo should be set up to run the workflows.
 #### Build and Deploy
-To build the subscription app in the tools namespace and deploy to the dev namespace, run the command:
+To submit a workflow, a previously submitted workflow with the same name must be deleted using the command `argo delete [workflow-name]`
+
+For example, if there is a submitted workflow called `mautic-subscribe-build`, you must delete the workflow using the command `argo delete mautic-subscribe-build` 
+
+To build the subscription app in the tools namespace and deploy to the dev namespace, run the commands:
 `argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=[keycloak-url] -p IMAGE_TAG=[image-tag]`
 
 - Example: 
