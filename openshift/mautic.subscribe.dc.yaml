@@ -234,6 +234,5 @@ parameters:
 - description: Host URL
   displayName: HOST_URL
   name: HOST_URL
-  required: true 
-  value: ''
+  value: ""
 
