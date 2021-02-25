@@ -16,7 +16,8 @@ export const AuthModal = () => {
         <p>Login with:</p>
         <div className="auth-buttons">
           <IdpButton idp={SSO_IDP.IDIR}/>
-          <IdpButton idp={SSO_IDP.GITHUB}/>
+          {/* Disable github button until github org filter is implemented */}
+          {/* <IdpButton idp={SSO_IDP.GITHUB}/> */}
         </div>
       </ModalFooter>
     </Modal>
