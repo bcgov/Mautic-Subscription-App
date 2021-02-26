@@ -41,7 +41,7 @@ Example:
 {
     "APP_NAME":"mautic-subscription",
     "SOURCE_REPOSITORY_URL":"https://github.com/bcgov/Mautic-Subscription-App",
-    "SOURCE_REPOSITORY_REF":"clean-state",
+    "SOURCE_REPOSITORY_REF":"installation-guide",
     "TOOLS_NAMESPACE":"de0974-tools",
     "DEV_NAMESPACE":"de0974-dev",
     "TEST_NAMESPACE":"de0974-test",
@@ -49,9 +49,10 @@ Example:
     "IMAGE_REGISTRY":"image-registry.openshift-image-registry.svc:5000",
     "SUBSCRIBE_FORM":"subscribe",
     "UNSUBSCRIBE_FORM":"unsubscribe",
-    "SUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5",
+    "SUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1",
     "UNSUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2",
     "SSO_REALM":"devhub",
+    "HOST_ADDRESS":"apps.silver.devops.gov.bc.ca",
     "HOST_URL":""
 }
 ```
@@ -147,11 +148,11 @@ To cleanup the artifacts in a namespace, run the command:
 
 - Example cleaning up the dev namespace:
 
-    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=pr2 -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=pr2 -p BRANCH=installation-guide -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
 
 - Example cleaning up the test namespace:
 
-    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=test -p BRANCH=clean-state -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=test -p BRANCH=installation-guide -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-test -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca`
 
 Or, to cleanup all mautic subscription app related artifacts in a namespace, run the command:
 `oc delete all,configmap,pvc,secret,service -l app=[app-name] -n [target-namespace]`
