@@ -164,6 +164,7 @@ objects:
         weight: null
       tls:
         termination: Edge
+        insecureEdgeTerminationPolicy: Redirect
     status:
       ingress: null  
   - apiVersion: route.openshift.io/v1
@@ -184,6 +185,7 @@ objects:
         weight: null
       tls:
         termination: Edge
+        insecureEdgeTerminationPolicy: Redirect
     status:
       ingress: null
 parameters:
