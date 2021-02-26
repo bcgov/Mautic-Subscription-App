@@ -61,8 +61,8 @@ spec:
         args:
           - >-
             oc delete all,configmap,pvc,secret,service -l name={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}} -n {{workflow.parameters.TARGET_NAMESPACE}};
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools > SSO_SA_CLIENT_ID.txt;
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools > SSO_SA_PASSWORD.txt
+            oc get secret mautic-sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools > SSO_SA_CLIENT_ID.txt;
+            oc get secret mautic-sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools > SSO_SA_PASSWORD.txt
 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:

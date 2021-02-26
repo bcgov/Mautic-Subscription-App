@@ -91,7 +91,7 @@ Web Origins: *
 and add an empty Valid Redirect URI.
 
 After creating a keycloak service account client, create a secret with the service account credentials using the command:
-`oc process -f ./openshift/sso_sa.secret.yaml -p SSO_SA_CLIENT_ID=[client-id-name] -p SSO_SA_PASSWORD=[service-account-password] -p TOOLS_NAMESPACE=[tools-namespace] | oc apply -f - -f - -n [tools-namespace]`
+`oc process -f ./openshift/sso_sa.secret.yaml -p SSO_SA_CLIENT_ID=[client-id-name] -p SSO_SA_PASSWORD=[service-account-password] -p TOOLS_NAMESPACE=[tools-namespace] | oc apply -f - -n [tools-namespace]`
 
 the service account password can be found labelled as `secret` under the credentials tab of the keycloak service account client
 
