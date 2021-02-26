@@ -28,14 +28,14 @@ export const Subscription = () => {
       <ModalFooter>
         {config ? (
         <div className="auth-buttons">
-          <form action={config.subscribeActionURL} method="post">
+          <form action={config.subscribeActionURL} method="post" enctype="multipart/form-data">
             <input className="auth-button" type="submit" value="Subscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
             <input type="hidden" name="mauticform[formId]" value={getformID(config.subscribeActionURL)}></input>
             <input type="hidden" name="mauticform[return]" value=""></input>
             <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
           </form>
-          <form action={config.unsubscribeActionURL} method="post">
+          <form action={config.unsubscribeActionURL} method="post" enctype="multipart/form-data">
             <input className="auth-button" type="submit" value="Unsubscribe"/>
             <input type="hidden" name="mauticform[email]" value={userEmail}></input>
             <input type="hidden" name="mauticform[formId]" value={getformID(config.unsubscribeActionURL)}></input>
