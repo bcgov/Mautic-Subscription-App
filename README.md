@@ -148,7 +148,7 @@ To cleanup the artifacts in a namespace, run the command:
 
 - Example cleaning up the dev namespace:
 
-    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=pr2 -p BRANCH=installation-guide -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
+    `argo submit openshift/argo/mautic.subscribe.cleanup.yaml -p IMAGE_TAG=pr10 -p BRANCH=installation-guide -p REALM_NAME=devhub -p REPO=https://github.com/bcgov/Mautic-Subscription-App -p TARGET_NAMESPACE=de0974-dev -p APP_NAME=mautic-subscription -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca`
 
 - Example cleaning up the test namespace:
 
@@ -172,7 +172,7 @@ TOOLS_NAMESPACE=de0974-tools
 DEV_NAMESPACE=de0974-dev
 TEST_NAMESPACE=de0974-test
 PROD_NAMESPACE=de0974-prod
-IMAGE_TAG=pr2
+IMAGE_TAG=pr10
 IMAGE_REGISTRY=image-registry.openshift-image-registry.svc:5000
 SUBSCRIBE_FORM=subscribe
 UNSUBSCRIBE_FORM=unsubscribe
@@ -208,8 +208,8 @@ and
 `oc start-build -w [app-name]-[image-tag]`
 
 - Example:
-`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr2 | oc apply -f - -n de0974-tools`
-`oc start-build -w mautic-subscription-pr2`
+`oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr10 | oc apply -f - -n de0974-tools`
+`oc start-build -w mautic-subscription-pr10`
 
 #### Retag Images
 Before deploying the app in the dev/test/prod namespaces run the following command to retag the image from the tools namespace:
@@ -218,10 +218,10 @@ Before deploying the app in the dev/test/prod namespaces run the following comma
 Note for best practice, the pr number can be used as the image tag in the dev namespace but in the test/prod namespaces the image tag should be test/prod
 
 - Example to retag the image to the dev namespace:
-`oc tag de0974-tools/mautic-subscription:pr2 de0974-dev/mautic-subscription:pr2`
+`oc tag de0974-tools/mautic-subscription:pr10 de0974-dev/mautic-subscription:pr10`
 
 - Example to retag the image to the test namespace:
-`oc tag de0974-tools/mautic-subscription:pr2 de0974-test/mautic-subscription:test`
+`oc tag de0974-tools/mautic-subscription:pr10 de0974-test/mautic-subscription:test`
 
 #### Deploying the app
 After retagging the image, delete the previously configured configmap if there is one:
@@ -234,8 +234,8 @@ Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespac
 The HOST_URL is optional for deployments to dev and test namespaces but should be specified for the prod namespace to provide a relevant URL for users.
 
 - Example deploying to dev:
-`oc delete configmap mautic-config-pr2`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr2 -p IMAGE_TAG=pr2 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca | oc apply -f - -n de0974-dev`
+`oc delete configmap mautic-config-pr10`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr10 -p IMAGE_TAG=pr10 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca | oc apply -f - -n de0974-dev`
 
 - Example deploying to prod:
 `oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p HOST_URL=https://platform.subscription.gov.bc.ca | oc apply -f - -n de0974-prod`
@@ -245,7 +245,7 @@ To clean up a deployment and its artifact in a namespace, run the command:
 `oc delete all,configmap,pvc,secret -l name=[app-name]-[image-tag] -n [target-namespace]`
 
 - Example:
-`oc delete all,configmap,pvc,secret -l name=mautic-subscription-pr2 -n de0974-dev`
+`oc delete all,configmap,pvc,secret -l name=mautic-subscription-pr10 -n de0974-dev`
 
 Or, to cleanup all mautic subscription app related artifacts in a namespace, run the command:
 `oc delete all,configmap,pvc,secret -l app=[app-name] -n [target-namespace]`
