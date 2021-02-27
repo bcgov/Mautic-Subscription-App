@@ -176,7 +176,7 @@ IMAGE_TAG=pr10
 IMAGE_REGISTRY=image-registry.openshift-image-registry.svc:5000
 SUBSCRIBE_FORM=subscribe
 UNSUBSCRIBE_FORM=unsubscribe
-SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5
+SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1
 UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2
 KEYCLOAK_URL=https://dev.oidc.gov.bc.ca
 SSO_REALM=devhub
