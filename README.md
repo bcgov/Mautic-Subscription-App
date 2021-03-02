@@ -251,13 +251,13 @@ The HOST_URL is optional for deployments to dev and test namespaces but should b
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:
-`oc delete all,configmap,pvc,secret -l name=[app-name]-[image-tag] -n [target-namespace]`
+`oc delete all,configmap,secret -l name=[app-name]-[image-tag] -n [target-namespace]`
 
 - Example:
-`oc delete all,configmap,pvc,secret -l name=mautic-subscription-pr10 -n de0974-dev`
+`oc delete all,configmap,secret -l name=mautic-subscription-pr10 -n de0974-dev`
 
 Or, to cleanup all mautic subscription app related artifacts in a namespace, run the command:
-`oc delete all,configmap,pvc,secret -l app=[app-name] -n [target-namespace]`
+`oc delete all,configmap,secret -l app=[app-name] -n [target-namespace]`
 
 - Example:
-`oc delete all,configmap,pvc,secret -l app=mautic-subscription -n de0974-dev`
+`oc delete all,configmap,secret -l app=mautic-subscription -n de0974-dev`
