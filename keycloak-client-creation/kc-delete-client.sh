@@ -6,23 +6,11 @@
 set -euf -o pipefail
 #set -x
 
-if [ "$1" == "" ]; then
-    echo "Skip this step in test or prod enviroments"
-    exit 0
+if echo $TARGET_NAMESPACE | grep -e '-test' -e '-prod' 
+    then exit 0
 fi
 
-# get sso variables:
-KEYCLOAK_URL=https://dev.oidc.gov.bc.ca
-REALM_NAME=devhub
-PR_NUMBER="$1"
-NAMESPACE="$2"
-
-echo $KEYCLOAK_URL
-echo $KEYCLOAK_CLIENT_ID
-echo $KEYCLOAK_CLIENT_SECRET
-echo $REALM_NAME
-echo $NAME
-echo $PR_NUMBER
+# This step is done on the argo workflow
 # # oc get secret for sso service account:
 # KEYCLOAK_CLIENT_ID=$(oc -n $NAMESPACE get secret/sso-service-account --template={{.data.KEYCLOAK_CLIENT_ID}} | base64 --decode)
 # KEYCLOAK_CLIENT_SECRET=$(oc -n $NAMESPACE get secret/sso-service-account --template={{.data.KEYCLOAK_CLIENT_SECRET}} | base64 --decode)
@@ -37,11 +25,11 @@ KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_S
  }
 echo $(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json")
 # check if client exists:
-CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR_NUMBER" '.[] | select(.clientId==$CLIENT) | .id')
+CLIENT_ID=$(_curl -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients" -H "Accept: application/json" | jq -r --arg CLIENT "$NAME-$PR" '.[] | select(.clientId==$CLIENT) | .id')
 echo $CLIENT_ID
 # Remove client:
 if [ "${CLIENT_ID}" != "" ]; then
-    echo "Delete '$NAME-$PR_NUMBER' client..."
+    echo "Delete '$NAME-$PR' client..."
     curl -sX DELETE -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/clients/${CLIENT_ID}"
 fi
 

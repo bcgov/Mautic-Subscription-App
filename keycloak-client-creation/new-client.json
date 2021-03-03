@@ -1,7 +1,7 @@
 {
-    "clientId": "mautic-subscription-app-#{PR}",
-    "name": "Mautic Subscription app for PR #{PR}",
-    "description": "Mautic Subscription Application, temperaily for PR #{PR}",
+    "clientId": "#{NAME}-#{PR}",
+    "name": "#{NAME} app for PR #{PR}",
+    "description": "#{NAME} Application, temporaily for PR #{PR}",
     "rootUrl": "",
     "surrogateAuthRequired": false,
     "enabled": true,

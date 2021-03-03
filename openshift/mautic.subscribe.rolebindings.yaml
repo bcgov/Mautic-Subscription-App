@@ -1,0 +1,51 @@
+kind: Template
+apiVersion: v1
+objects:
+
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: system:image-puller-dev
+      namespace: ${LICENSE_PLATE}-tools
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: system:image-puller
+    subjects:
+    - kind: ServiceAccount
+      name: default
+      namespace: ${LICENSE_PLATE}-dev
+
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: system:image-puller-test
+      namespace: ${LICENSE_PLATE}-tools
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: system:image-puller
+    subjects:
+    - kind: ServiceAccount
+      name: default
+      namespace: ${LICENSE_PLATE}-test
+
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: system:image-puller-prod
+      namespace: ${LICENSE_PLATE}-tools
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: system:image-puller
+    subjects:
+    - kind: ServiceAccount
+      name: default
+      namespace: ${LICENSE_PLATE}-prod
+
+parameters:
+- description: Licenseplate name
+  displayName: LICENSE_PLATE
+  name: LICENSE_PLATE
+  required: true
