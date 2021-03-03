@@ -38,9 +38,9 @@ spec:
           - '--depth'
           - '1'
           - '--branch'
-          - '{{workflow.parameters.BRANCH}}'
+          - '{{workflow.parameters.SOURCE_REPOSITORY_REF}}'
           - '--single-branch'
-          - '{{workflow.parameters.REPO}}'
+          - '{{workflow.parameters.SOURCE_REPOSITORY_URL}}'
         workingDir: /mnt/vol
         resources:
           limits:
@@ -66,9 +66,9 @@ spec:
           - '-c'
         args:
           - >-
-            oc delete all,configmap -l app={{workflow.parameters.NAME}} -n {{workflow.parameters.DEV_NAMESPACE}};
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools | base64 --decode > SSO_SA_CLIENT_ID.txt;
-            oc get secret sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt
+            oc delete all,configmap -l app={{workflow.parameters.APP_NAME}} -n {{workflow.parameters.DEV_NAMESPACE}};
+            oc get secret mautic-sso-service-account -o jsonpath={'.data.SSO_SA_CLIENT_ID'} -n de0974-tools | base64 --decode > SSO_SA_CLIENT_ID.txt;
+            oc get secret mautic-sso-service-account -o jsonpath={'.data.SSO_SA_PASSWORD'} -n de0974-tools | base64 --decode > SSO_SA_PASSWORD.txt
 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
@@ -95,12 +95,12 @@ spec:
           - '-c'
         args:
           - >-
-            NAME={{workflow.parameters.NAME}} TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} 
-            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.REALM_NAME}} 
-            PR={{workflow.parameters.PR}}
-            ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}-{{workflow.parameters.DEV_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
+            NAME={{workflow.parameters.APP_NAME}} TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} 
+            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.SSO_REALM}} 
+            PR={{workflow.parameters.IMAGE_TAG}}
+            ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}-{{workflow.parameters.DEV_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
             
-            jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}"' "public/config/sso_example.json" > public/config/sso.json;
+            jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}"' "public/config/sso_example.json" > public/config/sso.json;
 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
@@ -128,15 +128,15 @@ spec:
         args:
           - >-
             oc process -f openshift/mautic.subscribe.bc.yaml 
-            -p NAME={{workflow.parameters.NAME}}
-            -p SOURCE_REPOSITORY_REF={{workflow.parameters.BRANCH}}
+            -p APP_NAME={{workflow.parameters.APP_NAME}}
+            -p SOURCE_REPOSITORY_REF={{workflow.parameters.SOURCE_REPOSITORY_REF}}
+            -p SOURCE_REPOSITORY_URL={{workflow.parameters.SOURCE_REPOSITORY_URL}}
             -p TOOLS_NAMESPACE={{workflow.parameters.TOOLS_NAMESPACE}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} 
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             | oc apply -f - ; 
-            oc start-build -w {{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}};
-            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}}
-            {{workflow.parameters.DEV_NAMESPACE}}/{{workflow.parameters.NAME}}:{{workflow.parameters.IMAGE_TAG}} 
+            oc start-build -w {{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}};
+            oc tag {{workflow.parameters.TOOLS_NAMESPACE}}/{{workflow.parameters.APP_NAME}}:{{workflow.parameters.IMAGE_TAG}}
+            {{workflow.parameters.DEV_NAMESPACE}}/{{workflow.parameters.APP_NAME}}:{{workflow.parameters.IMAGE_TAG}} 
         workingDir: /mnt/vol/Mautic-Subscription-App
         resources:
           limits:
@@ -164,8 +164,7 @@ spec:
           - >-
             oc delete configmap mautic-config;
             oc process -f openshift/mautic.subscribe.dc.yaml 
-            -p NAME={{workflow.parameters.NAME}}
-            -p IMAGE_NAME={{workflow.parameters.NAME}} 
+            -p APP_NAME={{workflow.parameters.APP_NAME}}
             -p IMAGE_TAG={{workflow.parameters.IMAGE_TAG}} 
             -p TARGET_NAMESPACE={{workflow.parameters.DEV_NAMESPACE}}
             -p SUBSCRIBE_FORM={{workflow.parameters.SUBSCRIBE_FORM}}
@@ -174,7 +173,8 @@ spec:
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
             -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
-            -p SSO_CLIENT_ID={{workflow.parameters.NAME}}-{{workflow.parameters.IMAGE_TAG}}
+            -p SSO_CLIENT_ID={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}
+            -p IMAGE_REGISTRY={{workflow.parameters.IMAGE_REGISTRY}}
             -n {{workflow.parameters.DEV_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.DEV_NAMESPACE}}
         workingDir: /mnt/vol/Mautic-Subscription-App

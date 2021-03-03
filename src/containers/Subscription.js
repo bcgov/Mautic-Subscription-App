@@ -21,7 +21,7 @@ export const Subscription = () => {
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
       <ModalBody>
-        Subscribe/unsubscribe from the mautic mailing list.
+        Subscribe/unsubscribe from the Platform News mailing list.
         <br />
         Your email address is <b>{userEmail}</b>.
       </ModalBody>

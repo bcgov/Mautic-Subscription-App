@@ -10,9 +10,9 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        build: ${NAME}
-        group: ${NAME}
-      name: ${NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+      name: ${APP_NAME}
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
     spec:
@@ -20,7 +20,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: '${IMAGE_NAME}:${IMAGE_TAG}'
+          name: '${APP_NAME}:${IMAGE_TAG}'
       postCommit: {}
       resources: 
         requests:
@@ -45,34 +45,27 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        app: ${NAME}
-        build: ${NAME}-${IMAGE_TAG}
-      name: ${NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}
 parameters:
 - description: A name used for all objects
-  displayName: Name
-  name: NAME
+  displayName: App Name
+  name: APP_NAME
   required: true
 - description: Github repository URL
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
   required: true
-  value: https://github.com/bcgov/Mautic-Subscription-App
 - description: Github repository branch
   displayName: SOURCE_REPOSITORY_REF
   name: SOURCE_REPOSITORY_REF
   required: true
-  value: ''
 - description: Tools namespace name
   displayName: TOOLS_NAMESPACE
   name: TOOLS_NAMESPACE
   required: true
-  value: ''
 - description: A name used for all objects
   displayName: IMAGE_TAG
   name: IMAGE_TAG
-  required: true
-- description: A name used for all objects
-  displayName: IMAGE_NAME
-  name: IMAGE_NAME
   required: true

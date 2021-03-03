@@ -5,12 +5,10 @@ objects:
     kind: ImageStream
     metadata:
       creationTimestamp: null
-      name: ${NAME}
+      name: ${APP_NAME}
       labels:
-        app: ${NAME}
-        group: ${NAME}
-        deploymentconfig: ${NAME}
-        app-name: ${NAME}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
     spec:
       lookupPolicy:
         local: false
@@ -33,11 +31,12 @@ objects:
     kind: ConfigMap
     metadata:
       creationTimestamp: null
-      name: mautic-config
+      name: mautic-config-${IMAGE_TAG}
       namespace: ${TARGET_NAMESPACE}
-      app: ${NAME}
+      app: ${APP_NAME}
       labels:
-        app: ${NAME}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
   - apiVersion: v1
     data:
       Caddyfile: |
@@ -77,18 +76,16 @@ objects:
     kind: ConfigMap
     metadata:
       creationTimestamp: null
-      name: caddy-${NAME}-${IMAGE_TAG}
+      name: caddy-${APP_NAME}-${IMAGE_TAG}
       labels:
-        app: ${NAME}
-        group: ${NAME}
-        deploymentconfig: ${NAME}
-        app-name: ${NAME}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     spec:
       replicas: 1
       selector:
-        deploymentconfig: ${NAME}-${IMAGE_TAG}
+        deploymentconfig: ${APP_NAME}-${IMAGE_TAG}
       strategy:
         resources: {}
       template:
@@ -97,30 +94,31 @@ objects:
             openshift.io/generated-by: OpenShiftNewApp
           creationTimestamp: null
           labels:
-            deploymentconfig: ${NAME}-${IMAGE_TAG}
+            deploymentconfig: ${APP_NAME}-${IMAGE_TAG}
         spec:
           containers:
-            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}'
-              name: ${NAME}-${IMAGE_TAG}
+            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${APP_NAME}:${IMAGE_TAG}'
+              imagePullPolicy: Always
+              name: ${APP_NAME}-${IMAGE_TAG}
               ports:
                 - containerPort: 2015
                   protocol: TCP
               resources: {}
               volumeMounts:
-              - name: caddy-${NAME}-${IMAGE_TAG}
+              - name: caddy-${APP_NAME}-${IMAGE_TAG}
                 mountPath: /opt/app-root/etc/Caddyfile
                 readOnly: true
                 subPath: Caddyfile
               - name: config-volume
                 mountPath: /opt/app-root/src/config
           volumes:
-          - name: caddy-${NAME}-${IMAGE_TAG}
+          - name: caddy-${APP_NAME}-${IMAGE_TAG}
             configMap:
               defaultMode: 420
-              name: caddy-${NAME}-${IMAGE_TAG}
+              name: caddy-${APP_NAME}-${IMAGE_TAG}
           - name: config-volume
             configMap:
-              name: mautic-config
+              name: mautic-config-${IMAGE_TAG}
       test: false
       triggers: 
         - type: ConfigChange
@@ -128,11 +126,9 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-        group: ${NAME}
-      name: ${NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}
   - apiVersion: v1
     kind: Service
     spec:
@@ -142,50 +138,65 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${NAME}-${IMAGE_TAG}
+        deploymentconfig: ${APP_NAME}-${IMAGE_TAG}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
       creationTimestamp: null
       labels:
-        app: ${NAME}
-        app.kubernetes.io/component: ${NAME}
-        app.kubernetes.io/instance: ${NAME}
-      name: ${NAME}-${IMAGE_TAG}
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}
     spec:
       host: ""
       port:
         targetPort: 2015-tcp
       to:
         kind: ""
-        name: ${NAME}-${IMAGE_TAG}
+        name: ${APP_NAME}-${IMAGE_TAG}
         weight: null
       tls:
         termination: Edge
+        insecureEdgeTerminationPolicy: Redirect
+    status:
+      ingress: null  
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ${APP_NAME}
+        name: ${APP_NAME}-${IMAGE_TAG}
+      name: ${APP_NAME}-${IMAGE_TAG}-2
+    spec:
+      host: ${HOST_URL}
+      port:
+        targetPort: 2015-tcp
+      to:
+        kind: ""
+        name: ${APP_NAME}-${IMAGE_TAG}
+        weight: null
+      tls:
+        termination: Edge
+        insecureEdgeTerminationPolicy: Redirect
     status:
       ingress: null
 parameters:
 - description: A name used for all objects
-  displayName: Name
-  name: NAME
-  required: true
-- description: A name used for all objects
-  displayName: IMAGE_NAME
-  name: IMAGE_NAME
+  displayName: App Name
+  name: APP_NAME
   required: true
 - description: A name used for all objects
   displayName: IMAGE_REGISTRY
   name: IMAGE_REGISTRY
   required: true
-  value: image-registry.openshift-image-registry.svc:5000
 - description: A name used for all objects
   displayName: IMAGE_TAG
   name: IMAGE_TAG
@@ -222,4 +233,8 @@ parameters:
   displayName: SSO_CLIENT_ID
   name: SSO_CLIENT_ID
   required: true 
+- description: Host URL
+  displayName: HOST_URL
+  name: HOST_URL
+  value: ""
 
