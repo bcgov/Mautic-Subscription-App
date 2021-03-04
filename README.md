@@ -210,6 +210,11 @@ Authorization Enabled: Off
 Valid Redirect URI: https://[app-name]-[image-tag]-[target-namespace].[host-address]/*
 Web Origins: *
 ```
+
+Roles should be added to the test and prod clients as well. 
+For each client, add a role with Composite Roles `github-org-bcdevops`, `github-org-bcgov`, `github-org-bcgov-c`, and `idir-user`
+Using this role, an authorization flow should be added.
+
 #### Creating the build
 Create the build using the commands:
 `oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - -n [tools-namespace]`
