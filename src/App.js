@@ -26,8 +26,8 @@ function App() {
             path="/unsubscribed"
             component={Unsubscribed}
           />
-          <Route path="/" component={AuthModal} />
           <Route path="/401" component={Unauthorized} />
+          <Route path="/" component={AuthModal} />
         </Switch>
       </Layout>
   );
