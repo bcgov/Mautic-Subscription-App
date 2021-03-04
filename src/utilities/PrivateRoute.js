@@ -13,7 +13,7 @@ export const PrivateRoute= ({ component: Component, ...rest }) => {
             render={props => {
                 return keycloak.authenticated
                     ? <Component {...props} />
-                    : <Redirect to={{ pathname: '/', }} />
+                    : <Redirect to={{ pathname: '/401', }} />
             }}
         />
     )
