@@ -133,7 +133,7 @@ To promote the app in higher environments, run the command:
 `argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p PR=pr[pr-number] -p HOST_URL=[host-url]`
 
 Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespace].[host-address]/` if not provided.
-The HOST_URL is optional for deployments to dev and test namespaces but should be specified for the deployment to the prod namespace to provide a relevant URL for users.
+The HOST_URL is optional for deployments to dev and test namespaces but should be specified as the vanity url for the prod namespace.
 
 - Example promoting to the test namespace:
 `argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=test -p TARGET_NAMESPACE=de0974-test -p PR=pr10`
