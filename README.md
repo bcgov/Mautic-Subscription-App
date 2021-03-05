@@ -6,6 +6,9 @@ Start by granting imagepull access to the tools namespace for the dev, test, and
 
     `oc process -f openshift/mautic.subscribe.rolebindings.yaml -p LICENSE_PLATE=de0974 | oc apply -f -`
 
+If you want the subscription app to only allow users with certain roles to be able to subscribe to the mailing list, add these roles to the .env file as csv.
+- Example: `REACT_APP_AUTHORIZED_SSO_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops"`
+
 ## Setting up caddy s2i
 Create a new build config for caddy using the command: 
 `oc process -f https://raw.githubusercontent.com/bcgov/s2i-caddy-nodejs/master/openshift/templates/build.yaml | oc apply -f -`
@@ -210,10 +213,6 @@ Authorization Enabled: Off
 Valid Redirect URI: https://[app-name]-[image-tag]-[target-namespace].[host-address]/*
 Web Origins: *
 ```
-
-Roles should be added to the test and prod clients as well. 
-For each client, add a role with Composite Roles `github-org-bcdevops`, `github-org-bcgov`, `github-org-bcgov-c`, and `idir-user`
-Using this role, an authorization flow should be added.
 
 #### Creating the build
 Create the build using the commands:
