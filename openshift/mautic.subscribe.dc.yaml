@@ -28,6 +28,10 @@ objects:
           "realm": "${SSO_REALM}",
           "clientId": "${SSO_CLIENT_ID}"
         }
+      authorizedRoles.json: |-
+        {
+          "authorizedRoles": "${SSO_AUTHORIZED_ROLES}"
+        }
     kind: ConfigMap
     metadata:
       creationTimestamp: null
@@ -236,5 +240,9 @@ parameters:
 - description: Host URL
   displayName: HOST_URL
   name: HOST_URL
+  value: ""
+- description: Comma separated values of authorized roles
+  displayName: SSO_AUTHORIZED_ROLES
+  name: SSO_AUTHORIZED_ROLES
   value: ""
 

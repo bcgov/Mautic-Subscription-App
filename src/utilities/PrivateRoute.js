@@ -2,14 +2,16 @@
 import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-
+import { AUTHORIZED_SSO_ROLES } from '../constants'
 
 export const PrivateRoute= ({ component: Component, ...rest }) => {
     const { keycloak, initialized } = useKeycloak();
+    const authorizedRoles = useConfig('/config/authorizedRoles.json');
 
-    const isMember = ( keycloak, userRoles) => {
-      const roles = ["github-org-bcgov", "github-org-bcgov-c", "github-org-bcdevops", "idir-user"];
-      const result = userRoles.filter(role => roles.indexOf(role) > -1);
+    const isMember = ( userRoles, authorizedRoles) => {
+      authorizedRoles = authorizedRoles.split(',');
+      if (authorizedRoles.length===1 && authorizedRoles[0]==='') return true
+      const result = userRoles.filter(role => authorizedRoles.indexOf(role) > -1);
       return result.length > 0
     }
 
@@ -17,7 +19,7 @@ export const PrivateRoute= ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={props => {
-                return keycloak.authenticated && isMember(keycloak.realmAccess.roles)
+                return keycloak.authenticated && isMember(keycloak.realmAccess.roles, AUTHORIZED_SSO_ROLES)
                     ? <Component {...props} />
                     : <Redirect to={{ pathname: '/401', }} />
             }}
