@@ -10,7 +10,6 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
 
     const isMember = ( userRoles, authorizedRoles) => {
       const splitAuthorizedRoles = authorizedRoles.split(',');
-      console.log(splitAuthorizedRoles)
       if (authorizedRoles.length===1 && splitAuthorizedRoles[0]==='') return true
       const result = userRoles.filter(role => splitAuthorizedRoles.indexOf(role) > -1);
       return result.length > 0
