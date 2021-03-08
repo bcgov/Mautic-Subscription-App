@@ -27,7 +27,6 @@ export const useConfig = (filePath) => {
   useEffect(() => {
     if(!config) {
       fetch(filePath).then(response => {
-        console.log(response.body)
         setConfig(JSON.parse(response.body))
       });
     }
