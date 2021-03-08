@@ -122,6 +122,15 @@ objects:
       test: false
       triggers: 
         - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true 
+            from:
+              kind: "ImageStreamTag"
+              name: "${APP_NAME}:${IMAGE_TAG}"
+              namespace: "${TARGET_NAMESPACE}"
+            containerNames:
+              - ${APP_NAME}-${IMAGE_TAG}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
