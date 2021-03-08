@@ -30,7 +30,7 @@ const actionForCurrentState = ( keycloak, idp ) => {
 
 const IdpButton = ( { idp } ) => {
   const { keycloak, initialized } = useKeycloak();
-  console.log(keycloak)
+  
   return (
     <button className="auth-button"
       onClick={actionForCurrentState(keycloak, idp)}
