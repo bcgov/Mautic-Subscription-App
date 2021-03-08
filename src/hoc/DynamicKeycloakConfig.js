@@ -16,7 +16,7 @@ export const DynamicKeycloakConfig = ({ children}) => {
       console.log(config)
       const kc = new KeycloakJS(JSON.stringify(config));
       console.log('end')
-      console.log(SON.stringify(config))
+      console.log(JSON.stringify(config))
       setKeycloak(kc);
     }
   }, [config]);
