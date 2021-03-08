@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 export const DynamicKeycloakConfig = ({ children}) => {
   const config = useConfig('/config/sso.json');
-  const [keycloak, setKeycloak] = useState(new KeycloakJS({}));
+  const [keycloak, setKeycloak] = useState(new KeycloakJS());
 
   useEffect(() => {
     if(config) {
