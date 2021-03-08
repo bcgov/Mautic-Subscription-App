@@ -12,7 +12,11 @@ export const DynamicKeycloakConfig = ({ children}) => {
 
   useEffect(() => {
     if(config) {
+      console.log('here')
+      console.log(config)
       const kc = new KeycloakJS(JSON.stringify(config));
+      console.log('end')
+      console.log(SON.stringify(config))
       setKeycloak(kc);
     }
   }, [config]);
