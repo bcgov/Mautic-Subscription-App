@@ -12,6 +12,8 @@ export const DynamicKeycloakConfig = ({ children}) => {
 
   useEffect(() => {
     if(config) {
+      console.log('here is keycloak')
+      console.log(config)
       const kc = new KeycloakJS(config);
       setKeycloak(kc);
     }
