@@ -26,7 +26,7 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 import './index.css';
 import { ReactKeycloakProvider } from '@react-keycloak/web'
 import DynamicKeycloakConfig from './hoc/DynamicKeycloakConfig';
-import serviceWorker from './serviceWorker';
+import {unregister} from './serviceWorkerRegistration';
 import { BrowserRouter } from 'react-router-dom';
 
 
@@ -47,4 +47,5 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-serviceWorker();
+unregister();
+
