@@ -8,12 +8,12 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     const { keycloak, initialized } = useKeycloak();
     const authorizedRolesJSON = useConfig('/config/authorizedRoles.json');
 
+    /**
+     * @param {string[]} userRoles user's roles in the realm
+     * @param {string} authorizedRolesJSON JSON object containing comma separated values of authorized roles
+     *  @returns {boolean} 
+     */
     const isMember = ( userRoles, authorizedRolesJSON) => {
-      /**
-       * @param {string[]} userRoles user's roles in the realm
-       * @param {string} authorizedRolesJSON JSON object containing comma separated values of authorized roles
-       *  @returns {boolean} 
-       */
 
       // Case where configmap for authorized roles does not exist. Assume everyone is authorized
       if (authorizedRolesJSON === null) return true
