@@ -11,12 +11,12 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     const isMember = ( userRoles, authorizedRoles) => {
       /**
        * @param {string[]} userRoles user's roles in the realm
-       * @param {string} authorizedRoles comma separated values of roles that are authorized
+       * @param {string} authorizedRoles comma separated values of authorized roles
        *  @returns {boolean} 
        */
       const splitAuthorizedRoles = authorizedRoles.split(',');
 
-      // return true if there are no defined authorized roles since everyone is authorized   
+      // return true if no authorized roles are defined, since everyone would be authorized   
       if (authorizedRoles.length === 1 && splitAuthorizedRoles[0] === '') return true
       
       // check if the user is authorized
