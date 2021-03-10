@@ -16,7 +16,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     const isMember = ( userRoles, authorizedRolesJSON) => {
 
       // Case where configmap for authorized roles does not exist. Assume everyone is authorized
-      if (authorizedRolesJSON === null) return true
+      if (!authorizedRolesJSON) return true
 
       const splitAuthorizedRoles = authorizedRolesJSON.authorizedRoles.split(',');
 
