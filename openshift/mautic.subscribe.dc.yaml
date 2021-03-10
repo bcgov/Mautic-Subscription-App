@@ -28,6 +28,10 @@ objects:
           "realm": "${SSO_REALM}",
           "clientId": "${SSO_CLIENT_ID}"
         }
+      authorizedRoles.json: |-
+        {
+          "authorizedRoles": "${SSO_AUTHORIZED_ROLES}"
+        }
     kind: ConfigMap
     metadata:
       creationTimestamp: null
@@ -63,7 +67,11 @@ objects:
           # rewrite @try_files {http.matchers.file.relative}
           try_files {path} {path}/ index.html
 
-          # On OCP we should log to stdout so Prometheus can
+          header /service-worker.js {
+          # all static assets SHOULD be cached
+            Content-Type "text/javascript"
+          }
+            # On OCP we should log to stdout so Prometheus can
           # slurp up the logs for human consumption.
           log {
             #errors stdout
@@ -122,6 +130,15 @@ objects:
       test: false
       triggers: 
         - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true 
+            from:
+              kind: "ImageStreamTag"
+              name: "${APP_NAME}:${IMAGE_TAG}"
+              namespace: "${TARGET_NAMESPACE}"
+            containerNames:
+              - ${APP_NAME}-${IMAGE_TAG}
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewApp
@@ -236,5 +253,9 @@ parameters:
 - description: Host URL
   displayName: HOST_URL
   name: HOST_URL
+  value: ""
+- description: Comma separated values of authorized roles
+  displayName: SSO_AUTHORIZED_ROLES
+  name: SSO_AUTHORIZED_ROLES
   value: ""
 

@@ -9,4 +9,3 @@ export const SSO_IDP = {
     GITHUB: 'github',
     IDIR: 'idir',
 };
-

@@ -123,23 +123,24 @@ For example, if there is a submitted workflow called `mautic-subscribe-build`, y
 Alternatively, you can delete all argo workflows using `argo delete --all`
 
 To build the subscription app in the tools namespace and deploy to the dev namespace, run the commands:
-`argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=[keycloak-url] -p IMAGE_TAG=[image-tag]`
+`argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=[keycloak-url] -p IMAGE_TAG=[image-tag] -p SSO_AUTHORIZED_ROLES=[authorized-roles]`
 
 - Example: 
-`argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p IMAGE_TAG=pr10`
+`argo submit openshift/argo/mautic.subscribe.build.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p IMAGE_TAG=pr10 -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 To promote the app in higher environments, run the command:
 
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p PR=pr[pr-number] -p HOST_URL=[host-url]`
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p PR=pr[pr-number] -p HOST_URL=[host-url] -p SSO_AUTHORIZED_ROLES=[authorized-roles]`
 
 Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespace].[host-address]/` if not provided.
-The HOST_URL is optional for deployments to dev and test namespaces but should be specified for the deployment to the prod namespace to provide a relevant URL for users.
+The HOST_URL is optional for deployments to dev and test namespaces but should be specified as the vanity url for the prod namespace.
+The SSO_AUTHORIZED_ROLES is also optional and should be specified as csv when gating users with certain roles to sign up for the mailing list.
 
 - Example promoting to the test namespace:
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=test -p TARGET_NAMESPACE=de0974-test -p PR=pr10`
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=test -p TARGET_NAMESPACE=de0974-test -p PR=pr10 -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 - Example promoting to the prod namespace:
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p IMAGE_TAG=prod -p TARGET_NAMESPACE=de0974-prod -p PR=pr10 -p HOST_URL=https://platform.news.subscription.apps.silver.devops.gov.bc.ca`
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p IMAGE_TAG=prod -p TARGET_NAMESPACE=de0974-prod -p PR=pr10 -p HOST_URL=https://platform.news.subscription.apps.silver.devops.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 #### Cleanup
 
@@ -210,6 +211,7 @@ Authorization Enabled: Off
 Valid Redirect URI: https://[app-name]-[image-tag]-[target-namespace].[host-address]/*
 Web Origins: *
 ```
+
 #### Creating the build
 Create the build using the commands:
 `oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - -n [tools-namespace]`
@@ -237,18 +239,19 @@ After retagging the image, delete the previously configured configmap if there i
 `oc delete configmap mautic-config-[image-tag] -n [target-namespace]` 
 
 Then deploy the app in the target namespaces using the command:
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] -p HOST_URL=[host-url]| oc apply -f - -n [target-namespace]`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] -p KEYCLOAK_URL=[keycloak-url] -p HOST_URL=[host-url] -p SSO_AUTHORIZED_ROLES=[authorized-roles]| oc apply -f - -n [target-namespace]`
 
 Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespace].[host-address]/` if not provided.
 The HOST_URL is optional for deployments to dev and test namespaces but should be specified for the prod namespace to provide a relevant URL for users.
+The SSO_AUTHORIZED_ROLES is also optional and should be specified as csv when gating users with certain roles to sign up for the mailing list.
 
 - Example deploying to dev:
 `oc delete configmap mautic-config-pr10 -n de0974-dev`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr10 -p IMAGE_TAG=pr10 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca | oc apply -f - -n de0974-dev`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr10 -p IMAGE_TAG=pr10 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-dev`
 
 - Example deploying to prod:
 `oc delete configmap mautic-config-prod -n de0974-prod`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p HOST_URL=https://platform.subscription.gov.bc.ca | oc apply -f - -n de0974-prod`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" -p HOST_URL=https://platform.subscription.gov.bc.ca | oc apply -f - -n de0974-prod`
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:

@@ -6,6 +6,8 @@ import { Route, Switch } from 'react-router-dom';
 import { Subscription } from './containers/Subscription'
 import { Subscribed } from './containers/Subscribed'
 import { Unsubscribed } from './containers/Unsubscribed'
+import { Unauthorized } from './containers/Unauthorized'
+
 import { PrivateRoute } from './utilities/PrivateRoute'
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
             path="/unsubscribed"
             component={Unsubscribed}
           />
+          <Route path="/401" component={Unauthorized} />
           <Route path="/" component={AuthModal} />
         </Switch>
       </Layout>
