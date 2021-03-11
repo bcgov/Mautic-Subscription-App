@@ -19,7 +19,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={props => {
-                return keycloak.authenticated && isMember(keycloak.realmAccess.roles, authorizedRolesJSON.authorizedRoles)
+                return keycloak.authenticated && !!authorizedRolesJSON && isMember(keycloak.realmAccess.roles, authorizedRolesJSON.authorizedRoles)
                     ? <Component {...props} />
                     : <Redirect to={{ pathname: '/401', }} />
             }}
