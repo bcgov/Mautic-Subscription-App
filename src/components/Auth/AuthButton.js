@@ -22,11 +22,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './AuthButton.css';
 
-export const AuthButton = () => {
+const titleForAuthenticationState = isAuthenticated => (isAuthenticated ? 'Logout' : 'Login');
+
+const linkForAuthenticationState = isAuthenticated => (isAuthenticated ? '/logout' : '/login');
+
+export const AuthButton = ({ isAuthenticated }) => {
   return (
     <span>
-      <Link className="auth-button" to={"/login"}>
-        {"login"}
+      <Link className="auth-button" to={linkForAuthenticationState(isAuthenticated)}>
+        {titleForAuthenticationState(isAuthenticated)}
       </Link>
     </span>
   );
