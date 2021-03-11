@@ -7,10 +7,13 @@ import { Subscription } from './containers/Subscription'
 import { Subscribed } from './containers/Subscribed'
 import { Unsubscribed } from './containers/Unsubscribed'
 import { Unauthorized } from './containers/Unauthorized'
+import { Logout } from './components/Auth/Logout'
 
 import { PrivateRoute } from './utilities/PrivateRoute'
+import { useKeycloak } from '@react-keycloak/web';
 
 function App() {
+  const { keycloak, initialized } = useKeycloak();
   return (
       <Layout >
         <Switch>
@@ -26,6 +29,7 @@ function App() {
             path="/unsubscribed"
             component={Unsubscribed}
           />
+          <Route path="/logout" component={Logout} />
           <Route path="/401" component={Unauthorized} />
           <Route path="/" component={AuthModal} />
         </Switch>

@@ -3,9 +3,14 @@ import { Modal, ModalHeader, ModalBody, } from 'reactstrap';
 import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
+import { useKeycloak } from '@react-keycloak/web';
 
 export const Unauthorized = () => {
-
+  const { keycloak } = useKeycloak();
+  console.log(keycloak)
+  if (keycloak.authenticated){
+    keycloak.logout({ redirectUri: `${window.location.origin}/` })
+  }
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>

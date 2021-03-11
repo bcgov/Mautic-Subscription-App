@@ -23,9 +23,6 @@ import React from 'react';
 import './AuthModal.css';
 
 const actionForCurrentState = ( keycloak, idp ) => {
-  if (keycloak.authenticated){
-    keycloak.logout()
-  }
   return () =>  {
     keycloak.login({ idpHint: idp, redirectUri: `${window.location.origin}/subscription` });
   }
