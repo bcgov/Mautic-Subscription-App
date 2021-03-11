@@ -9,7 +9,7 @@ export const Unauthorized = () => {
   const { keycloak } = useKeycloak();
   console.log(keycloak)
   if (keycloak.authenticated){
-    keycloak.logout({ redirectUri: `${window.location.origin}/` })
+    keycloak.logout()
   }
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>

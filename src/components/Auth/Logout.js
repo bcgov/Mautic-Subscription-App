@@ -1,15 +1,22 @@
 
 import React from 'react';
+
 import { useKeycloak } from '@react-keycloak/web';
 import { Redirect } from 'react-router';
 
-export const Logout= () => {
+export const Logout = () => {
   const { keycloak, initialized } = useKeycloak();
-  if (keycloak.authenticated){
-    keycloak.logout({ redirectUri: `${window.location.origin}/` })
+  console.log(keycloak)
+
+  const logout = ( keycloak ) => {
+    if (keycloak.authenticated){
+      keycloak.logout( { redirectUri: `${window.location.origin}/` } )
+    }
   }
   return (
-    <Redirect to={{ pathname: '/', }} />
+    <div>
+      {logout(keycloak)}
+      </div>
   );
 };
 
