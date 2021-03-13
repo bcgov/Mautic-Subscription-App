@@ -34,7 +34,7 @@ CLIENT_ID=$(curl --fail -sX GET "$KEYCLOAK_URL/auth/admin/realms/$REALM_NAME/cli
 echo $CLIENT_ID
 GET_ROLES=$(curl https://dev.oidc.gov.bc.ca/auth/admin/realms/devhub/clients/d5d9e7b1-0466-4f6b-9a8d-26464f0409ff/roles/authorized-user/composites -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN")
 
-# echo $GET_ROLES
+
 # Create client:
 if [ "${CLIENT_ID}" == "" ]; then
     echo "Creating '$NAME-$PR' client..."
@@ -47,15 +47,11 @@ if [ "${CLIENT_ID}" == "" ]; then
     curl -X POST https://dev.oidc.gov.bc.ca/auth/admin/realms/devhub/clients/$CLIENT_ID/roles -H "Content-Type: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -d @./keycloak-client-creation/add-role.json
     ROLE_ID=$(curl https://dev.oidc.gov.bc.ca/auth/admin/realms/devhub/clients/$CLIENT_ID/roles -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" | jq -r '.[0].id')
     ROLE_NAME=$(cat ./keycloak-client-creation/add-role.json | jq -r '.name')
-    # curl -X POST https://dev.oidc.gov.bc.ca/auth/admin/realms/devhub/clients/$ROLE_ID/roles/$ROLE_NAME/composites
+    echo $ROLE_ID
+    curl -X POST https://dev.oidc.gov.bc.ca/auth/admin/realms/devhub/roles-by-id/$ROLE_ID/composites -H "Content-Type: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -d @./keycloak-client-creation/add-composite.json
 fi
 
 
 # return the client-id:
 echo "$NAME-$PR"
 
-
-# [{"id":"f8760ed6-bfb4-47ac-9a4a-ff1948552262","name":"idir-user","description":"Users coming from IDIR IDP will be assigned with this role","composite":true,"clientRole":false,"containerId":"devhub"}
-# ,{"id":"49badd97-9233-4d7c-9581-dcdc369dcda5","name":"github-org-bcdevops","description":"Users with membership in GitHub BCDevOps organization","composite":true,"clientRole":false,"containerId":"devhub"}
-# ,{"id":"294d1229-9620-4d75-b4e6-8f772bc3b9b1","name":"github-org-bcgov","description":"Users with membership in GitHub bcgov organization","composite":true,"clientRole":false,"containerId":"devhub"}
-# ,{"id":"387fc24a-7aff-43c9-9a6b-f249f34e1bc3","name":"github-org-bcgov-c","description":"Users with membership in GitHub bcgov-c organization","composite":true,"clientRole":false,"containerId":"devhub"}]
