@@ -1,0 +1,29 @@
+[{
+	"id": "f8760ed6-bfb4-47ac-9a4a-ff1948552262",
+	"name": "idir-user",
+	"description": "Users coming from IDIR IDP will be assigned with this role",
+	"composite": true,
+	"clientRole": false,
+	"containerId": "devhub"
+}, {
+	"id": "49badd97-9233-4d7c-9581-dcdc369dcda5",
+	"name": "github-org-bcdevops",
+	"description": "Users with membership in GitHub BCDevOps organization",
+	"composite": true,
+	"clientRole": false,
+	"containerId": "devhub"
+}, {
+	"id": "294d1229-9620-4d75-b4e6-8f772bc3b9b1",
+	"name": "github-org-bcgov",
+	"description": "Users with membership in GitHub bcgov organization",
+	"composite": true,
+	"clientRole": false,
+	"containerId": "devhub"
+}, {
+	"id": "387fc24a-7aff-43c9-9a6b-f249f34e1bc3",
+	"name": "github-org-bcgov-c",
+	"description": "Users with membership in GitHub bcgov-c organization",
+	"composite": true,
+	"clientRole": false,
+	"containerId": "devhub"
+}]
