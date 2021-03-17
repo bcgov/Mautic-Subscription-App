@@ -28,20 +28,26 @@ export const Subscription = () => {
         </p>
         {config ? (
           <div className="auth-buttons">
-            <form action={config.subscribeActionURL} method="post">
-              <input className="auth-button" type="submit" value="Subscribe"/>
-              <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-              <input type="hidden" name="mauticform[formId]" value={getformID(config.subscribeActionURL)}></input>
-              <input type="hidden" name="mauticform[return]" value=""></input>
-              <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
-            </form>
-            <form action={config.unsubscribeActionURL} method="post">
-              <input className="auth-button" type="submit" value="Unsubscribe"/>
-              <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-              <input type="hidden" name="mauticform[formId]" value={getformID(config.unsubscribeActionURL)}></input>
-              <input type="hidden" name="mauticform[return]" value=""></input>
-              <input type="hidden" name="mauticform[formName]" value={config.unsubscribeFormName}></input>
-            </form>
+            <div className="form-buttons">
+              <div className="form-margin">
+                <form action={config.subscribeActionURL} method="post">
+                  <input className="auth-button" type="submit" value="Subscribe"/>
+                  <input type="hidden" name="mauticform[email]" value={userEmail}></input>
+                  <input type="hidden" name="mauticform[formId]" value={getformID(config.subscribeActionURL)}></input>
+                  <input type="hidden" name="mauticform[return]" value=""></input>
+                  <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
+                </form>
+              </div>
+              <div className="form-margin">
+                <form action={config.unsubscribeActionURL} method="post">
+                  <input className="auth-button" type="submit" value="Unsubscribe"/>
+                  <input type="hidden" name="mauticform[email]" value={userEmail}></input>
+                  <input type="hidden" name="mauticform[formId]" value={getformID(config.unsubscribeActionURL)}></input>
+                  <input type="hidden" name="mauticform[return]" value=""></input>
+                  <input type="hidden" name="mauticform[formName]" value={config.unsubscribeFormName}></input>
+                </form>
+              </div>
+            </div>
           </div>
           ): <div>loading...</div>
         }

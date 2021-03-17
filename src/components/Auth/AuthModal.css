@@ -25,6 +25,15 @@
   justify-content: space-evenly;
 }
 
+.form-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.form-margin {
+  margin: 30px;
+}
+
 .auth-modal .auth-button {
   margin: 0;
 }
