@@ -7,10 +7,11 @@ import { useKeycloak } from '@react-keycloak/web';
 
 export const Unauthorized = () => {
   const { keycloak } = useKeycloak();
-  console.log(keycloak)
+
   if (keycloak.authenticated){
     keycloak.logout()
   }
+  
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>

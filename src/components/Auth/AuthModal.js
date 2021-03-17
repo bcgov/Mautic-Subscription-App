@@ -9,13 +9,14 @@ import { Redirect } from 'react-router';
 
 export const AuthModal = () => {
   const { keycloak, initialized } = useKeycloak();
-  console.log(keycloak)
   const isAuthenticated = keycloak.authenticated;
+
   if (isAuthenticated) {
     return (
       <Redirect to={{ pathname: '/subscription', }} />
     )
   }
+
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
