@@ -28,8 +28,8 @@ export const Subscription = () => {
         </p>
         {config ? (
           <div className="auth-buttons">
-            <div className="form-buttons">
-              <div className="form-margin">
+            <div className="subscription-buttons">
+              <div className="subscription-buttons-spacer">
                 <form action={config.subscribeActionURL} method="post">
                   <input className="auth-button" type="submit" value="Subscribe"/>
                   <input type="hidden" name="mauticform[email]" value={userEmail}></input>
@@ -38,7 +38,7 @@ export const Subscription = () => {
                   <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
                 </form>
               </div>
-              <div className="form-margin">
+              <div className="subscription-buttons-spacer">
                 <form action={config.unsubscribeActionURL} method="post">
                   <input className="auth-button" type="submit" value="Unsubscribe"/>
                   <input type="hidden" name="mauticform[email]" value={userEmail}></input>

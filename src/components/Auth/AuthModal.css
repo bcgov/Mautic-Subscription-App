@@ -25,12 +25,12 @@
   justify-content: space-evenly;
 }
 
-.form-buttons {
+.subscription-buttons {
   display: flex;
   justify-content: center;
 }
 
-.form-margin {
+.subscription-buttons-spacer {
   margin: 0px 20px;
 }
 
