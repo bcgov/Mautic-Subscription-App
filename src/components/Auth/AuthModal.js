@@ -4,8 +4,19 @@ import Banner from '../UI/Banner';
 import { SSO_IDP, APP_INFO } from '../../constants';
 import './AuthModal.css';
 import IdpButton from './IdpButton.js';
+import { useKeycloak } from '@react-keycloak/web';
+import { Redirect } from 'react-router';
 
 export const AuthModal = () => {
+  const { keycloak, initialized } = useKeycloak();
+  const isAuthenticated = keycloak.authenticated;
+
+  if (isAuthenticated) {
+    return (
+      <Redirect to={{ pathname: '/subscription', }} />
+    )
+  }
+
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>

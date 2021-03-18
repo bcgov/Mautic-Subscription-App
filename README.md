@@ -1,3 +1,6 @@
+# Architecture Diagram
+
+![Architecture Diagram](architecture-diagram.png)
 # Setting up Mautic Subscription App on Openshift
 
 Start by granting imagepull access to the tools namespace for the dev, test, and prod namespaces
@@ -113,6 +116,7 @@ Authorization Enabled: Off
 Valid Redirect URI: https://[app-name]-[image-tag]-[target-namespace].[host-address]/*
 Web Origins: *
 ```
+Additionally, a role should be created with composite roles github-org-bcgov, github-org-bcgov-c, github-org-bcdevops, idir-user.
 
 Now argo should be set up to run the workflows.
 #### Build and Deploy
@@ -211,6 +215,7 @@ Authorization Enabled: Off
 Valid Redirect URI: https://[app-name]-[image-tag]-[target-namespace].[host-address]/*
 Web Origins: *
 ```
+Additionally, a role should be created with composite roles github-org-bcgov, github-org-bcgov-c, github-org-bcdevops, idir-user.
 
 #### Creating the build
 Create the build using the commands:

@@ -25,6 +25,15 @@
   justify-content: space-evenly;
 }
 
+.subscription-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.subscription-buttons-spacer {
+  margin: 0px 20px;
+}
+
 .auth-modal .auth-button {
   margin: 0;
 }
