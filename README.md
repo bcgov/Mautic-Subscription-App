@@ -144,7 +144,7 @@ The SSO_AUTHORIZED_ROLES is also optional and should be specified as csv when ga
 `argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=test -p TARGET_NAMESPACE=de0974-test -p PR=pr10 -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 - Example promoting to the prod namespace:
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p IMAGE_TAG=prod -p TARGET_NAMESPACE=de0974-prod -p PR=pr10 -p HOST_URL=https://platform.news.subscription.apps.silver.devops.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p IMAGE_TAG=prod -p TARGET_NAMESPACE=de0974-prod -p PR=pr10 -p HOST_URL=https://subscribe.developer.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 #### Cleanup
 
