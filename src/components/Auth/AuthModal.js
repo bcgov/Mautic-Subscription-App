@@ -22,7 +22,7 @@ export const AuthModal = () => {
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>Please login to subscribe/unsubscribe from the Platform News Mailing List</ModalBody>
+      <ModalBody>Please login to subscribe/unsubscribe from the {APP_INFO.NAME}.</ModalBody>
       <ModalFooter>
         <p>Login with:</p>
         <div className="auth-buttons">

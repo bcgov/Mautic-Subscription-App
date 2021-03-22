@@ -14,7 +14,7 @@ export const Subscribed = () => {
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>You have subscribed to the Platform News mailing list.</ModalBody>
+      <ModalBody>You have subscribed to the {APP_INFO.NAME}.</ModalBody>
     </Modal>
   );
 };

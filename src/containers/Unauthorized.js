@@ -17,7 +17,7 @@ export const Unauthorized = () => {
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>You are unable to subscribe to the mailing list. You must log in with an idir account or a be a member of the bcgov or bcgovdevops organizations on github.</ModalBody>
+      <ModalBody>You are unable to subscribe to the subscription service. You must log in with an idir account or a be a member of the bcgov or bcgovdevops organizations on github.</ModalBody>
     </Modal>
   );
 };
