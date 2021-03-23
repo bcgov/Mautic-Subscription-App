@@ -11,7 +11,7 @@ export const Unsubscribed = () => {
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>You have unsubscribed from the Platform News mailing list.</ModalBody>
+      <ModalBody>You have unsubscribed from the {APP_INFO.NAME}.</ModalBody>
     </Modal>
   );
 };

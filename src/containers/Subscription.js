@@ -22,7 +22,7 @@ export const Subscription = () => {
       <h1>Welcome to {APP_INFO.DISPLAY_NAME}</h1>
       <div>
         <p>
-          Hello {userName}, subscribe/unsubscribe from the Platform News mailing list.
+          Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
           <br />
           Your email address is {userEmail}.
         </p>

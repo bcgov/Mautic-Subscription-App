@@ -1,8 +1,8 @@
 
 
 export const APP_INFO = {
-    NAME: 'Mautic Subscription App',
-    DISPLAY_NAME: 'Mautic Subscription App',
+    NAME: ' Platform Services Comms Subscription Service',
+    DISPLAY_NAME: ' Platform Services Comms Subscription Service',
 };
 
 export const SSO_IDP = {
