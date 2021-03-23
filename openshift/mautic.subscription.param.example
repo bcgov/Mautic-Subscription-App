@@ -12,4 +12,3 @@ SUBSCRIBE_URL=
 UNSUBSCRIBE_URL=
 SSO_REALM=
 HOST_ADDRESS=apps.silver.devops.gov.bc.ca
-HOST_URL=""
