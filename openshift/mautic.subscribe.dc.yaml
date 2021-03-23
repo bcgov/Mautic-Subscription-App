@@ -184,27 +184,6 @@ objects:
         insecureEdgeTerminationPolicy: Redirect
     status:
       ingress: null  
-  - apiVersion: route.openshift.io/v1
-    kind: Route
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: ${APP_NAME}
-        name: ${APP_NAME}-${IMAGE_TAG}
-      name: ${APP_NAME}-${IMAGE_TAG}-2
-    spec:
-      host: ${HOST_URL}
-      port:
-        targetPort: 2015-tcp
-      to:
-        kind: ""
-        name: ${APP_NAME}-${IMAGE_TAG}
-        weight: null
-      tls:
-        termination: Edge
-        insecureEdgeTerminationPolicy: Redirect
-    status:
-      ingress: null
 parameters:
 - description: A name used for all objects
   displayName: App Name
@@ -250,10 +229,6 @@ parameters:
   displayName: SSO_CLIENT_ID
   name: SSO_CLIENT_ID
   required: true 
-- description: Host URL
-  displayName: HOST_URL
-  name: HOST_URL
-  value: ""
 - description: Comma separated values of authorized roles
   displayName: SSO_AUTHORIZED_ROLES
   name: SSO_AUTHORIZED_ROLES

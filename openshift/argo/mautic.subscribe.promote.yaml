@@ -166,7 +166,6 @@ spec:
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
             -p SSO_CLIENT_ID={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}
             -p IMAGE_REGISTRY={{workflow.parameters.IMAGE_REGISTRY}}
-            -p HOST_URL={{workflow.parameters.HOST_URL}}
             -p SSO_AUTHORIZED_ROLES={{workflow.parameters.SSO_AUTHORIZED_ROLES}}
             -n {{workflow.parameters.TARGET_NAMESPACE}}
             | oc apply -f - -n {{workflow.parameters.TARGET_NAMESPACE}}

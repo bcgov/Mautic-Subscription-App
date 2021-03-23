@@ -37,8 +37,6 @@ The SUBSCRIBE_FORM and UNSUBSCRIBE_FORM parameters are the names of the subscrib
 
 The SUBSCRIBE_URL and UNSUBSCRIBE_URL are the subscribe and unsubscribe form URLs. They are expressed in the following format: ```<mautic-app-url>/form/submit?formId=[form-id]``` where the `form-id` are listed under the `ID` column in Components -> Forms in the Mautic App
 
-Leave the HOST_URL value as "". This parameter will only be used when promoting the app to the prod environment.
-
 Example:
 ```
 {
@@ -55,8 +53,7 @@ Example:
     "SUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1",
     "UNSUBSCRIBE_URL":"http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2",
     "SSO_REALM":"devhub",
-    "HOST_ADDRESS":"apps.silver.devops.gov.bc.ca",
-    "HOST_URL":""
+    "HOST_ADDRESS":"apps.silver.devops.gov.bc.ca"
 }
 ```
 #### Installing Argo and setting up the environment
@@ -134,17 +131,13 @@ To build the subscription app in the tools namespace and deploy to the dev names
 
 To promote the app in higher environments, run the command:
 
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p PR=pr[pr-number] -p HOST_URL=[host-url] -p SSO_AUTHORIZED_ROLES=[authorized-roles]`
-
-Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespace].[host-address]/` if not provided.
-The HOST_URL is optional for deployments to dev and test namespaces but should be specified as the vanity url for the prod namespace.
-The SSO_AUTHORIZED_ROLES is also optional and should be specified as csv when gating users with certain roles to sign up for the mailing list.
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=[image-tag] -p TARGET_NAMESPACE=[target-namespace] -p PR=pr[pr-number] -p SSO_AUTHORIZED_ROLES=[authorized-roles]`
 
 - Example promoting to the test namespace:
 `argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://test.oidc.gov.bc.ca -p IMAGE_TAG=test -p TARGET_NAMESPACE=de0974-test -p PR=pr10 -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 - Example promoting to the prod namespace:
-`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p IMAGE_TAG=prod -p TARGET_NAMESPACE=de0974-prod -p PR=pr10 -p HOST_URL=https://subscribe.developer.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
+`argo submit openshift/argo/mautic.subscribe.promote.yaml -f openshift/argo/argo.workflow.param -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p IMAGE_TAG=prod -p TARGET_NAMESPACE=de0974-prod -p PR=pr10 -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user"`
 
 #### Cleanup
 
@@ -174,8 +167,6 @@ Of particular note are the parameters SUBSCRIBE_FORM, UNSUBSCRIBE_FORM, SUBSCRIB
 The SUBSCRIBE_FORM and UNSUBSCRIBE_FORM parameters are the names of the subscribe and unsubscribe forms in lower case. Under Components -> Forms in the Mautic App, you can find the names of each form listed under the `Name` column.
 
 The SUBSCRIBE_URL and UNSUBSCRIBE_URL are the subscribe and unsubscribe form URLs. They are expressed in the following format: ```<mautic-app-url>/form/submit?formId=[form-id]``` where the `form-id` are listed under the `ID` column in Components -> Forms in the Mautic App
-
-Leave the HOST_URL value as "". This parameter will only be used when promoting the app to the prod environment.
 
 - Example:
 ```
@@ -244,11 +235,7 @@ After retagging the image, delete the previously configured configmap if there i
 `oc delete configmap mautic-config-[image-tag] -n [target-namespace]` 
 
 Then deploy the app in the target namespaces using the command:
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] -p KEYCLOAK_URL=[keycloak-url] -p HOST_URL=[host-url] -p SSO_AUTHORIZED_ROLES=[authorized-roles]| oc apply -f - -n [target-namespace]`
-
-Note that the HOST_URL will default to `https://[app-name]-[image-tag]-[namespace].[host-address]/` if not provided.
-The HOST_URL is optional for deployments to dev and test namespaces but should be specified for the prod namespace to provide a relevant URL for users.
-The SSO_AUTHORIZED_ROLES is also optional and should be specified as csv when gating users with certain roles to sign up for the mailing list.
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=[target-namespace] -p SSO_CLIENT_ID=[sso-client-id] -p KEYCLOAK_URL=[keycloak-url] -p SSO_AUTHORIZED_ROLES=[authorized-roles]| oc apply -f - -n [target-namespace]`
 
 - Example deploying to dev:
 `oc delete configmap mautic-config-pr10 -n de0974-dev`
@@ -256,7 +243,7 @@ The SSO_AUTHORIZED_ROLES is also optional and should be specified as csv when ga
 
 - Example deploying to prod:
 `oc delete configmap mautic-config-prod -n de0974-prod`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" -p HOST_URL=https://platform.subscription.gov.bc.ca | oc apply -f - -n de0974-prod`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-prod`
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:
