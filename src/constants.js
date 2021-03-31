@@ -1,8 +1,8 @@
 
 
 export const APP_INFO = {
-    NAME: ' Platform Services Comms Subscription Service',
-    DISPLAY_NAME: ' Platform Services Comms Subscription Service',
+    NAME: 'DevOps Platform Services Communications',
+    DISPLAY_NAME: 'DevOps Platform Services Communications',
 };
 
 export const SSO_IDP = {
