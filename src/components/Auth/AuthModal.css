@@ -44,6 +44,13 @@
   vertical-align: middle;
 }
 
+.app-url-hover {
+  background-color:white;
+}
+
+.app-url-hover:hover {
+  color: blue;
+}
 @media screen and (max-width: 500px) {
   .auth-modal .modal-dialog {
     width: 100%;
