@@ -40,7 +40,7 @@
 
 .modal-body {
   height: auto;
-  width: 500px;
+  width: auto;
   vertical-align: middle;
   text-align: center;
 }
