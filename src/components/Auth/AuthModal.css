@@ -42,6 +42,7 @@
   height: auto;
   width: 500px;
   vertical-align: middle;
+  text-align: center;
 }
 
 .app-url-hover {
