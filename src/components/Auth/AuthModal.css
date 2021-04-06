@@ -39,7 +39,7 @@
 }
 
 .modal-body {
-  height: 90px;
+  height: auto;
   width: 500px;
   vertical-align: middle;
 }

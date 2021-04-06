@@ -19,7 +19,7 @@ export const Subscription = () => {
   return (
 
     <div>
-      <h1>Welcome to {APP_INFO.DISPLAY_NAME}</h1>
+      <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
       <div>
         <p>
           Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
