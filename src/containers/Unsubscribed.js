@@ -11,7 +11,9 @@ export const Unsubscribed = () => {
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>You have unsubscribed from the {APP_INFO.NAME}.</ModalBody>
+      <ModalBody>You have been successfully unsubscribed from the {APP_INFO.NAME}. We are sorry to see you go. If you change your mind, you can always re-subscribe
+        at <a href={APP_INFO.URL} class="app-url-hover">{APP_INFO.URL}</a>. You can now close the page.
+      </ModalBody>
     </Modal>
   );
 };
