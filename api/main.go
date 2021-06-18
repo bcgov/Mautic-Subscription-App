@@ -13,8 +13,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/segments", getSegments)
-	http.HandleFunc("/segments/ids", getSegmentAndIds)
+	http.HandleFunc("/segments", getSegmentAndIds)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
@@ -79,20 +78,5 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			}
 			fmt.Fprintf(w, "%s \n", b)
 		}
-	}
-}
-
-func getSegments(w http.ResponseWriter, r *http.Request) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://mautic-theme-de0974-dev.apps.silver.devops.gov.bc.ca/api/segments", nil)
-	req.SetBasicAuth("mautic", "mautic")
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Fprintf(w, "The HTTP request failed with error %s\n", err)
-	} else {
-		bodyText, _ := ioutil.ReadAll(resp.Body)
-		s := string(bodyText)
-
-		fmt.Fprintf(w, s)
 	}
 }
