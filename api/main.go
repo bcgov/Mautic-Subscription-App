@@ -1,32 +1,50 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Nerzal/gocloak/v8"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load env variables
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	kcClientID := os.Getenv("KC_CLIENT_ID")
+	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
+	kcRealm := os.Getenv("KC_REALM")
+	kcURL := os.Getenv("KC_URL")
+
+	// Initialize keycloak client
+	kcClient := gocloak.NewClient((kcURL))
+	fmt.Println(kcClientID)
+	ctx := context.Background()
+	token, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
+	if err != nil {
+		panic("Login failed:" + err.Error())
+	}
+	fmt.Println(token)
+
+	// Create backend server
 	http.HandleFunc("/segments", getSegments)
-	http.HandleFunc("/segments/ids", getSegmentAndIds)
-	err := http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/segments/ids", getSegmentAndIDs)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
 	}
-
-	// response, err := http.Get("https://google.com")
-	// if err != nil {
-	// 	fmt.Printf("The HTTP request failed with error %s\n", err)
-	// } else {
-	// 	data, _ := ioutil.ReadAll(response.Body)
-	// 	fmt.Println(string(data))
-	// }
 
 }
 
@@ -57,7 +75,7 @@ type SegmentAndID struct {
 	SegmentID   string
 }
 
-func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
+func getSegmentAndIDs(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://mautic-theme-de0974-dev.apps.silver.devops.gov.bc.ca/api/segments", nil)
 	req.SetBasicAuth("mautic", "mautic")
