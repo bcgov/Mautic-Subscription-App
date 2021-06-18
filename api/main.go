@@ -19,15 +19,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	// response, err := http.Get("https://google.com")
-	// if err != nil {
-	// 	fmt.Printf("The HTTP request failed with error %s\n", err)
-	// } else {
-	// 	data, _ := ioutil.ReadAll(response.Body)
-	// 	fmt.Println(string(data))
-	// }
-
 }
 
 type SegmentData struct {
@@ -78,8 +69,6 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 			for _, value := range data.Lists {
-				// output := strconv.Itoa(value.ID) + value.Name
-				// fmt.Fprintf(w, output  + "\n")
 				curSegmentAndID := SegmentAndID{strconv.Itoa(value.ID), value.Name}
 				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
 
