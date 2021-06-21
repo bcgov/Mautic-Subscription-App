@@ -21,7 +21,7 @@ func main() {
 	// Load env variables
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		fmt.Println("Error loading .env file")
 	}
 	kcClientID := os.Getenv("KC_CLIENT_ID")
 	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
@@ -33,14 +33,14 @@ func main() {
 	ctx := context.Background()
 	token, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
 	if err != nil {
-		panic("Login failed:" + err.Error())
+		fmt.Println("Login failed:" + err.Error())
 	}
 	fmt.Println(token)
 
 	http.HandleFunc("/segments", getSegmentAndIds)
 	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 }
@@ -76,7 +76,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 	// Load env variables
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		fmt.Println("Error loading .env file")
 	}
 
 	mauticUser := os.Getenv("MAUTIC_USER")
