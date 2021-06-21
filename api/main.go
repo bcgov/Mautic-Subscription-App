@@ -7,9 +7,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -48,9 +51,18 @@ type SegmentAndID struct {
 }
 
 func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
+	// Load env variables
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	mauticUser := os.Getenv("MAUTIC_USER")
+	mauticPW := os.Getenv("MAUTIC_PW")
+	mauticURL := os.Getenv("MAUTIC_URL")
+
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://mautic-theme-de0974-dev.apps.silver.devops.gov.bc.ca/api/segments", nil)
-	req.SetBasicAuth("mautic", "mautic")
+	req, err := http.NewRequest("GET", mauticURL+"api/segments", nil)
+	req.SetBasicAuth(mauticUser, mauticPW)
 
 	resp, err := client.Do(req)
 
