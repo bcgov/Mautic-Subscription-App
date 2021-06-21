@@ -1,0 +1,146 @@
+kind: Template
+apiVersion: v1
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      name: ${APP_NAME}-api
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+    spec:
+      lookupPolicy:
+        local: false
+    status: {}
+
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          annotations:
+            openshift.io/generated-by: OpenShiftNewApp
+          creationTimestamp: null
+          labels:
+            deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
+        spec:
+          containers:
+            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${APP_NAME}-api:${IMAGE_TAG}'
+              imagePullPolicy: Always
+              name: ${APP_NAME}-api-${IMAGE_TAG}
+              ports:
+                - containerPort: 2015
+                  protocol: TCP
+              resources: {}
+      test: false
+      triggers: 
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true 
+            from:
+              kind: "ImageStreamTag"
+              name: "${APP_NAME}-api:${IMAGE_TAG}"
+              namespace: "${TARGET_NAMESPACE}"
+            containerNames:
+              - ${APP_NAME}-api-${IMAGE_TAG}
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+  - apiVersion: v1
+    kind: Service
+    spec:
+      ports:
+        - name: 2015-tcp
+          port: 2015
+          protocol: TCP
+          targetPort: 2015
+      selector:
+        deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+    spec:
+      host: ""
+      port:
+        targetPort: 2015-tcp
+      to:
+        kind: ""
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+        weight: null
+      tls:
+        termination: Edge
+        insecureEdgeTerminationPolicy: Redirect
+    status:
+      ingress: null  
+parameters:
+- description: A name used for all objects
+  displayName: App Name
+  name: APP_NAME
+  required: true
+- description: A name used for all objects
+  displayName: IMAGE_REGISTRY
+  name: IMAGE_REGISTRY
+  required: true
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true
+- description: A name used for all objects
+  displayName: TARGET_NAMESPACE
+  name: TARGET_NAMESPACE
+  required: true
+- description: Subscribe form name
+  displayName: SUBSCRIBE_FORM
+  name: SUBSCRIBE_FORM
+  required: true
+- description: Unubscribe form name
+  displayName: UNSUBSCRIBE_FORM
+  name: UNSUBSCRIBE_FORM
+  required: true
+- description: Subscribe Action URL
+  displayName: SUBSCRIBE_URL
+  name: SUBSCRIBE_URL
+  required: true
+- description: Unubscribe Action URL
+  displayName: UNSUBSCRIBE_URL
+  name: UNSUBSCRIBE_URL
+  required: true
+- description: Keycloak URL
+  displayName: KEYCLOAK_URL
+  name: KEYCLOAK_URL
+  required: true
+- description: SSO REALM
+  displayName: SSO_REALM
+  name: SSO_REALM
+  required: true 
+- description: SSO CLIENT_ID
+  displayName: SSO_CLIENT_ID
+  name: SSO_CLIENT_ID
+  required: true 
+- description: Comma separated values of authorized roles
+  displayName: SSO_AUTHORIZED_ROLES
+  name: SSO_AUTHORIZED_ROLES
+  value: ""
+
