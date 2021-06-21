@@ -40,6 +40,7 @@ objects:
           pullSecret:
             name: artifactory-creds
           dockerfilePath: Dockerfile
+          from: docker-remote.artifacts.developer.gov.bc.ca/golang
         type: Docker
     metadata:
       annotations:
