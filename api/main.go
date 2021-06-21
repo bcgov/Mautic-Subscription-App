@@ -14,19 +14,21 @@ import (
 	"time"
 
 	"github.com/Nerzal/gocloak/v8"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
 	// Load env variables
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println("Error loading .env file")
+	// }
 	kcClientID := os.Getenv("KC_CLIENT_ID")
 	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
 	kcRealm := os.Getenv("KC_REALM")
 	kcURL := os.Getenv("KC_URL")
+
+	fmt.Println(kcClientID)
 
 	// Initialize keycloak client
 	kcClient := gocloak.NewClient((kcURL))
@@ -73,11 +75,11 @@ type SegmentAndID struct {
 }
 
 func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
-	// Load env variables
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file")
-	}
+	// // Load env variables
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println("Error loading .env file")
+	// }
 
 	mauticUser := os.Getenv("MAUTIC_USER")
 	mauticPW := os.Getenv("MAUTIC_PW")
