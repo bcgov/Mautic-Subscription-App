@@ -56,6 +56,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
 	mauticUser := os.Getenv("MAUTIC_USER")
 	mauticPW := os.Getenv("MAUTIC_PW")
 	mauticURL := os.Getenv("MAUTIC_URL")
@@ -72,6 +73,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 		bodyText, _ := ioutil.ReadAll(resp.Body)
 		dec := json.NewDecoder(strings.NewReader(string(bodyText)))
 		segmentAndIDs := []SegmentAndID{}
+
 		for {
 			var data SegmentData
 			if err := dec.Decode(&data); err == io.EOF {
@@ -79,11 +81,13 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			} else if err != nil {
 				log.Fatal(err)
 			}
+			// Append segment and ID to output
 			for _, value := range data.Lists {
 				curSegmentAndID := SegmentAndID{strconv.Itoa(value.ID), value.Name}
 				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
-
 			}
+
+			// Marshall array to json
 			b, err := json.Marshal(segmentAndIDs)
 			if err != nil {
 				fmt.Fprintf(w, "Marshal failed with error %s\n", err)
