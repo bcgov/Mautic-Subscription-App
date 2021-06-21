@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,28 +13,28 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Nerzal/gocloak"
+	"github.com/Nerzal/gocloak/v8"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load env variables
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
 	kcClientID := os.Getenv("KC_CLIENT_ID")
 	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
 	kcRealm := os.Getenv("KC_REALM")
 	kcURL := os.Getenv("KC_URL")
 
 	// Initialize keycloak client
-	kcClient := gocloak.NewClient(kcURL)
-	token, err := kcClient.LoginClient(kcClientID, kcClientSecret, kcRealm)
+	kcClient := gocloak.NewClient((kcURL))
+	ctx := context.Background()
+	token, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
 	if err != nil {
 		panic("Login failed:" + err.Error())
 	}
-
 	fmt.Println(token)
 
 	http.HandleFunc("/segments", getSegmentAndIds)
