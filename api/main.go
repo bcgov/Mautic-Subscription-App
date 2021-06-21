@@ -83,7 +83,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			}
 			// Append segment and ID to output
 			for _, value := range data.Lists {
-				curSegmentAndID := SegmentAndID{strconv.Itoa(value.ID), value.Name}
+				curSegmentAndID := SegmentAndID{value.Name, strconv.Itoa(value.ID)}
 				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
 			}
 
