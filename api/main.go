@@ -12,15 +12,36 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Nerzal/gocloak"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	kcClientID := os.Getenv("KC_CLIENT_ID")
+	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
+	kcRealm := os.Getenv("KC_REALM")
+	kcURL := os.Getenv("KC_URL")
+
+	// Initialize keycloak client
+	kcClient := gocloak.NewClient(kcURL)
+	token, err := kcClient.LoginClient(kcClientID, kcClientSecret, kcRealm)
+	if err != nil {
+		panic("Login failed:" + err.Error())
+	}
+
+	fmt.Println(token)
+
 	http.HandleFunc("/segments", getSegmentAndIds)
-	err := http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 type SegmentData struct {
