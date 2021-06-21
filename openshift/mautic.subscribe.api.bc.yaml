@@ -36,13 +36,11 @@ objects:
           uri: ${SOURCE_REPOSITORY_URL}
         type: Git
       strategy:
-        sourceStrategy:
-          dockerStrategy:
+        dockerStrategy:
           pullSecret:
             name: artifactory-creds
           dockerfilePath: Dockerfile
         type: Docker
-        type: Source
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
