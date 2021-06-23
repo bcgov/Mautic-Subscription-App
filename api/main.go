@@ -18,11 +18,6 @@ import (
 )
 
 func main() {
-	// Load env variables
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	fmt.Println("Error loading .env file")
-	// }
 	kcClientID := os.Getenv("KC_CLIENT_ID")
 	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
 	kcRealm := os.Getenv("KC_REALM")
@@ -75,12 +70,6 @@ type SegmentAndID struct {
 }
 
 func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
-	// // Load env variables
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	fmt.Println("Error loading .env file")
-	// }
-
 	mauticUser := os.Getenv("MAUTIC_USER")
 	mauticPW := os.Getenv("MAUTIC_PW")
 	mauticURL := os.Getenv("MAUTIC_URL")

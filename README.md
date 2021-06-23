@@ -209,6 +209,7 @@ Web Origins: *
 Additionally, a role should be created with composite roles github-org-bcgov, github-org-bcgov-c, github-org-bcdevops, idir-user.
 
 #### Creating the build
+##### Web
 Create the build using the commands:
 `oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - -n [tools-namespace]`
 and
@@ -217,6 +218,12 @@ and
 - Example:
 `oc process -f openshift/mautic.subscribe.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr10 | oc apply -f - -n de0974-tools`
 `oc start-build -w mautic-subscription-pr10`
+
+##### API
+Create the build using the command:
+`oc process -f openshift/mautic.subscribe.api.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true | oc apply -f - -n [tools-namespace]`
+and 
+`oc start-build -w [app-name]-api-[image-tag]`
 
 #### Retag Images
 Before deploying the app in the dev/test/prod namespaces run the following command to retag the image from the tools namespace:
@@ -231,6 +238,7 @@ Note for best practice, the pr number can be used as the image tag in the dev na
 `oc tag de0974-tools/mautic-subscription:pr10 de0974-test/mautic-subscription:test`
 
 #### Deploying the app
+##### Web
 After retagging the image, delete the previously configured configmap if there is one:
 `oc delete configmap mautic-config-[image-tag] -n [target-namespace]` 
 
@@ -244,6 +252,13 @@ Then deploy the app in the target namespaces using the command:
 - Example deploying to prod:
 `oc delete configmap mautic-config-prod -n de0974-prod`
 `oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-prod`
+
+##### API
+Create a secret for the environment variables:
+`oc create secret generic [app-name]-api --from-env-file=api/.env`
+
+Deploy the app in the target namespaces using the command:
+`oc process -f openshift/mautic.subscribe.api.dc.yaml --param-file=openshift/mautic.subscription.param -p TARGET_NAMESPACE=[target-namespace] --ignore-unknown-parameters=true | oc apply -f - -n [target-namespace]`
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:
