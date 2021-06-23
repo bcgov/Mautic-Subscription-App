@@ -35,7 +35,7 @@ objects:
               imagePullPolicy: Always
               name: ${APP_NAME}-api-${IMAGE_TAG}
               ports:
-                - containerPort: 2015
+                - containerPort: 8080
                   protocol: TCP
               resources: {}
               env:
@@ -96,10 +96,10 @@ objects:
     kind: Service
     spec:
       ports:
-        - name: 2015-tcp
-          port: 2015
+        - name: 8080-tcp
+          port: 8080
           protocol: TCP
-          targetPort: 2015
+          targetPort: 8080
       selector:
         deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
     metadata:
@@ -120,7 +120,7 @@ objects:
     spec:
       host: ""
       port:
-        targetPort: 2015-tcp
+        targetPort: 8080-tcp
       to:
         kind: ""
         name: ${APP_NAME}-api-${IMAGE_TAG}
