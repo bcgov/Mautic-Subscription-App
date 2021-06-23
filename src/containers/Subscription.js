@@ -11,7 +11,7 @@ export const Subscription = () => {
   const config = useConfig('/config/form.json');
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
-  
+  console.log(keycloak.token)
   const getformID = ( actionLink ) => {
     return actionLink.charAt(actionLink.length-1)
   }
