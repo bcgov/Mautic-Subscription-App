@@ -19,7 +19,7 @@ func main() {
 	http.HandleFunc("/segments", getSegmentAndIds)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
 	}
 }
 
@@ -79,7 +79,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			if err := dec.Decode(&data); err == io.EOF {
 				break
 			} else if err != nil {
-				log.Fatal(err)
+				fmt.Fprintf(w, "Decode failed with error %s\n", err)
 			}
 			// Append segment and ID to output
 			for _, value := range data.Lists {
