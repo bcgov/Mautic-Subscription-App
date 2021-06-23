@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -23,21 +22,18 @@ func main() {
 	kcRealm := os.Getenv("KC_REALM")
 	kcURL := os.Getenv("KC_URL")
 
-	fmt.Println(kcClientID)
-
 	// Initialize keycloak client
 	kcClient := gocloak.NewClient((kcURL))
 	ctx := context.Background()
-	token, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
+	_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
 	if err != nil {
-		fmt.Println("Login failed:" + err.Error())
+		fmt.Printf("Login failed:" + err.Error())
 	}
-	fmt.Println(token)
 
 	http.HandleFunc("/segments", getSegmentAndIds)
 	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf(err.Error())
 	}
 
 }
@@ -92,7 +88,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			if err := dec.Decode(&data); err == io.EOF {
 				break
 			} else if err != nil {
-				log.Fatal(err)
+				fmt.Fprintf(w, "Decode failed with error %s\n", err)
 			}
 			// Append segment and ID to output
 			for _, value := range data.Lists {
