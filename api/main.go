@@ -1,26 +1,28 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
+	"github.com/Nerzal/gocloak/v8"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
 	http.HandleFunc("/segments", getSegmentAndIds)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf(err.Error())
 	}
+
 }
 
 type SegmentData struct {
@@ -51,20 +53,38 @@ type SegmentAndID struct {
 }
 
 func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
-	// Load env variables
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	mauticUser := os.Getenv("MAUTIC_USER")
 	mauticPW := os.Getenv("MAUTIC_PW")
 	mauticURL := os.Getenv("MAUTIC_URL")
+	kcClientID := os.Getenv("KC_CLIENT_ID")
+	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
+	kcRealm := os.Getenv("KC_REALM")
+	kcURL := os.Getenv("KC_URL")
+	token := os.Getenv("TOKEN")
 
+	kcClient := gocloak.NewClient((kcURL))
+	ctx := context.Background()
+	_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
+	if err != nil {
+		fmt.Fprintf(w, "Login failed:"+err.Error())
+		return
+	}
+
+	rptResult, err := kcClient.RetrospectToken(ctx, token, kcClientID, kcClientSecret, kcRealm)
+	if err != nil {
+		fmt.Fprintf(w, "Inspection failed:"+err.Error())
+		return
+	}
+
+	if !*rptResult.Active {
+		fmt.Fprintf(w, "Token is not active")
+		return
+	}
+
+	// Mautic auth
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", mauticURL+"api/segments", nil)
 	req.SetBasicAuth(mauticUser, mauticPW)
-
 	resp, err := client.Do(req)
 
 	if err != nil {
