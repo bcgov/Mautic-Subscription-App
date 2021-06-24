@@ -33,7 +33,7 @@ func main() {
 	http.HandleFunc("/segments", getSegmentAndIds)
 	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
-		fmt.Printf(err.Error())
+		fmt.Println(err.Error())
 	}
 
 }
