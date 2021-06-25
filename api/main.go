@@ -65,7 +65,8 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 	resp, err := client.Do(req)
 
 	if err != nil {
-		fmt.Fprintf(w, "The HTTP request failed with error %s\n", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 	} else {
 		bodyText, _ := ioutil.ReadAll(resp.Body)
 		dec := json.NewDecoder(strings.NewReader(string(bodyText)))
@@ -107,17 +108,20 @@ func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc 
 		ctx := context.Background()
 		_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
 		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, "Keycloak Login failed:"+err.Error())
 			return
 		}
 
 		rptResult, err := kcClient.RetrospectToken(ctx, token, kcClientID, kcClientSecret, kcRealm)
 		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, "Keycloak inspection failed:"+err.Error())
 			return
 		}
 
 		if !*rptResult.Active {
+			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, "Keycloak token is not active")
 			return
 		}
