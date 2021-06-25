@@ -17,7 +17,8 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/segments", getSegmentAndIds)
+	http.HandleFunc("/segments", keycloakAuth(getSegmentAndIds))
+
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Printf(err.Error())
@@ -56,30 +57,6 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 	mauticUser := os.Getenv("MAUTIC_USER")
 	mauticPW := os.Getenv("MAUTIC_PW")
 	mauticURL := os.Getenv("MAUTIC_URL")
-	kcClientID := os.Getenv("KC_CLIENT_ID")
-	kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
-	kcRealm := os.Getenv("KC_REALM")
-	kcURL := os.Getenv("KC_URL")
-	token := os.Getenv("TOKEN")
-
-	kcClient := gocloak.NewClient((kcURL))
-	ctx := context.Background()
-	_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
-	if err != nil {
-		fmt.Fprintf(w, "Login failed:"+err.Error())
-		return
-	}
-
-	rptResult, err := kcClient.RetrospectToken(ctx, token, kcClientID, kcClientSecret, kcRealm)
-	if err != nil {
-		fmt.Fprintf(w, "Inspection failed:"+err.Error())
-		return
-	}
-
-	if !*rptResult.Active {
-		fmt.Fprintf(w, "Token is not active")
-		return
-	}
 
 	// Mautic auth
 	client := &http.Client{}
@@ -114,5 +91,38 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			}
 			fmt.Fprintf(w, "%s \n", b)
 		}
+	}
+}
+
+// keycloak authentication function that wraps handlers needing keycloak auth
+func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := r.Header.Get("Authorization")
+		kcClientID := os.Getenv("KC_CLIENT_ID")
+		kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
+		kcRealm := os.Getenv("KC_REALM")
+		kcURL := os.Getenv("KC_URL")
+		kcClient := gocloak.NewClient((kcURL))
+
+		ctx := context.Background()
+		_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
+		if err != nil {
+			fmt.Fprintf(w, "Keycloak Login failed:"+err.Error())
+			return
+		}
+
+		rptResult, err := kcClient.RetrospectToken(ctx, token, kcClientID, kcClientSecret, kcRealm)
+		if err != nil {
+			fmt.Fprintf(w, "Keycloak inspection failed:"+err.Error())
+			return
+		}
+
+		if !*rptResult.Active {
+			fmt.Fprintf(w, "Keycloak token is not active")
+			return
+		}
+
+		//Execute handler function if token is valid
+		fn(w, r)
 	}
 }
