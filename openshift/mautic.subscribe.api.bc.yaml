@@ -1,0 +1,74 @@
+kind: Template
+apiVersion: v1
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    spec:
+      lookupPolicy:
+        local: false
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewBuild
+      labels:
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+        app: ${APP_NAME}-api
+      name: ${APP_NAME}-api
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: '${APP_NAME}-api:${IMAGE_TAG}'
+      postCommit: {}
+      resources: 
+        requests:
+          cpu: 500m
+          memory: 1.5Gi
+        limits:
+          cpu: 1000m
+          memory: 3Gi
+      source:
+        contextDir: api
+        git:
+          ref: ${SOURCE_REPOSITORY_REF}
+          uri: ${SOURCE_REPOSITORY_URL}
+        type: Git
+      strategy:
+        dockerStrategy:
+          pullSecret:
+            name: artifactory-creds
+          dockerfilePath: Dockerfile
+          from: 
+            kind: DockerImage
+            name: docker-remote.artifacts.developer.gov.bc.ca/golang
+        type: Docker
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewBuild
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+parameters:
+- description: A name used for all objects
+  displayName: App Name
+  name: APP_NAME
+  required: true
+- description: Github repository URL
+  displayName: SOURCE_REPOSITORY_URL
+  name: SOURCE_REPOSITORY_URL
+  required: true
+- description: Github repository branch
+  displayName: SOURCE_REPOSITORY_REF
+  name: SOURCE_REPOSITORY_REF
+  required: true
+- description: Tools namespace name
+  displayName: TOOLS_NAMESPACE
+  name: TOOLS_NAMESPACE
+  required: true
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true

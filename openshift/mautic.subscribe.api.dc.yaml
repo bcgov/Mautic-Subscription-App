@@ -1,0 +1,150 @@
+kind: Template
+apiVersion: v1
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      name: ${APP_NAME}-api
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+    spec:
+      lookupPolicy:
+        local: false
+    status: {}
+
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          annotations:
+            openshift.io/generated-by: OpenShiftNewApp
+          creationTimestamp: null
+          labels:
+            deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
+        spec:
+          containers:
+            - image: '${IMAGE_REGISTRY}/${TARGET_NAMESPACE}/${APP_NAME}-api:${IMAGE_TAG}'
+              imagePullPolicy: Always
+              name: ${APP_NAME}-api-${IMAGE_TAG}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              resources: {}
+              env:
+                - name: KC_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: KC_CLIENT_ID
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: KC_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      key: KC_CLIENT_SECRET
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: KC_REALM
+                  valueFrom:
+                    secretKeyRef:
+                      key: KC_REALM
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: KC_URL
+                  valueFrom:
+                    secretKeyRef:
+                      key: KC_URL
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: MAUTIC_URL
+                  valueFrom:
+                    secretKeyRef:
+                      key: MAUTIC_URL
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: MAUTIC_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: MAUTIC_USER
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: MAUTIC_PW
+                  valueFrom:
+                    secretKeyRef:
+                      key: MAUTIC_PW
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+      test: false
+      triggers: 
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true 
+            from:
+              kind: "ImageStreamTag"
+              name: "${APP_NAME}-api:${IMAGE_TAG}"
+              namespace: "${TARGET_NAMESPACE}"
+            containerNames:
+              - ${APP_NAME}-api-${IMAGE_TAG}
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+  - apiVersion: v1
+    kind: Service
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        deploymentconfig: ${APP_NAME}-api-${IMAGE_TAG}
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ${APP_NAME}-api
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+      name: ${APP_NAME}-api-${IMAGE_TAG}
+    spec:
+      host: ""
+      port:
+        targetPort: 8080-tcp
+      to:
+        kind: ""
+        name: ${APP_NAME}-api-${IMAGE_TAG}
+        weight: null
+      tls:
+        termination: Edge
+        insecureEdgeTerminationPolicy: Redirect
+    status:
+      ingress: null  
+parameters:
+- description: A name used for all objects
+  displayName: App Name
+  name: APP_NAME
+  required: true
+- description: A name used for all objects
+  displayName: IMAGE_REGISTRY
+  name: IMAGE_REGISTRY
+  required: true
+- description: A name used for all objects
+  displayName: IMAGE_TAG
+  name: IMAGE_TAG
+  required: true
+- description: A name used for all objects
+  displayName: TARGET_NAMESPACE
+  name: TARGET_NAMESPACE
+  required: true
+
