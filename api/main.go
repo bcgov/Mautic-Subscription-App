@@ -98,7 +98,17 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 // keycloak authentication function that wraps handlers needing keycloak auth
 func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token := r.Header.Get("Authorization")
+		w.Header().Add("Content-Type", "application/json")
+
+		authHeader := strings.Fields(r.Header.Get("Authorization"))
+
+		if len(authHeader) < 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "Invalid authorization header")
+			return
+		}
+
+		token := authHeader[1]
 		kcClientID := os.Getenv("KC_CLIENT_ID")
 		kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
 		kcRealm := os.Getenv("KC_REALM")
