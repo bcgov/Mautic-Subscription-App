@@ -99,15 +99,14 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
-
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		authHeader := strings.Fields(r.Header.Get("Authorization"))
 
-		if len(authHeader) < 1 {
+		if len(authHeader) < 2 {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "Invalid authorization header")
 			return
 		}
-
 		token := authHeader[1]
 		kcClientID := os.Getenv("KC_CLIENT_ID")
 		kcClientSecret := os.Getenv("KC_CLIENT_SECRET")
