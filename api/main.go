@@ -99,7 +99,15 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Access-Control-Allow-Credentials", "true")
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+
+		if r.Method == "OPTIONS" {
+			http.Error(w, "No Content", http.StatusNoContent)
+			return
+		}
 		authHeader := strings.Fields(r.Header.Get("Authorization"))
 
 		if len(authHeader) < 2 {
@@ -116,6 +124,7 @@ func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc 
 
 		ctx := context.Background()
 		_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
+
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, "Keycloak Login failed:"+err.Error())
