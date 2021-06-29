@@ -42,8 +42,9 @@ export const Subscription = () => {
 
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
-      
-            {segments ?
+
+            {/* To be modified to display segments in a selectable list format */}
+            {/* {segments ?
             
             (<div>
             
@@ -57,7 +58,7 @@ export const Subscription = () => {
             
             </div>
             ): <div>loading...</div>
-            }
+            } */}
         
       <div>
         
