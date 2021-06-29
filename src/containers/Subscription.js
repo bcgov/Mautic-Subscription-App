@@ -1,26 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { APP_INFO, SUBSCRIPTION_FORM } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
+import axios from 'axios';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
   const config = useConfig('/config/form.json');
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
-  
+  const userToken = keycloak.token;
+  const [ segments, setSegments ] = useState(null);
+
   const getformID = ( actionLink ) => {
     return actionLink.charAt(actionLink.length-1)
   }
 
+  useEffect(() => {
+    const fetchSegments = async () => {
+      const result = await axios(
+        'https://mautic-theme-de0974-dev.apps.silver.devops.gov.bc.ca/api/segments',
+      );
+      setSegments(result.data);
+    };
+
+    fetchSegments();
+  }, []);
+  console.log(segments)
   return (
 
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
+      
+            {segments ?
+            
+            (<div>
+            
+              {
+                segments.map(
+                  (contents, x) => (
+                    <div key={x}> {contents.SegmentName} </div>
+                  )
+                )
+              }
+            
+            </div>
+            ): <div>loading...</div>
+            }
+        
       <div>
+        
         <p>
           Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
           <br />
