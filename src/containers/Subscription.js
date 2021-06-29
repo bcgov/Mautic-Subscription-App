@@ -21,10 +21,18 @@ export const Subscription = () => {
 
   useEffect(() => {
     const fetchSegments = async () => {
-      const result = await axios(
-        'https://mautic-theme-de0974-dev.apps.silver.devops.gov.bc.ca/api/segments',
-      );
-      setSegments(result.data);
+      const axiosConfig = {
+
+      }
+      if (config) {
+        const result = await axios.get(`${config.backendURL}segments`, {
+            headers: {
+              'Content-Type': "application/json",
+              'Authorization': `bearer ${userToken}`
+            }
+          });
+        setSegments(result.data);
+      }
     };
 
     fetchSegments();
