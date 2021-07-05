@@ -123,16 +123,10 @@ func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc 
 			return
 		}
 
-		rptResult, err := kcClient.RetrospectToken(ctx, token, kcClientID, kcClientSecret, kcRealm)
+		_, err = kcClient.GetUserInfo(ctx, token, kcRealm)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprintf(w, "Keycloak inspection failed:"+err.Error())
-			return
-		}
-
-		if !*rptResult.Active {
-			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprintf(w, "Keycloak token is not active")
+			fmt.Fprintf(w, "Invalid Keycloak Token:"+err.Error())
 			return
 		}
 
