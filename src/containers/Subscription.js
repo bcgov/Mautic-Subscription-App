@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { APP_INFO, SUBSCRIPTION_FORM } from '../constants';
+import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
-import Banner from '../components/UI/Banner';
 import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 import axios from 'axios';
