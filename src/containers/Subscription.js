@@ -13,10 +13,40 @@ export const Subscription = () => {
   const userToken = keycloak.token;
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
+  const [ checkedboxes, setCheckedboxes] = useState(null);
 
   const getformID = ( actionLink ) => {
     return actionLink.charAt(actionLink.length-1)
   }
+
+  const createCheckboxes = () => {
+      console.log(checkedboxes)
+      return (
+        segments.map(
+          (contents, x) => (
+            <div key={contents.SegmentID}> 
+              <input type ="checkbox" id ={contents.SegmentID} checked={checkedboxes[x]} onChange={() => handleCheckbox(x)}/>
+                <label htmlFor={contents.SegmentID}>
+                  key={contents.SegmentID}, {contents.SegmentName}, ischecked={String(checkedboxes[x])}, index={x}
+                </label>
+            </div>
+          )
+        )
+      )
+  }
+
+  const handleCheckbox = (updateIndex) => {
+    // Which way should I use to update the checked boxes?
+    // const updatedCheckedState = checkedboxes.map((item, index) =>
+    //   index === updateIndex ? !item : item
+    // );
+
+    // setCheckedboxes(updatedCheckedState);
+    const updatedCheckedboxes = [...checkedboxes]
+    updatedCheckedboxes[updateIndex] = !updatedCheckedboxes[updateIndex]
+    setCheckedboxes(updatedCheckedboxes)
+  }
+
 
   useEffect(() => {
     const fetchSegments = async () => {
@@ -52,6 +82,12 @@ export const Subscription = () => {
     fetchSegments();
   }, [config]);
   
+  useEffect(() => {
+    if (segments){
+      setCheckedboxes(new Array(segments.length).fill(false));
+    }
+  }, [segments]);
+
   if (httpError) {
     return (
       <div>
@@ -63,27 +99,21 @@ export const Subscription = () => {
   return (
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
-
-            {/* To be modified to display segments in a selectable list format */}
-            {segments ?
-            (<div>
-              {
-                segments.map(
-                  (contents, x) => (
-                    <div key={x}> {contents.SegmentName} </div>
-                  )
-                )
-              }
-            </div>
-            ): <div>loading segments...</div>
-            }
       <div>
-        
         <p>
           Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
           <br />
           Your email address is {userEmail}.
         </p>
+            {/* To be modified to display segments in a selectable list format */}
+            {segments && checkedboxes ?
+            (<div>
+              {createCheckboxes()}
+            </div>
+            ): <div>loading segments...</div>
+            }
+      
+        
         {config ? (
           <div className="auth-buttons">
             <div className="subscription-buttons">
