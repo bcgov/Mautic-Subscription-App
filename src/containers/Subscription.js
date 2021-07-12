@@ -4,6 +4,7 @@ import '../components/Auth/AuthModal.css';
 import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 import axios from 'axios';
+import './Subscription.css';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
@@ -13,41 +14,51 @@ export const Subscription = () => {
   const userToken = keycloak.token;
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
-  const [ checkedboxes, setCheckedboxes] = useState(null);
+  const [ checkboxes, setCheckboxes] = useState(null);
+  const [ selectAll, setSelectAll] = useState(false);
 
-  const getformID = ( actionLink ) => {
-    return actionLink.charAt(actionLink.length-1)
+  const selectAllCheckboxes = () => {
+    
+    const updatedCheckedboxes = checkboxes.map(
+      x => [!selectAll, x[1]]
+    )
+
+    setCheckboxes(updatedCheckedboxes)
+    setSelectAll(!selectAll)
   }
 
   const createCheckboxes = () => {
-      console.log(checkedboxes)
       return (
-        segments.map(
-          (contents, x) => (
-            <div key={contents.SegmentID}> 
-              <input type ="checkbox" id ={contents.SegmentID} checked={checkedboxes[x]} onChange={() => handleCheckbox(x)}/>
-                <label htmlFor={contents.SegmentID}>
-                  key={contents.SegmentID}, {contents.SegmentName}, ischecked={String(checkedboxes[x])}, index={x}
-                </label>
-            </div>
-          )
-        )
+        <div >
+          <div className="checkboxContent">
+            <input type ="checkbox" id="select_all" onChange={() => selectAllCheckboxes(true)}/>
+            <label htmlFor="select_all">
+              Select all
+            </label>
+          </div>
+
+          <div className="checkboxContent">
+            {segments.map((contents, x) => (
+                <div key={contents.SegmentID} className="checkboxContent"> 
+                  <input type ="checkbox" id ={contents.SegmentID} checked={checkboxes[x][0]} onChange={() => handleCheckbox(x)}/>
+                    <label htmlFor={contents.SegmentID}>
+                      {contents.SegmentName}, ischecked={String(checkboxes[x])}
+                    </label>
+                </div>
+            ))}
+          </div>
+        </div>
       )
   }
 
   const handleCheckbox = (updateIndex) => {
-    // Which way should I use to update the checked boxes?
-    // const updatedCheckedState = checkedboxes.map((item, index) =>
-    //   index === updateIndex ? !item : item
-    // );
+    const updatedCheckedboxes = [...checkboxes]
+    updatedCheckedboxes[updateIndex][0] = !updatedCheckedboxes[updateIndex][0]
 
-    // setCheckedboxes(updatedCheckedState);
-    const updatedCheckedboxes = [...checkedboxes]
-    updatedCheckedboxes[updateIndex] = !updatedCheckedboxes[updateIndex]
-    setCheckedboxes(updatedCheckedboxes)
+    setCheckboxes(updatedCheckedboxes)
   }
 
-
+  // Fetch segments when config file is loaded/changed
   useEffect(() => {
     const fetchSegments = async () => {
       if (config) {
@@ -59,7 +70,8 @@ export const Subscription = () => {
               }
             });
           
-          setSegments(segmentResponse.data);
+          // store segments in lexicographic order
+          setSegments(segmentResponse.data.sort((segmentA, segmentB) => segmentA.SegmentName.localeCompare(segmentB.SegmentName)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -82,12 +94,17 @@ export const Subscription = () => {
     fetchSegments();
   }, [config]);
   
+  // Set checkboxes when segments are fetched
   useEffect(() => {
     if (segments){
-      setCheckedboxes(new Array(segments.length).fill(false));
+      const initializeCheckedboxes = segments.map((contents) => (
+          [false, contents.SegmentID]
+      ))
+      setCheckboxes(initializeCheckedboxes)
     }
   }, [segments]);
 
+  
   if (httpError) {
     return (
       <div>
@@ -105,42 +122,14 @@ export const Subscription = () => {
           <br />
           Your email address is {userEmail}.
         </p>
-            {/* To be modified to display segments in a selectable list format */}
-            {segments && checkedboxes ?
-            (<div>
-              {createCheckboxes()}
-            </div>
-            ): <div>loading segments...</div>
-            }
-      
-        
-        {config ? (
-          <div className="auth-buttons">
-            <div className="subscription-buttons">
-              <div className="subscription-buttons-spacer">
-                <form action={config.subscribeActionURL} method="post">
-                  <input className="auth-button" type="submit" value="Subscribe"/>
-                  <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-                  <input type="hidden" name="mauticform[formId]" value={getformID(config.subscribeActionURL)}></input>
-                  <input type="hidden" name="mauticform[return]" value=""></input>
-                  <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
-                </form>
-              </div>
-              <div className="subscription-buttons-spacer">
-                <form action={config.unsubscribeActionURL} method="post">
-                  <input className="auth-button" type="submit" value="Unsubscribe"/>
-                  <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-                  <input type="hidden" name="mauticform[formId]" value={getformID(config.unsubscribeActionURL)}></input>
-                  <input type="hidden" name="mauticform[return]" value=""></input>
-                  <input type="hidden" name="mauticform[formName]" value={config.unsubscribeFormName}></input>
-                </form>
-              </div>
-            </div>
-          </div>
-          ): <div>loading...</div>
-        }
+   
+        {segments && checkboxes ? (
+          <div className="checkboxContainer">{createCheckboxes()}</div>
+        ) : (
+          <div>loading segments...</div>
+        )}
+          
       </div>         
-      
     </div>
   );
   }
