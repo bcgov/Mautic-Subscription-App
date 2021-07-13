@@ -14,6 +14,7 @@ export const Subscription = () => {
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
 
+
   const getformID = ( actionLink ) => {
     return actionLink.charAt(actionLink.length-1)
   }
