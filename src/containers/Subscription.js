@@ -63,16 +63,15 @@ export const Subscription = () => {
     const fetchSegments = async () => {
       if (config) {
         try {
-          const segmentResponse = await axios.get(`${config.backendURL}segments`, {
+          const segmentResponse = await axios.get(`${config.backendURL}/segments`, {
               headers: {
                 'Content-Type': "application/json",
                 'Authorization': `bearer ${userToken}`
               }
             });
-          const segmentData= segmentResponse.data
-          console.log(segmentData)
+          
           // store segments in lexicographic order
-          setSegments(segmentData.sort((segmentA, segmentB) => segmentA.SegmentName.localeCompare(segmentB.SegmentName)));
+          setSegments(segmentResponse.data.sort((segmentA, segmentB) => segmentA.SegmentName.localeCompare(segmentB.SegmentName)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -105,7 +104,7 @@ export const Subscription = () => {
     }
   }, [segments]);
 
-
+  
   if (httpError) {
     return (
       <div>
