@@ -124,6 +124,7 @@ func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc 
 
 		ctx := context.Background()
 		_, err := kcClient.LoginClient(ctx, kcClientID, kcClientSecret, kcRealm)
+
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, "Keycloak Login failed:"+err.Error())

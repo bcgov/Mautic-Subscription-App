@@ -2,6 +2,7 @@
   "subscribeFormName": "subscribe",
   "unsubscribeFormName": "unsubscribe",
   "subscribeActionURL": "http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=5",
-  "unsubscribeActionURL": "http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2"
+  "unsubscribeActionURL": "http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2",
+  "backendURL": "http://localhost:8080/"
 }
 
