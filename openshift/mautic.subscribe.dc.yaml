@@ -21,6 +21,7 @@ objects:
           "unsubscribeFormName": "${UNSUBSCRIBE_FORM}",
           "subscribeActionURL": "${SUBSCRIBE_URL}",
           "unsubscribeActionURL": "${UNSUBSCRIBE_URL}"
+          "backendURL": "${BACKEND_URL}"
         }
       sso.json: |-
         {
@@ -220,6 +221,10 @@ parameters:
 - description: Keycloak URL
   displayName: KEYCLOAK_URL
   name: KEYCLOAK_URL
+  required: true
+- description: Backend URL
+  displayName: BACKEND_URL
+  name: BACKEND_URL
   required: true
 - description: SSO REALM
   displayName: SSO_REALM
