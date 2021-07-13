@@ -69,9 +69,10 @@ export const Subscription = () => {
                 'Authorization': `bearer ${userToken}`
               }
             });
-          
+          const segmentData= segmentResponse.data
+          console.log(segmentData)
           // store segments in lexicographic order
-          setSegments(segmentResponse.data.sort((segmentA, segmentB) => segmentA.SegmentName.localeCompare(segmentB.SegmentName)));
+          setSegments(segmentData.sort((segmentA, segmentB) => segmentA.SegmentName.localeCompare(segmentB.SegmentName)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -104,7 +105,7 @@ export const Subscription = () => {
     }
   }, [segments]);
 
-  
+
   if (httpError) {
     return (
       <div>
