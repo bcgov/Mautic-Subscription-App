@@ -14,15 +14,17 @@ export const Subscription = () => {
   const userToken = keycloak.token;
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
+  // checkboxes is an array of [checkboxStatus, segmentID]
   const [ checkboxes, setCheckboxes] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
 
   const selectAllCheckboxes = () => {
     
+    // Create new array with updated checkbox statuses while keeping the same segment IDs
     const updatedCheckedboxes = checkboxes.map(
-      x => [!selectAll, x[1]]
+      checkboxStatusAndID => [!selectAll, checkboxStatusAndID[1]]
     )
-
+    
     setCheckboxes(updatedCheckedboxes)
     setSelectAll(!selectAll)
   }
