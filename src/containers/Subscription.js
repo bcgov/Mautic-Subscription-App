@@ -12,20 +12,15 @@ export const Subscription = () => {
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
   const userToken = keycloak.token;
+  // segments is an array of objects {isChecked, segmentID, segmentName}
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
-  // checkboxes is an array of [checkboxStatus, segmentID]
-  const [ checkboxes, setCheckboxes] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
 
-  const selectAllCheckboxes = () => {
-    
-    // Create new array with updated checkbox statuses while keeping the same segment IDs
-    const updatedCheckedboxes = checkboxes.map(
-      checkboxStatusAndID => [!selectAll, checkboxStatusAndID[1]]
-    )
-    
-    setCheckboxes(updatedCheckedboxes)
+  const toggleCheckboxes = () => {
+    const updatedCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
+
+    setSegments(updatedCheckedboxes)
     setSelectAll(!selectAll)
   }
 
@@ -33,7 +28,7 @@ export const Subscription = () => {
       return (
         <div >
           <div className="checkboxContent">
-            <input type ="checkbox" id="select_all" onChange={() => selectAllCheckboxes(true)}/>
+            <input type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
             <label htmlFor="select_all">
               Select all
             </label>
@@ -41,10 +36,10 @@ export const Subscription = () => {
 
           <div className="checkboxContent">
             {segments.map((contents, x) => (
-                <div key={contents.SegmentID} className="checkboxContent"> 
-                  <input type ="checkbox" id ={contents.SegmentID} checked={checkboxes[x][0]} onChange={() => handleCheckbox(x)}/>
-                    <label htmlFor={contents.SegmentID}>
-                      {contents.SegmentName}, ischecked={String(checkboxes[x])}
+                <div key={contents.segmentID} className="checkboxContent"> 
+                  <input type ="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
+                    <label htmlFor={contents.segmentID}>
+                      {contents.segmentName}, ischecked={String(contents.isChecked)}
                     </label>
                 </div>
             ))}
@@ -54,10 +49,10 @@ export const Subscription = () => {
   }
 
   const handleCheckbox = (updateIndex) => {
-    const updatedCheckedboxes = [...checkboxes]
-    updatedCheckedboxes[updateIndex][0] = !updatedCheckedboxes[updateIndex][0]
+    const updatedSegments = [...segments]
+    updatedSegments[updateIndex].isChecked = !updatedSegments[updateIndex].isChecked
 
-    setCheckboxes(updatedCheckedboxes)
+    setSegments(updatedSegments)
   }
 
   // Fetch segments when config file is loaded/changed
@@ -73,7 +68,15 @@ export const Subscription = () => {
             });
           
           // store segments in lexicographic order
-          setSegments(segmentResponse.data.sort((segmentA, segmentB) => segmentA.SegmentName.localeCompare(segmentB.SegmentName)));
+          const segmentData = segmentResponse.data
+          
+          const segmentObjects = segmentData.map((contents) => ({
+            isChecked: false,
+            segmentID: contents.SegmentID,
+            segmentName: contents.SegmentName
+          }));
+          
+          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -95,18 +98,7 @@ export const Subscription = () => {
 
     fetchSegments();
   }, [config]);
-  
-  // Set checkboxes when segments are fetched
-  useEffect(() => {
-    if (segments){
-      const initializeCheckedboxes = segments.map((contents) => (
-          [false, contents.SegmentID]
-      ))
-      setCheckboxes(initializeCheckedboxes)
-    }
-  }, [segments]);
 
-  
   if (httpError) {
     return (
       <div>
@@ -125,7 +117,7 @@ export const Subscription = () => {
           Your email address is {userEmail}.
         </p>
    
-        {segments && checkboxes ? (
+        {segments ? (
           <div className="checkboxContainer">{createCheckboxes()}</div>
         ) : (
           <div>loading segments...</div>
