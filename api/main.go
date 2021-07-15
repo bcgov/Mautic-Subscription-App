@@ -16,8 +16,13 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+// Global Mautic credentials
+var mauticUser = os.Getenv("MAUTIC_USER")
+var mauticPW = os.Getenv("MAUTIC_PW")
+var mauticURL = os.Getenv("MAUTIC_URL")
+
 func main() {
-	http.HandleFunc("/segments", keycloakAuth(getSegmentAndIds))
+	http.HandleFunc("/segments", keycloakAuth(getSegmentAndIdInfo))
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -49,14 +54,12 @@ type Segment struct {
 }
 
 type SegmentAndID struct {
+	IsChecked   bool
 	SegmentName string
 	SegmentID   string
 }
 
-func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
-	mauticUser := os.Getenv("MAUTIC_USER")
-	mauticPW := os.Getenv("MAUTIC_PW")
-	mauticURL := os.Getenv("MAUTIC_URL")
+func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 
 	// Mautic auth
 	client := &http.Client{}
@@ -64,6 +67,7 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 	req.SetBasicAuth(mauticUser, mauticPW)
 	resp, err := client.Do(req)
 
+	// Get all Segment Names and IDs
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
@@ -80,8 +84,9 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "Decode failed with error %s\n", err)
 			}
 			// Append segment and ID to output
-			for _, value := range data.Lists {
-				curSegmentAndID := SegmentAndID{value.Name, strconv.Itoa(value.ID)}
+			for key, value := range data.Lists {
+				fmt.Print(key)
+				curSegmentAndID := SegmentAndID{false, value.Name, strconv.Itoa(value.ID)}
 				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
 			}
 
@@ -93,6 +98,9 @@ func getSegmentAndIds(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "%s \n", b)
 		}
 	}
+
+	// Get User segments and IDs using user email
+	// test(w, r)
 }
 
 // keycloak authentication function that wraps handlers needing keycloak auth
