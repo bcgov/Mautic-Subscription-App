@@ -71,7 +71,7 @@ export const Subscription = () => {
           const segmentData = segmentResponse.data
           
           const segmentObjects = segmentData.map((contents) => ({
-            isChecked: false,
+            isChecked: false, // To be fetched from the backend
             segmentID: contents.SegmentID,
             segmentName: contents.SegmentName
           }));
