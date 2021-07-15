@@ -18,9 +18,9 @@ export const Subscription = () => {
   const [ selectAll, setSelectAll] = useState(false);
 
   const toggleCheckboxes = () => {
-    const updatedCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
+    const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
 
-    setSegments(updatedCheckedboxes)
+    setSegments(toggledCheckedboxes)
     setSelectAll(!selectAll)
   }
 
