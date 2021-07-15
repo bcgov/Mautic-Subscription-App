@@ -59,7 +59,20 @@ type SegmentAndID struct {
 	SegmentID   string
 }
 
+type ContactInfoByEmail struct {
+	Total    string                 `json:"total"`
+	Contacts map[string]interface{} `json:"contacts"`
+}
+
 func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
+	// Get contact's email
+	contactEmailHeader := strings.Fields(r.Header.Get("Email"))
+	if len(contactEmailHeader) != 1 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Invalid Email header. Only one email is accepted")
+		return
+	}
+	contactEmail := contactEmailHeader[0]
 
 	// Mautic auth
 	client := &http.Client{}
@@ -84,8 +97,7 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "Decode failed with error %s\n", err)
 			}
 			// Append segment and ID to output
-			for key, value := range data.Lists {
-				fmt.Print(key)
+			for _, value := range data.Lists {
 				curSegmentAndID := SegmentAndID{false, value.Name, strconv.Itoa(value.ID)}
 				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
 			}
@@ -100,7 +112,42 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get User segments and IDs using user email
-	// test(w, r)
+	contactID := getContactIdByEmail(w, r, contactEmail)
+	fmt.Printf("%s", contactID)
+}
+
+func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail string) string {
+	// Mautic auth
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", mauticURL+"api/contacts?search=email:+"+contactEmail, nil)
+	req.SetBasicAuth(mauticUser, mauticPW)
+	resp, err := client.Do(req)
+
+	contactId := ""
+
+	// Get contact ID from response
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+		return contactId
+	}
+
+	bodyText, _ := ioutil.ReadAll(resp.Body)
+	dec := json.NewDecoder(strings.NewReader(string(bodyText)))
+	for {
+		var data ContactInfoByEmail
+		if err := dec.Decode(&data); err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Fprintf(w, "Decode failed with error %s\n", err)
+		}
+
+		// Get contact ID
+		for key := range data.Contacts {
+			contactId = key
+		}
+	}
+	return contactId
 }
 
 // keycloak authentication function that wraps handlers needing keycloak auth
@@ -109,7 +156,7 @@ func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc 
 		w.Header().Add("Content-Type", "application/json")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Access-Control-Allow-Credentials", "true")
-		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Authorization, Email")
 		w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 
 		if r.Method == "OPTIONS" {
