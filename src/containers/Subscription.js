@@ -63,7 +63,8 @@ export const Subscription = () => {
           const segmentResponse = await axios.get(`${config.backendURL}/segments`, {
               headers: {
                 'Content-Type': "application/json",
-                'Authorization': `bearer ${userToken}`
+                'Authorization': `bearer ${userToken}`,
+                'Email': `${userEmail}`
               }
             });
           
@@ -71,7 +72,7 @@ export const Subscription = () => {
           const segmentData = segmentResponse.data
           
           const segmentObjects = segmentData.map((contents) => ({
-            isChecked: false,
+            isChecked: contents.IsChecked,
             segmentID: contents.SegmentID,
             segmentName: contents.SegmentName
           }));
