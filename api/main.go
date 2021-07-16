@@ -31,7 +31,7 @@ func main() {
 
 }
 
-type SegmentData struct {
+type MauticSegmentData struct {
 	Total int                `json:"total"`
 	Lists map[string]Segment `json:"lists"`
 }
@@ -64,6 +64,11 @@ type ContactInfoByEmail struct {
 	Contacts map[string]interface{} `json:"contacts"`
 }
 
+type ContactSegmentsById struct {
+	Total int                    `json:"total"`
+	Lists map[string]interface{} `json:"lists"`
+}
+
 func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 	// Get contact's email
 	contactEmailHeader := strings.Fields(r.Header.Get("Email"))
@@ -80,7 +85,13 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 	req.SetBasicAuth(mauticUser, mauticPW)
 	resp, err := client.Do(req)
 
-	// Get all Segment Names and IDs
+	// Get contact ID by email
+	contactId := getContactIdByEmail(w, r, contactEmail)
+
+	// Get contact Segments by email. returns hashmap as {"segmentID": true/false}
+	contactSegments := getContactSegmentsById(w, r, contactId)
+
+	// Get all Segment Names and IDs and mark contact segments
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
@@ -90,7 +101,7 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 		segmentAndIDs := []SegmentAndID{}
 
 		for {
-			var data SegmentData
+			var data MauticSegmentData
 			if err := dec.Decode(&data); err == io.EOF {
 				break
 			} else if err != nil {
@@ -98,7 +109,8 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 			}
 			// Append segment and ID to output
 			for _, value := range data.Lists {
-				curSegmentAndID := SegmentAndID{false, value.Name, strconv.Itoa(value.ID)}
+				_, isSubscribed := contactSegments[strconv.Itoa(value.ID)]
+				curSegmentAndID := SegmentAndID{isSubscribed, value.Name, strconv.Itoa(value.ID)}
 				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
 			}
 
@@ -111,9 +123,6 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Get User segments and IDs using user email
-	contactID := getContactIdByEmail(w, r, contactEmail)
-	fmt.Printf("%s", contactID)
 }
 
 func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail string) string {
@@ -148,6 +157,40 @@ func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail st
 		}
 	}
 	return contactId
+}
+
+func getContactSegmentsById(w http.ResponseWriter, r *http.Request, contactId string) map[string]bool {
+	// Mautic auth
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", mauticURL+"api/contacts/"+contactId+"/segments", nil)
+	req.SetBasicAuth(mauticUser, mauticPW)
+	resp, err := client.Do(req)
+
+	contactSegments := make(map[string]bool)
+
+	// Get contact ID from response
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+		return contactSegments
+	}
+
+	bodyText, _ := ioutil.ReadAll(resp.Body)
+	dec := json.NewDecoder(strings.NewReader(string(bodyText)))
+	for {
+		var data ContactSegmentsById
+		if err := dec.Decode(&data); err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Fprintf(w, "Decode failed with error %s\n", err)
+		}
+		// Get contact ID
+		for key := range data.Lists {
+			contactSegments[key] = true
+		}
+	}
+	return contactSegments
+
 }
 
 // keycloak authentication function that wraps handlers needing keycloak auth
