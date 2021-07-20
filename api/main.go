@@ -23,6 +23,7 @@ var mauticURL = os.Getenv("MAUTIC_URL")
 
 func main() {
 	http.HandleFunc("/segments", keycloakAuth(getSegmentAndIdInfo))
+	http.HandleFunc("/segments/contact/add", keycloakAuth(updateContactSegments))
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -199,13 +200,51 @@ func getContactSegmentsById(w http.ResponseWriter, r *http.Request, contactId st
 
 }
 
+func updateContactSegments(w http.ResponseWriter, r *http.Request) {
+	// Mautic auth
+	client := &http.Client{}
+
+	// decode input or return error
+	newContactSegmentsAndIds := ContactSegmentsAndIds{}
+	err := json.NewDecoder(r.Body).Decode(&newContactSegmentsAndIds)
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Decode error! please check your JSON formating.")
+		return
+	}
+	contactId := newContactSegmentsAndIds.ContactID
+
+	for _, value := range newContactSegmentsAndIds.SegmentsAndIds {
+		if value.IsChecked {
+			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/add", nil)
+			req.SetBasicAuth(mauticUser, mauticPW)
+			_, err = client.Do(req)
+			// Get contact ID from response
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+			}
+		} else {
+			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/remove", nil)
+			req.SetBasicAuth(mauticUser, mauticPW)
+			_, err = client.Do(req)
+			// Get contact ID from response
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+			}
+		}
+	}
+
+}
+
 // keycloak authentication function that wraps handlers needing keycloak auth
 func keycloakAuth(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Access-Control-Allow-Credentials", "true")
-		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Authorization, Email")
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Authorization, Email, ContactId, SegmentsAndIds")
 		w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 
 		if r.Method == "OPTIONS" {
