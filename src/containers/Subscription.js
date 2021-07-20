@@ -28,8 +28,8 @@ export const Subscription = () => {
       return (
         <div >
           <div className="checkboxContent">
-            <input type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
-            <label htmlFor="select_all">
+            <input className="checkboxContent" type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
+            <label htmlFor="select_all" className="segmentNames">
               Select all
             </label>
           </div>
@@ -38,8 +38,8 @@ export const Subscription = () => {
             {segments.map((contents, x) => (
                 <div key={contents.segmentID} className="checkboxContent"> 
                   <input type ="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
-                    <label htmlFor={contents.segmentID}>
-                      {contents.segmentName}, ischecked={String(contents.isChecked)}
+                    <label htmlFor={contents.segmentID} className="segmentNames">
+                      {contents.segmentName}
                     </label>
                 </div>
             ))}
@@ -119,12 +119,19 @@ export const Subscription = () => {
         </p>
    
         {segments ? (
-          <div className="checkboxContainer">{createCheckboxes()}</div>
+          <div>
+            <div className="checkboxContainer">{createCheckboxes()}</div>
+            <div className="auth-buttons">
+              <a href="/subscribed">
+                <input className="auth-button" type="submit" value="Submit"/>
+              </a>
+            </div>
+          </div>    
         ) : (
           <div>loading segments...</div>
         )}
           
-      </div>         
+      </div>     
     </div>
   );
   }
