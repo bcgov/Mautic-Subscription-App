@@ -56,6 +56,41 @@ export const Subscription = () => {
     setSegments(updatedSegments)
   }
 
+  const postSegments = async () => {
+    if (segments && contactId) {
+      try {
+        await axios.post(`${config.backendURL}/segments/contact/add`,
+          {
+            ContactId: contactId,
+            SegmentsAndIds: segments,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `bearer ${userToken}`,
+            },
+          }
+        );
+        
+        sethttpError(false);
+      } catch(error) {
+        if (error.response) {
+          // client received error response (5xx, 4xx)
+          sethttpError(`Unable to post segments: ${error.response.data}`);
+  
+        } else if (error.request) {
+          // The request was made but no response was received
+          sethttpError("Unable to post segments")
+  
+        } else {
+          // Something happened in setting up the request and triggered an Error
+          sethttpError(`Unable to post segments: ${error.message}`);
+        }
+      }
+      
+    }
+  };
+
   // Fetch segments when config file is loaded/changed
   useEffect(() => {
     const fetchSegments = async () => {
@@ -125,9 +160,12 @@ export const Subscription = () => {
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
             <div className="auth-buttons">
-              <a href="/subscribed">
-                <input className="auth-button" type="submit" value="Submit"/>
-              </a>
+              {/* <a href="/subscribed"> */}
+              <form action="/subscribed"  onSubmit={postSegments}>
+                <button className="auth-button" type="submit">Submit</button>
+              </form>
+                {/* <input className="auth-button" type="submit" value="Submit" onClick={postSegments}/> */}
+              {/* </a> */}
             </div>
           </div>    
         ) : (
