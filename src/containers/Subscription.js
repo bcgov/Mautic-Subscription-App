@@ -16,6 +16,7 @@ export const Subscription = () => {
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
+  const [ contactId, setContactId] = useState(null);
 
   const toggleCheckboxes = () => {
     const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
@@ -71,7 +72,9 @@ export const Subscription = () => {
           // store segments in lexicographic order
           const segmentData = segmentResponse.data
           
-          const segmentObjects = segmentData.map((contents) => ({
+          setContactId(segmentData.contactId)
+          
+          const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
             isChecked: contents.IsChecked,
             segmentID: contents.SegmentID,
             segmentName: contents.SegmentName
@@ -91,7 +94,7 @@ export const Subscription = () => {
           } else {
             // Something happened in setting up the request and triggered an Error
             sethttpError(`Unable to fetch segments: ${error.message}`);
-        }
+          }
         }
         
       }

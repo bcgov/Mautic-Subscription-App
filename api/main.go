@@ -53,7 +53,12 @@ type Segment struct {
 	IsPreferenceCenter bool          `json:"isPreferenceCenter"`
 }
 
-type SegmentAndID struct {
+type ContactSegmentsAndIds struct {
+	ContactID      string         `json:"contactId"`
+	SegmentsAndIds []SegmentAndId `json:"segmentsAndIds"`
+}
+
+type SegmentAndId struct {
 	IsChecked   bool
 	SegmentName string
 	SegmentID   string
@@ -85,8 +90,10 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 	req.SetBasicAuth(mauticUser, mauticPW)
 	resp, err := client.Do(req)
 
+	contactSegmentsAndIds := ContactSegmentsAndIds{}
 	// Get contact ID by email
 	contactId := getContactIdByEmail(w, r, contactEmail)
+	contactSegmentsAndIds.ContactID = contactId
 
 	// Get contact Segments by email. returns hashmap as {"segmentID": true/false}
 	contactSegments := getContactSegmentsById(w, r, contactId)
@@ -98,7 +105,6 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 	} else {
 		bodyText, _ := ioutil.ReadAll(resp.Body)
 		dec := json.NewDecoder(strings.NewReader(string(bodyText)))
-		segmentAndIDs := []SegmentAndID{}
 
 		for {
 			var data MauticSegmentData
@@ -110,12 +116,12 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 			// Append segment and ID to output
 			for _, value := range data.Lists {
 				_, isSubscribed := contactSegments[strconv.Itoa(value.ID)]
-				curSegmentAndID := SegmentAndID{isSubscribed, value.Name, strconv.Itoa(value.ID)}
-				segmentAndIDs = append(segmentAndIDs, curSegmentAndID)
+				curSegmentAndId := SegmentAndId{isSubscribed, value.Name, strconv.Itoa(value.ID)}
+				contactSegmentsAndIds.SegmentsAndIds = append(contactSegmentsAndIds.SegmentsAndIds, curSegmentAndId)
 			}
 
 			// Marshall array to json
-			b, err := json.Marshal(segmentAndIDs)
+			b, err := json.Marshal(contactSegmentsAndIds)
 			if err != nil {
 				fmt.Fprintf(w, "Marshal failed with error %s\n", err)
 			}
