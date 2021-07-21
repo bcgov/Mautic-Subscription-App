@@ -218,7 +218,6 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 	for _, value := range newContactSegmentsAndIds.SegmentsAndIds {
 		// Only add/remove segments if they need to be updated
 		if value.IsChecked && !contactSegments[value.SegmentID] {
-			fmt.Print("call here\n")
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/add", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
@@ -228,7 +227,6 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 			}
 		} else if !value.IsChecked && contactSegments[value.SegmentID] {
-			fmt.Print("call here\n")
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/remove", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
