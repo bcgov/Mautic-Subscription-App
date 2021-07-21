@@ -203,7 +203,6 @@ func getContactSegmentsById(w http.ResponseWriter, r *http.Request, contactId st
 func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 	// Mautic auth
 	client := &http.Client{}
-
 	// decode input or return error
 	newContactSegmentsAndIds := ContactSegmentsAndIds{}
 	err := json.NewDecoder(r.Body).Decode(&newContactSegmentsAndIds)
@@ -213,9 +212,13 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	contactId := newContactSegmentsAndIds.ContactID
+	// Get contact Segments by email. returns hashmap as {"segmentID": true/false}
+	contactSegments := getContactSegmentsById(w, r, contactId)
 
 	for _, value := range newContactSegmentsAndIds.SegmentsAndIds {
-		if value.IsChecked {
+		// Only add/remove segments if they need to be updated
+		if value.IsChecked && !contactSegments[value.SegmentID] {
+			fmt.Print("call here\n")
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/add", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
@@ -224,7 +227,8 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusUnauthorized)
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 			}
-		} else {
+		} else if !value.IsChecked && contactSegments[value.SegmentID] {
+			fmt.Print("call here\n")
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/remove", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
