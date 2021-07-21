@@ -160,12 +160,9 @@ export const Subscription = () => {
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
             <div className="auth-buttons">
-              {/* <a href="/subscribed"> */}
               <form action="/subscribed"  onSubmit={postSegments}>
                 <button className="auth-button" type="submit">Submit</button>
               </form>
-                {/* <input className="auth-button" type="submit" value="Submit" onClick={postSegments}/> */}
-              {/* </a> */}
             </div>
           </div>    
         ) : (
