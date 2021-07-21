@@ -12,14 +12,13 @@ export const Subscription = () => {
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
   const userToken = keycloak.token;
-  // segments is an array of objects {isChecked, segmentID, segmentName}
+  // segments is an array of objects {isChecked, id, name}
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
 
   const toggleCheckboxes = () => {
-    const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
-
+    const toggledCheckedboxes = segments.map(s => ( { ...s, isChecked: !selectAll } ));
     setSegments(toggledCheckedboxes)
     setSelectAll(!selectAll)
   }
@@ -36,10 +35,10 @@ export const Subscription = () => {
 
           <div className="checkboxContent">
             {segments.map((contents, x) => (
-                <div key={contents.segmentID} className="checkboxContent"> 
-                  <input type ="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
-                    <label htmlFor={contents.segmentID}>
-                      {contents.segmentName}, ischecked={String(contents.isChecked)}
+                <div key={contents.id} className="checkboxContent"> 
+                  <input type ="checkbox" id ={contents.id} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
+                    <label htmlFor={contents.id}>
+                      {contents.name}, ischecked={String(contents.isChecked)}
                     </label>
                 </div>
             ))}
@@ -72,12 +71,14 @@ export const Subscription = () => {
           const segmentData = segmentResponse.data
           
           const segmentObjects = segmentData.map((contents) => ({
+            
             isChecked: contents.IsChecked,
             segmentID: contents.SegmentID,
             segmentName: contents.SegmentName
+
           }));
           
-          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
+          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.name.localeCompare(segmentB.name)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -96,8 +97,9 @@ export const Subscription = () => {
         
       }
     };
-
-    fetchSegments();
+    if (!segments) {
+      fetchSegments();
+    }
   }, [config]);
 
   if (httpError) {
