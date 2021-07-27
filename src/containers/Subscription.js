@@ -4,6 +4,7 @@ import '../components/Auth/AuthModal.css';
 import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 import axios from 'axios';
+import './Subscription.css';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
@@ -11,26 +12,70 @@ export const Subscription = () => {
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
   const userToken = keycloak.token;
+  // segments is an array of objects {isChecked, id, name}
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
+  const [ selectAll, setSelectAll] = useState(false);
 
-
-  const getformID = ( actionLink ) => {
-    return actionLink.charAt(actionLink.length-1)
+  const toggleCheckboxes = () => {
+    const toggledCheckedboxes = segments.map(s => ( { ...s, isChecked: !selectAll } ));
+    setSegments(toggledCheckedboxes)
+    setSelectAll(!selectAll)
   }
 
+  const createCheckboxes = () => {
+      return (
+        <div >
+          <div className="checkboxContent">
+            <input type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
+            <label htmlFor="select_all">
+              Select all
+            </label>
+          </div>
+
+          <div className="checkboxContent">
+            {segments.map((contents, x) => (
+                <div key={contents.id} className="checkboxContent"> 
+                  <input type ="checkbox" id ={contents.id} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
+                    <label htmlFor={contents.id}>
+                      {contents.name}, ischecked={String(contents.isChecked)}
+                    </label>
+                </div>
+            ))}
+          </div>
+        </div>
+      )
+  }
+
+  const handleCheckbox = (updateIndex) => {
+    const updatedSegments = [...segments]
+    updatedSegments[updateIndex].isChecked = !updatedSegments[updateIndex].isChecked
+
+    setSegments(updatedSegments)
+  }
+
+  // Fetch segments when config file is loaded/changed
   useEffect(() => {
     const fetchSegments = async () => {
       if (config) {
         try {
-          const segmentResponse = await axios.get(`${config.backendURL}segments`, {
+          const segmentResponse = await axios.get(`${config.backendURL}/segments`, {
               headers: {
                 'Content-Type': "application/json",
                 'Authorization': `bearer ${userToken}`
               }
             });
           
-          setSegments(segmentResponse.data);
+          // store segments in lexicographic order
+          const segmentData = segmentResponse.data
+          
+          const segmentObjects = segmentData.map((contents) => ({
+            isChecked: false, // To be fetched from the backend
+            id: contents.SegmentID,
+            name: contents.SegmentName
+          }));
+          
+          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.name.localeCompare(segmentB.name)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -49,10 +94,11 @@ export const Subscription = () => {
         
       }
     };
-
-    fetchSegments();
+    if (!segments) {
+      fetchSegments();
+    }
   }, [config]);
-  
+
   if (httpError) {
     return (
       <div>
@@ -64,54 +110,20 @@ export const Subscription = () => {
   return (
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
-
-            {/* To be modified to display segments in a selectable list format */}
-            {segments ?
-            (<div>
-              {
-                segments.map(
-                  (contents, x) => (
-                    <div key={x}> {contents.SegmentName} </div>
-                  )
-                )
-              }
-            </div>
-            ): <div>loading segments...</div>
-            }
       <div>
-        
         <p>
           Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
           <br />
           Your email address is {userEmail}.
         </p>
-        {config ? (
-          <div className="auth-buttons">
-            <div className="subscription-buttons">
-              <div className="subscription-buttons-spacer">
-                <form action={config.subscribeActionURL} method="post">
-                  <input className="auth-button" type="submit" value="Subscribe"/>
-                  <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-                  <input type="hidden" name="mauticform[formId]" value={getformID(config.subscribeActionURL)}></input>
-                  <input type="hidden" name="mauticform[return]" value=""></input>
-                  <input type="hidden" name="mauticform[formName]" value={config.subscribeFormName}></input>
-                </form>
-              </div>
-              <div className="subscription-buttons-spacer">
-                <form action={config.unsubscribeActionURL} method="post">
-                  <input className="auth-button" type="submit" value="Unsubscribe"/>
-                  <input type="hidden" name="mauticform[email]" value={userEmail}></input>
-                  <input type="hidden" name="mauticform[formId]" value={getformID(config.unsubscribeActionURL)}></input>
-                  <input type="hidden" name="mauticform[return]" value=""></input>
-                  <input type="hidden" name="mauticform[formName]" value={config.unsubscribeFormName}></input>
-                </form>
-              </div>
-            </div>
-          </div>
-          ): <div>loading...</div>
-        }
+   
+        {segments ? (
+          <div className="checkboxContainer">{createCheckboxes()}</div>
+        ) : (
+          <div>loading segments...</div>
+        )}
+          
       </div>         
-      
     </div>
   );
   }

@@ -1,0 +1,9 @@
+.checkboxContainer {
+    width: 300px;
+    margin: auto;
+    position: relative;
+}
+
+.checkboxContent {
+    text-align: left;
+}
