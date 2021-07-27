@@ -156,6 +156,7 @@ func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail st
 			fmt.Fprintf(w, "Decode failed with error %s\n", err)
 		}
 
+
 		// Get contact ID
 		for key := range data.Contacts {
 			contactId = key
