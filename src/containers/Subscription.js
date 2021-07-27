@@ -16,6 +16,7 @@ export const Subscription = () => {
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
+  const [ contactId, setContactId] = useState(null);
 
   const toggleCheckboxes = () => {
     const toggledCheckedboxes = segments.map(s => ( { ...s, isChecked: !selectAll } ));
@@ -27,18 +28,18 @@ export const Subscription = () => {
       return (
         <div >
           <div className="checkboxContent">
-            <input type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
-            <label htmlFor="select_all">
+            <input className="checkboxContent" type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
+            <label htmlFor="select_all" className="segmentNames">
               Select all
             </label>
           </div>
 
           <div className="checkboxContent">
             {segments.map((contents, x) => (
-                <div key={contents.id} className="checkboxContent"> 
-                  <input type ="checkbox" id ={contents.id} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
-                    <label htmlFor={contents.id}>
-                      {contents.name}, ischecked={String(contents.isChecked)}
+                <div key={contents.segmentID} className="checkboxContent"> 
+                  <input type ="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
+                    <label htmlFor={contents.segmentID} className="segmentNames">
+                      {contents.segmentName}
                     </label>
                 </div>
             ))}
@@ -53,6 +54,41 @@ export const Subscription = () => {
 
     setSegments(updatedSegments)
   }
+
+  const postSegments = async () => {
+    if (segments && contactId) {
+      try {
+        await axios.post(`${config.backendURL}/segments/contact/add`,
+          {
+            ContactId: contactId,
+            SegmentsAndIds: segments,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `bearer ${userToken}`,
+            },
+          }
+        );
+        
+        sethttpError(false);
+      } catch(error) {
+        if (error.response) {
+          // client received error response (5xx, 4xx)
+          sethttpError(`Unable to post segments: ${error.response.data}`);
+  
+        } else if (error.request) {
+          // The request was made but no response was received
+          sethttpError("Unable to post segments")
+  
+        } else {
+          // Something happened in setting up the request and triggered an Error
+          sethttpError(`Unable to post segments: ${error.message}`);
+        }
+      }
+      
+    }
+  };
 
   // Fetch segments when config file is loaded/changed
   useEffect(() => {
@@ -70,8 +106,9 @@ export const Subscription = () => {
           // store segments in lexicographic order
           const segmentData = segmentResponse.data
           
-          const segmentObjects = segmentData.map((contents) => ({
-            
+          setContactId(segmentData.contactId)
+          
+          const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
             isChecked: contents.IsChecked,
             segmentID: contents.SegmentID,
             segmentName: contents.SegmentName
@@ -92,7 +129,7 @@ export const Subscription = () => {
           } else {
             // Something happened in setting up the request and triggered an Error
             sethttpError(`Unable to fetch segments: ${error.message}`);
-        }
+          }
         }
         
       }
@@ -121,12 +158,19 @@ export const Subscription = () => {
         </p>
    
         {segments ? (
-          <div className="checkboxContainer">{createCheckboxes()}</div>
+          <div>
+            <div className="checkboxContainer">{createCheckboxes()}</div>
+            <div className="auth-buttons">
+              <form action="/subscribed"  onSubmit={postSegments}>
+                <button className="auth-button" type="submit">Submit</button>
+              </form>
+            </div>
+          </div>    
         ) : (
           <div>loading segments...</div>
         )}
           
-      </div>         
+      </div>     
     </div>
   );
   }
