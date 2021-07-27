@@ -12,14 +12,15 @@ export const Subscription = () => {
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
   const userToken = keycloak.token;
-  // segments is an array of objects {isChecked, id, name}
+  // segments is an array of objects {isChecked, segmentID, segmentName}
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
   const [ contactId, setContactId] = useState(null);
 
   const toggleCheckboxes = () => {
-    const toggledCheckedboxes = segments.map(s => ( { ...s, isChecked: !selectAll } ));
+    const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
+
     setSegments(toggledCheckedboxes)
     setSelectAll(!selectAll)
   }
@@ -112,10 +113,9 @@ export const Subscription = () => {
             isChecked: contents.IsChecked,
             segmentID: contents.SegmentID,
             segmentName: contents.SegmentName
-
           }));
           
-          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.name.localeCompare(segmentB.name)));
+          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -134,6 +134,7 @@ export const Subscription = () => {
         
       }
     };
+
     if (!segments) {
       fetchSegments();
     }
