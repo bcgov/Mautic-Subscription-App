@@ -12,13 +12,15 @@ export const Subscription = () => {
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
   const userToken = keycloak.token;
-  // segments is an array of objects {isChecked, id, name}
+  // segments is an array of objects {isChecked, segmentID, segmentName}
   const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
+  const [ contactId, setContactId] = useState(null);
 
   const toggleCheckboxes = () => {
-    const toggledCheckedboxes = segments.map(s => ( { ...s, isChecked: !selectAll } ));
+    const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
+
     setSegments(toggledCheckedboxes)
     setSelectAll(!selectAll)
   }
@@ -27,18 +29,18 @@ export const Subscription = () => {
       return (
         <div >
           <div className="checkboxContent">
-            <input type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
-            <label htmlFor="select_all">
+            <input className="checkboxContent" type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
+            <label htmlFor="select_all" className="segmentNames">
               Select all
             </label>
           </div>
 
           <div className="checkboxContent">
             {segments.map((contents, x) => (
-                <div key={contents.id} className="checkboxContent"> 
-                  <input type ="checkbox" id ={contents.id} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
-                    <label htmlFor={contents.id}>
-                      {contents.name}, ischecked={String(contents.isChecked)}
+                <div key={contents.segmentID} className="checkboxContent"> 
+                  <input type ="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
+                    <label htmlFor={contents.segmentID} className="segmentNames">
+                      {contents.segmentName}
                     </label>
                 </div>
             ))}
@@ -54,6 +56,41 @@ export const Subscription = () => {
     setSegments(updatedSegments)
   }
 
+  const postSegments = async () => {
+    if (segments && contactId) {
+      try {
+        await axios.post(`${config.backendURL}/segments/contact/add`,
+          {
+            ContactId: contactId,
+            SegmentsAndIds: segments,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `bearer ${userToken}`,
+            },
+          }
+        );
+        
+        sethttpError(false);
+      } catch(error) {
+        if (error.response) {
+          // client received error response (5xx, 4xx)
+          sethttpError(`Unable to post segments: ${error.response.data}`);
+  
+        } else if (error.request) {
+          // The request was made but no response was received
+          sethttpError("Unable to post segments")
+  
+        } else {
+          // Something happened in setting up the request and triggered an Error
+          sethttpError(`Unable to post segments: ${error.message}`);
+        }
+      }
+      
+    }
+  };
+
   // Fetch segments when config file is loaded/changed
   useEffect(() => {
     const fetchSegments = async () => {
@@ -62,20 +99,23 @@ export const Subscription = () => {
           const segmentResponse = await axios.get(`${config.backendURL}/segments`, {
               headers: {
                 'Content-Type': "application/json",
-                'Authorization': `bearer ${userToken}`
+                'Authorization': `bearer ${userToken}`,
+                'Email': `${userEmail}`
               }
             });
           
           // store segments in lexicographic order
           const segmentData = segmentResponse.data
           
-          const segmentObjects = segmentData.map((contents) => ({
-            isChecked: false, // To be fetched from the backend
-            id: contents.SegmentID,
-            name: contents.SegmentName
+          setContactId(segmentData.contactId)
+          
+          const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
+            isChecked: contents.IsChecked,
+            segmentID: contents.SegmentID,
+            segmentName: contents.SegmentName
           }));
           
-          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.name.localeCompare(segmentB.name)));
+          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
           sethttpError(false);
         } catch(error) {
           if (error.response) {
@@ -89,11 +129,12 @@ export const Subscription = () => {
           } else {
             // Something happened in setting up the request and triggered an Error
             sethttpError(`Unable to fetch segments: ${error.message}`);
-        }
+          }
         }
         
       }
     };
+
     if (!segments) {
       fetchSegments();
     }
@@ -118,12 +159,19 @@ export const Subscription = () => {
         </p>
    
         {segments ? (
-          <div className="checkboxContainer">{createCheckboxes()}</div>
+          <div>
+            <div className="checkboxContainer">{createCheckboxes()}</div>
+            <div className="auth-buttons">
+              <form action="/subscribed"  onSubmit={postSegments}>
+                <button className="auth-button" type="submit">Submit</button>
+              </form>
+            </div>
+          </div>    
         ) : (
           <div>loading segments...</div>
         )}
           
-      </div>         
+      </div>     
     </div>
   );
   }
