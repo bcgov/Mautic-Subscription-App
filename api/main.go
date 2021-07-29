@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -64,13 +66,19 @@ type SegmentAndId struct {
 }
 
 type ContactInfoByEmail struct {
-	Total    string                 `json:"total"`
-	Contacts map[string]interface{} `json:"contacts"`
+	Total    string      `json:"total"`
+	Contacts interface{} `json:"contacts"`
 }
 
 type ContactSegmentsById struct {
-	Total int                    `json:"total"`
-	Lists map[string]interface{} `json:"lists"`
+	Total int         `json:"total"`
+	Lists interface{} `json:"lists"`
+}
+
+type newContact struct {
+	Contact struct {
+		ID int `json:"id"`
+	} `json:"contact"`
 }
 
 func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
@@ -133,7 +141,7 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail string) string {
 	// Mautic auth
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", mauticURL+"api/contacts?search=email:+"+contactEmail, nil)
+	req, err := http.NewRequest("GET", mauticURL+"api/contacts?search=email:%2B"+contactEmail, nil)
 	req.SetBasicAuth(mauticUser, mauticPW)
 	resp, err := client.Do(req)
 
@@ -156,11 +164,61 @@ func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail st
 			fmt.Fprintf(w, "Decode failed with error %s\n", err)
 		}
 
-		// Get contact ID
-		for key := range data.Contacts {
-			contactId = key
+		switch contactList := data.Contacts.(type) {
+		case []interface{}:
+			// create contact ID for new user
+			contactId = createNewContactByEmail(w, r, contactEmail)
+
+		case map[string]interface{}:
+			// Get contact ID
+			// Error if more than 1 contact is found in Mautic
+			if len(contactList) > 1 {
+				fmt.Fprintf(w, "More than one contact associated with the email address.")
+				fmt.Print("Here")
+			}
+
+			for key := range contactList {
+				contactId = key
+			}
 		}
 	}
+	fmt.Print(contactId)
+	return contactId
+}
+
+func createNewContactByEmail(w http.ResponseWriter, r *http.Request, contactEmail string) string {
+	contactId := ""
+
+	postData := url.Values{}
+	postData.Set("email", contactEmail)
+	encodedPostData := bytes.NewBufferString(postData.Encode())
+	// Mautic auth
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", mauticURL+"api/contacts/new", encodedPostData)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	req.SetBasicAuth(mauticUser, mauticPW)
+	resp, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+		return contactId
+	}
+
+	bodyText, _ := ioutil.ReadAll(resp.Body)
+	dec := json.NewDecoder(strings.NewReader(string(bodyText)))
+
+	for {
+		var data newContact
+		if err := dec.Decode(&data); err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Fprintf(w, "Decode failed with error %s\n", err)
+		}
+		contactId = strconv.Itoa(data.Contact.ID)
+	}
+
 	return contactId
 }
 
@@ -189,9 +247,15 @@ func getContactSegmentsById(w http.ResponseWriter, r *http.Request, contactId st
 		} else if err != nil {
 			fmt.Fprintf(w, "Decode failed with error %s\n", err)
 		}
-		// Mark contact segments as true
-		for key := range data.Lists {
-			contactSegments[key] = true
+
+		switch segmentList := data.Lists.(type) {
+		case []interface{}:
+			// do nothing if segmentList is an array (user is not subscribed to any segments)
+		case map[string]interface{}:
+			// Mark contact segments as true
+			for key := range segmentList {
+				contactSegments[key] = true
+			}
 		}
 	}
 	return contactSegments
