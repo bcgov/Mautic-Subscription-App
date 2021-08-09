@@ -5,6 +5,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 import axios from 'axios';
 import './Subscription.css';
+import  { Loader } from 'shared-components'
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
@@ -153,7 +154,7 @@ export const Subscription = () => {
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
       <div>
         <p>
-          Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
+          Hello {userName}, select/unselect the checkboxes and click submit to update your subscription preferences.
           <br />
           Your email address is {userEmail}.
         </p>
@@ -168,7 +169,7 @@ export const Subscription = () => {
             </div>
           </div>    
         ) : (
-          <div>loading segments...</div>
+          <Loader page />
         )}
           
       </div>     
