@@ -1,8 +1,12 @@
+.displayMessage {
+    font-size: 18px;
+}
 .checkboxContainer {
     width: 200px;
     margin: auto;
     position: relative;
-    margin-bottom: 10px;
+    padding-bottom: 25px;
+    padding-top: 25px;
 }
 
 .checkboxContent {
@@ -10,7 +14,7 @@
 }
 
 .segmentNames {
-    margin-left: 6px;
+    padding-left: 6px;
 }
 
 /* Custom Checkbox */

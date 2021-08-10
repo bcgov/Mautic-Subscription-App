@@ -153,7 +153,7 @@ export const Subscription = () => {
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
       <div>
-        <p>
+        <p className="displayMessage">
           Hello {userName}, select/unselect the checkboxes and click submit to update your subscription preferences.
           <br />
           Your email address is {userEmail}.
