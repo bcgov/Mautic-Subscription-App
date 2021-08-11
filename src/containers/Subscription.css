@@ -1,14 +1,75 @@
+.displayMessage {
+    font-size: 18px;
+}
 .checkboxContainer {
-    width: 300px;
+    width: 200px;
     margin: auto;
     position: relative;
+    padding-bottom: 25px;
+    padding-top: 25px;
 }
 
 .checkboxContent {
     text-align: left;
-    margin-left: 10px;
 }
 
 .segmentNames {
-    margin-left: 6px;
+    padding-left: 6px;
 }
+
+/* Custom Checkbox */
+.checkbox {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    Font-family: "Noto Sans", Verdana, Arial, sans-serif;
+    font-size: 18px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    top: 50%;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    outline: 2px solid #606060;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .checkbox input:checked ~ .checkmark {
+    background-color: #606060;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "\2713";
+    color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .checkbox input:checked ~ .checkmark:after {
+    display: block;
+  }

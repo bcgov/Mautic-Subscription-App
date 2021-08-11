@@ -14,7 +14,7 @@ export const Subscribed = () => {
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>You have been successfully subscribed to the {APP_INFO.NAME}. You can now close the page.</ModalBody>
+      <ModalBody>Your subscription preferences have been updated successfully. You can now close the page.</ModalBody>
     </Modal>
   );
 };
