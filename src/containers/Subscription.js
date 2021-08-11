@@ -5,6 +5,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 import axios from 'axios';
 import './Subscription.css';
+import  { Loader } from 'shared-components'
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
@@ -29,20 +30,20 @@ export const Subscription = () => {
       return (
         <div >
           <div className="checkboxContent">
-            <input className="checkboxContent" type ="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
-            <label htmlFor="select_all" className="segmentNames">
-              Select all
+            <label className="checkbox" htmlFor="select_all">
+              Select All
+              <input type="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
+              <span className="checkmark"></span>
             </label>
-          </div>
-
-          <div className="checkboxContent">
+            
             {segments.map((contents, x) => (
-                <div key={contents.segmentID} className="checkboxContent"> 
-                  <input type ="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
-                    <label htmlFor={contents.segmentID} className="segmentNames">
-                      {contents.segmentName}
-                    </label>
-                </div>
+              <div key={contents.segmentID} className="checkboxContent"> 
+                <label className="checkbox" htmlFor={contents.segmentID}>
+                  {contents.segmentName}
+                  <input type="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
+                  <span className="checkmark"></span>
+                </label>
+              </div>
             ))}
           </div>
         </div>
@@ -152,8 +153,8 @@ export const Subscription = () => {
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
       <div>
-        <p>
-          Hello {userName}, subscribe/unsubscribe from the {APP_INFO.NAME}.
+        <p className="displayMessage">
+          Hello {userName}, select/unselect the checkboxes and click submit to update your subscription preferences.
           <br />
           Your email address is {userEmail}.
         </p>
@@ -168,7 +169,7 @@ export const Subscription = () => {
             </div>
           </div>    
         ) : (
-          <div>loading segments...</div>
+          <Loader page />
         )}
           
       </div>     
