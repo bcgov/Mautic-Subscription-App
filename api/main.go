@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -299,7 +300,10 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = sendConfirmationEmail(w, r, contactId)
-
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+	}
 }
 
 func sendConfirmationEmail(w http.ResponseWriter, r *http.Request, contactId string) error {
@@ -310,12 +314,9 @@ func sendConfirmationEmail(w http.ResponseWriter, r *http.Request, contactId str
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", mauticURL+"api/emails/"+confirmationEmailId+"/contact/"+contactId+"/send", nil)
 	req.SetBasicAuth(mauticUser, mauticPW)
-	_, err = client.Do(req)
-
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+	resp, err := client.Do(req)
+	if resp.StatusCode != 200 {
+		err = errors.New("Mautic request status code" + strconv.Itoa(resp.StatusCode))
 	}
-
 	return err
 }
