@@ -74,6 +74,11 @@ objects:
                     secretKeyRef:
                       key: MAUTIC_PW
                       name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: CONFIRMATION_EMAIL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: CONFIRMATION_EMAIL_ID
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
       test: false
       triggers: 
         - type: ImageChange
