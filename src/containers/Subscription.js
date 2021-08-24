@@ -5,7 +5,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useConfig } from '../hooks/useConfig';
 import axios from 'axios';
 import './Subscription.css';
-import  { Loader } from 'shared-components'
+import { Redirect } from 'react-router';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
@@ -18,6 +18,8 @@ export const Subscription = () => {
   const [ httpError, sethttpError] = useState(null);
   const [ selectAll, setSelectAll] = useState(false);
   const [ contactId, setContactId] = useState(null);
+  const [ submitButtonPressed, setSubmitButtonPressed] = useState(false);
+  const [ redirect, setRedirect] = useState(null);
 
   const toggleCheckboxes = () => {
     const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
@@ -57,7 +59,10 @@ export const Subscription = () => {
     setSegments(updatedSegments)
   }
 
-  const postSegments = async () => {
+  const postSegments = async (event) => {
+    event.preventDefault();
+    setSubmitButtonPressed(true)
+
     if (segments && contactId) {
       try {
         await axios.post(`${config.backendURL}/segments/contact/add`,
@@ -74,7 +79,10 @@ export const Subscription = () => {
         );
         
         sethttpError(false);
+        setRedirect("/subscribe/success")
+
       } catch(error) {
+        setRedirect("/subscribe/error")
         if (error.response) {
           // client received error response (5xx, 4xx)
           sethttpError(`Unable to post segments: ${error.response.data}`);
@@ -141,10 +149,28 @@ export const Subscription = () => {
     }
   }, [config]);
 
+
+  if (submitButtonPressed) {
+    if (redirect) {
+      return <Redirect to={{
+        pathname: redirect,
+      }}/>
+    }
+    return (
+      <div>
+        <div className="bcgov-page-loader"></div>
+        <div>Updating your subscription preferences... please wait</div>
+      </div>
+    )
+  
+  }
+
+
+
   if (httpError) {
     return (
       <div>
-        <p>{httpError}</p>
+        <p>There was an unexpected error. Please try again in a few moments. If the error persists, please contact the Platform Services team for more information.</p>
       </div>
     )
   }
@@ -163,13 +189,16 @@ export const Subscription = () => {
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
             <div className="auth-buttons">
-              <form action="/subscribed"  onSubmit={postSegments}>
+              <form onSubmit={postSegments}>
                 <button className="auth-button" type="submit">Submit</button>
               </form>
             </div>
           </div>    
         ) : (
-          <Loader page />
+          <div>
+            <div className="bcgov-page-loader"></div>
+            <div>Loading... please wait</div>
+          </div>
         )}
           
       </div>     

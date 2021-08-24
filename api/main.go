@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -281,7 +282,7 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/add", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
-			// Get contact ID from response
+
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
@@ -290,7 +291,7 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/"+value.SegmentID+"/contact/"+contactId+"/remove", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
-			// Get contact ID from response
+
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
@@ -298,4 +299,24 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	err = sendConfirmationEmail(w, r, contactId)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+	}
+}
+
+func sendConfirmationEmail(w http.ResponseWriter, r *http.Request, contactId string) error {
+	err := error(nil)
+	confirmationEmailId := os.Getenv("CONFIRMATION_EMAIL_ID")
+
+	// Mautic auth
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", mauticURL+"api/emails/"+confirmationEmailId+"/contact/"+contactId+"/send", nil)
+	req.SetBasicAuth(mauticUser, mauticPW)
+	resp, err := client.Do(req)
+	if resp.StatusCode != 200 {
+		err = errors.New("Mautic request status code" + strconv.Itoa(resp.StatusCode))
+	}
+	return err
 }

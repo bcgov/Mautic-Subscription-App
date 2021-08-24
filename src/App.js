@@ -4,8 +4,8 @@ import Layout from './hoc/Layout';
 import AuthModal from './components/Auth/AuthModal'; 
 import { Route, Switch } from 'react-router-dom';
 import { Subscription } from './containers/Subscription'
-import { Subscribed } from './containers/Subscribed'
-import { Unsubscribed } from './containers/Unsubscribed'
+import { SubscribeSuccess } from './containers/SubscribeSuccess'
+import { SubscribeError } from './containers/SubscribeError'
 import { Unauthorized } from './containers/Unauthorized'
 import { Logout } from './components/Auth/Logout'
 import { PrivateRoute } from './utilities/PrivateRoute'
@@ -19,12 +19,12 @@ function App() {
             component={Subscription}
           />
           <PrivateRoute
-            path="/subscribed"
-            component={Subscribed}
+            path="/subscribe/success"
+            component={SubscribeSuccess}
           />
           <PrivateRoute
-            path="/unsubscribed"
-            component={Unsubscribed}
+            path="/subscribe/error"
+            component={SubscribeError}
           />
           <Route path="/logout" component={Logout} />
           <Route path="/401" component={Unauthorized} />

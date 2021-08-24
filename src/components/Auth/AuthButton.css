@@ -14,12 +14,32 @@
   cursor: pointer;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
+  font-size: 17px;
 }
 
 @media screen and (max-width: 500px) {
   .auth-button {
     letter-spacing: .1em;
     padding: 4px 8px;
-    font-size: 0.8rem;
+  }
+}
+
+.bcgov-page-loader {
+  height: 60px;
+  width: 60px;
+  color: #494949;
+  border: 7px solid;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: rotate 2s linear infinite;
+  display: inline-block;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

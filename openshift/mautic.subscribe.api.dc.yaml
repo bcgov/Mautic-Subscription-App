@@ -37,7 +37,13 @@ objects:
               ports:
                 - containerPort: 8080
                   protocol: TCP
-              resources: {}
+              resources:
+                limits:
+                  cpu: 250m
+                  memory: 600Mi
+                requests:
+                  cpu: 50m
+                  memory: 200Mi
               env:
                 - name: KC_CLIENT_ID
                   valueFrom:
@@ -73,6 +79,11 @@ objects:
                   valueFrom:
                     secretKeyRef:
                       key: MAUTIC_PW
+                      name: ${APP_NAME}-api-${IMAGE_TAG}
+                - name: CONFIRMATION_EMAIL_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: CONFIRMATION_EMAIL_ID
                       name: ${APP_NAME}-api-${IMAGE_TAG}
       test: false
       triggers: 
