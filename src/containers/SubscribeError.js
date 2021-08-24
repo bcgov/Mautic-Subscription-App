@@ -4,18 +4,17 @@ import { APP_INFO } from '../constants';
 import '../components/Auth/AuthModal.css';
 import Banner from '../components/UI/Banner';
 
-export const Unsubscribed = () => {
+export const SubscribeError = () => {
 
   return (
     <Modal modalClassName="auth-modal" isOpen={true} fade={false}>
       <ModalHeader>
         <Banner titleText={APP_INFO.NAME} />
       </ModalHeader>
-      <ModalBody>You have been successfully unsubscribed from the {APP_INFO.NAME}. We are sorry to see you go. If you change your mind, you can always re-subscribe
-        at <a href={APP_INFO.URL} class="app-url-hover">{APP_INFO.URL}</a>. You can now close the page.
+      <ModalBody>There was an unexpected error. Please try again in a few moments. If the error persists, please contact the Platform Services team for more information.
       </ModalBody>
     </Modal>
   );
 };
 
-export default Unsubscribed;
+export default SubscribeError;

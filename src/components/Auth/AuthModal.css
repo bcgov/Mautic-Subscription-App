@@ -8,12 +8,6 @@
   background-color: #003366;
   border-bottom: 2px solid #fcba19;
   color: #fff;
-  height: 100px;
-  padding: 0.5rem 1rem !important;
-}
-
-.modal-title {
-  width: 400px;
 }
 
 .auth-modal .modal-footer {

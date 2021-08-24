@@ -17,10 +17,6 @@ objects:
     data:
       form.json: |+
         {
-          "subscribeFormName": "${SUBSCRIBE_FORM}",
-          "unsubscribeFormName": "${UNSUBSCRIBE_FORM}",
-          "subscribeActionURL": "${SUBSCRIBE_URL}",
-          "unsubscribeActionURL": "${UNSUBSCRIBE_URL}",
           "backendURL": "${BACKEND_URL}"
         }
       sso.json: |-
@@ -112,7 +108,13 @@ objects:
               ports:
                 - containerPort: 2015
                   protocol: TCP
-              resources: {}
+              resources:
+                limits:
+                  cpu: 250m
+                  memory: 600Mi
+                requests:
+                  cpu: 50m
+                  memory: 200Mi
               volumeMounts:
               - name: caddy-${APP_NAME}-${IMAGE_TAG}
                 mountPath: /opt/app-root/etc/Caddyfile
@@ -201,22 +203,6 @@ parameters:
 - description: A name used for all objects
   displayName: TARGET_NAMESPACE
   name: TARGET_NAMESPACE
-  required: true
-- description: Subscribe form name
-  displayName: SUBSCRIBE_FORM
-  name: SUBSCRIBE_FORM
-  required: true
-- description: Unubscribe form name
-  displayName: UNSUBSCRIBE_FORM
-  name: UNSUBSCRIBE_FORM
-  required: true
-- description: Subscribe Action URL
-  displayName: SUBSCRIBE_URL
-  name: SUBSCRIBE_URL
-  required: true
-- description: Unubscribe Action URL
-  displayName: UNSUBSCRIBE_URL
-  name: UNSUBSCRIBE_URL
   required: true
 - description: Keycloak URL
   displayName: KEYCLOAK_URL
