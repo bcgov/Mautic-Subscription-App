@@ -2,16 +2,15 @@
     font-size: 18px;
 }
 .checkboxContainer {
-    width: 700px;
+    width: 200px;
     margin: auto;
     position: relative;
     padding-bottom: 25px;
     padding-top: 25px;
-
 }
 
 .checkboxContent {
-    text-align: justify;
+    text-align: left;
 }
 
 .segmentNames {
@@ -47,8 +46,8 @@
     position: absolute;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    left: 0px;
-    top: 13.5px;
+    top: 50%;
+    left: 0;
     height: 18px;
     width: 18px;
     outline: 2px solid #606060;
