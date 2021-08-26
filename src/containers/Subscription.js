@@ -41,7 +41,7 @@ export const Subscription = () => {
             {segments.map((contents, x) => (
               <div key={contents.segmentID} className="checkboxContent"> 
                 <label className="checkbox" htmlFor={contents.segmentID}>
-                  {contents.segmentName}
+                  {contents.segmentName} {contents.description ? `- ${contents.description}` : ""} 
                   <input type="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/>
                   <span className="checkmark"></span>
                 </label>
@@ -121,7 +121,8 @@ export const Subscription = () => {
           const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
             isChecked: contents.IsChecked,
             segmentID: contents.SegmentID,
-            segmentName: contents.SegmentName
+            segmentName: contents.SegmentName,
+            description: contents.Description
           }));
           
           setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
