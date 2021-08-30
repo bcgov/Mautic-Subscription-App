@@ -70,3 +70,9 @@
   .checkbox input:checked ~ .checkmark:after {
     display: block;
   }
+
+  @media screen and (max-width: 800px) {
+    .checkboxContainer {
+       width: 100%;
+    }
+ }
