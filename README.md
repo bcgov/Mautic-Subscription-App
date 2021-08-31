@@ -7,7 +7,7 @@ To run this application locally, first create a `.env` file with the parameters 
 As well, update the parameters in `public/config` as necessary.
 
 The backend server can be run using the command `go run .` in the api directory.
-The frontend can be run using `npm run start` and `npm start`.
+The frontend can be run using `npm run build` and `npm start`.
 
 # Setting up Mautic Subscription App on Openshift
 
