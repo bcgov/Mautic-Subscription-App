@@ -158,40 +158,41 @@ Or, to cleanup all mautic subscription app related artifacts in a namespace, run
 - Example:
 `oc delete all,configmap,pvc,secret,service -l app=mautic-subscription -n de0974-dev`
 
+# Local Development
+To run this application locally, first create a `.env` file with the parameters in the `.env.example` file in the api directory.
+As well, update the parameters in `public/config` as necessary.
+
+The backend server can be run using the command `go run .` in the api directory.
+The frontend can be run using `npm run start` and `npm start`.
+
+# Setting up Mautic Subscription App on Openshift
 ## Using openshift commands
 #### Setting up openshift parameters
 Start by creating a `mautic.subscription.param` file with the parameters in the `openshift/mautic.subscription.param.example` file. 
 
-Of particular note are the parameters SUBSCRIBE_FORM, UNSUBSCRIBE_FORM, SUBSCRIBE_URL, and UNSUBSCRIBE_URL.
-
-The SUBSCRIBE_FORM and UNSUBSCRIBE_FORM parameters are the names of the subscribe and unsubscribe forms in lower case. Under Components -> Forms in the Mautic App, you can find the names of each form listed under the `Name` column.
-
-The SUBSCRIBE_URL and UNSUBSCRIBE_URL are the subscribe and unsubscribe form URLs. They are expressed in the following format: ```<mautic-app-url>/form/submit?formId=[form-id]``` where the `form-id` are listed under the `ID` column in Components -> Forms in the Mautic App
 
 - Example:
 ```
-NAME=mautic-subscription
+APP_NAME=mautic-subscription
 SOURCE_REPOSITORY_URL=https://github.com/bcgov/Mautic-Subscription-App
-SOURCE_REPOSITORY_REF=clean-state
+SOURCE_REPOSITORY_REF=main 
 TOOLS_NAMESPACE=de0974-tools
 DEV_NAMESPACE=de0974-dev
 TEST_NAMESPACE=de0974-test
 PROD_NAMESPACE=de0974-prod
-IMAGE_TAG=pr10
 IMAGE_REGISTRY=image-registry.openshift-image-registry.svc:5000
-SUBSCRIBE_FORM=subscribe
-UNSUBSCRIBE_FORM=unsubscribe
-SUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=1
-UNSUBSCRIBE_URL=http://mautic-de0974-tools.apps.silver.devops.gov.bc.ca/form/submit?formId=2
-KEYCLOAK_URL=https://dev.oidc.gov.bc.ca
+BACKEND_URL=https://mautic-subscription-api-test-de0974-dev.apps.silver.devops.gov.bc.ca
 SSO_REALM=devhub
+HOST_ADDRESS=apps.silver.devops.gov.bc.ca
 ```
+
 #### Setting up keycloak clients
+##### Front-end
 For each deployment in the dev namespace there must be a keycloak client created for it. The keycloak Client ID should match the deployment config name.
 
 For the test and prod namespaces, one keycloak client for each of the namespaces must be created. Ex// `mautic-subscription-test` and `mautic-subscription-prod`
 
-Keycloak clients for the test and prod environments should be created with the following properties:
+Keycloak clients should be created with the following properties:
 ```
 Client-ID: [client-id-name]
 Enabled: On
@@ -208,6 +209,27 @@ Web Origins: *
 ```
 Additionally, a role should be created with composite roles github-org-bcgov, github-org-bcgov-c, github-org-bcdevops, idir-user.
 
+##### Back-end
+For the dev, test, and prod namespaces, one keycloak client for each of the namespaces must be created. Ex// `mautic-subscription-api-dev`, `mautic-subscription-api-test` and `mautic-subscription-api-prod`
+
+Keycloak clients should be created with the following properties:
+
+```
+Client-ID: [client-id-name]
+Enabled: On
+Consent Required: Off
+Client Protocol: openid-connect
+Access Type: confidential
+Standard Flow Enabled: On
+Implicit Flow Enabled: Off
+Direct Access Grants Enabled: Off
+Service Accounts Enabled: On
+Authorization Enabled: Off
+Valid Redirect URI: *
+Web Origins: +
+```
+Note that the keycloak properties in the `api/.env` file must match those from the corresponding client.
+
 #### Creating the build
 ##### Web
 Create the build using the commands:
@@ -221,7 +243,7 @@ and
 
 ##### API
 Create the build using the command:
-`oc process -f openshift/mautic.subscribe.api.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true | oc apply -f - -n [tools-namespace]`
+`oc process -f openshift/mautic.subscribe.api.bc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number]| oc apply -f - -n [tools-namespace]`
 and 
 `oc start-build -w [app-name]-api-[image-tag]`
 
@@ -239,6 +261,10 @@ Note for best practice, the pr number can be used as the image tag in the dev na
 
 #### Deploying the app
 ##### Web
+If there is already a deploymentConfig in the test/prod namespaces, retagging the images will automatically deploy the application using the updated images and existing configmaps/secrets.
+
+If this is the first time deploying the app in the test/prod namespace, or if this is the first time deploying an app in the dev namespace with the current pr number, follow these steps:
+
 After retagging the image, delete the previously configured configmap if there is one:
 `oc delete configmap mautic-config-[image-tag] -n [target-namespace]` 
 
@@ -254,11 +280,15 @@ Then deploy the app in the target namespaces using the command:
 `oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-prod`
 
 ##### API
+If there is already a deploymentConfig in the test/prod namespaces, retagging the images will automatically deploy the application using the updated images and existing configmaps/secrets.
+
+If this is the first time deploying the app in the test/prod namespace, or if this is the first time deploying an app in the dev namespace with the current pr number, follow these steps:
+
 Create a secret for the environment variables:
-`oc create secret generic [app-name]-api --from-env-file=api/.env`
+`oc create secret generic [app-name]-api-[image-tag] --from-env-file=api/.env`
 
 Deploy the app in the target namespaces using the command:
-`oc process -f openshift/mautic.subscribe.api.dc.yaml --param-file=openshift/mautic.subscription.param -p TARGET_NAMESPACE=[target-namespace] --ignore-unknown-parameters=true | oc apply -f - -n [target-namespace]`
+`oc process -f openshift/mautic.subscribe.api.dc.yaml --param-file=openshift/mautic.subscription.param -p TARGET_NAMESPACE=[target-namespace] --ignore-unknown-parameters=true -p IMAGE_TAG=pr[pr-number] | oc apply -f - -n [target-namespace]`
 
 #### Cleaning up
 To clean up a deployment and its artifact in a namespace, run the command:
