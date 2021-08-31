@@ -1,6 +1,14 @@
 # Architecture Diagram
 
 ![Architecture Diagram](architecture-diagram.png)
+
+# Local Development
+To run this application locally, first create a `.env` file with the parameters in the `.env.example` file in the api directory.
+As well, update the parameters in `public/config` as necessary.
+
+The backend server can be run using the command `go run .` in the api directory.
+The frontend can be run using `npm run start` and `npm start`.
+
 # Setting up Mautic Subscription App on Openshift
 
 Start by granting imagepull access to the tools namespace for the dev, test, and prod namespaces
@@ -26,16 +34,6 @@ The final step is to trigger the build which will make the s2i caddy image and s
 For more information on the caddy s2i builder, visit [here](https://github.com/bcgov/s2i-caddy-nodejs)
 
 ## Building and Deploying the App
-
-# Local Development
-To run this application locally, first create a `.env` file with the parameters in the `.env.example` file in the api directory.
-As well, update the parameters in `public/config` as necessary.
-
-The backend server can be run using the command `go run .` in the api directory.
-The frontend can be run using `npm run start` and `npm start`.
-
-# Setting up Mautic Subscription App on Openshift
-## Using openshift commands
 #### Setting up openshift parameters
 Start by creating a `mautic.subscription.param` file with the parameters in the `openshift/mautic.subscription.param.example` file. 
 
