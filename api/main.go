@@ -64,6 +64,7 @@ type SegmentAndId struct {
 	IsChecked   bool
 	SegmentName string
 	SegmentID   string
+	Description string
 }
 
 type ContactInfoByEmail struct {
@@ -124,7 +125,13 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 			// Append segment and ID to output
 			for _, value := range data.Lists {
 				_, isSubscribed := contactSegments[strconv.Itoa(value.ID)]
-				curSegmentAndId := SegmentAndId{isSubscribed, value.Name, strconv.Itoa(value.ID)}
+
+				description := ""
+
+				if descriptionExists(value.Description) {
+					description = value.Description.(string)
+				}
+				curSegmentAndId := SegmentAndId{isSubscribed, value.Name, strconv.Itoa(value.ID), description}
 				contactSegmentsAndIds.SegmentsAndIds = append(contactSegmentsAndIds.SegmentsAndIds, curSegmentAndId)
 			}
 
@@ -137,6 +144,15 @@ func getSegmentAndIdInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+}
+
+func descriptionExists(description interface{}) bool {
+	switch description.(type) {
+	default:
+		return false
+	case string:
+		return true
+	}
 }
 
 func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail string) string {

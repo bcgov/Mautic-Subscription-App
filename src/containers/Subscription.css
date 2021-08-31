@@ -1,8 +1,8 @@
 .displayMessage {
-    font-size: 18px;
+  font-size: 18px;
 }
 .checkboxContainer {
-    width: 200px;
+    width: 700px;
     margin: auto;
     position: relative;
     padding-bottom: 25px;
@@ -10,7 +10,7 @@
 }
 
 .checkboxContent {
-    text-align: left;
+  text-align: justify;
 }
 
 .segmentNames {
@@ -31,7 +31,7 @@
     -ms-user-select: none;
     user-select: none;
   }
-  
+
   /* Hide the browser's default checkbox */
   .checkbox input {
     position: absolute;
@@ -40,24 +40,22 @@
     height: 0;
     width: 0;
   }
-  
+
   /* Create a custom checkbox */
   .checkmark {
     position: absolute;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    top: 50%;
-    left: 0;
+    left: 0px;
+    top: 13.5px;
     height: 18px;
     width: 18px;
     outline: 2px solid #606060;
   }
-  
   /* When the checkbox is checked, add a blue background */
   .checkbox input:checked ~ .checkmark {
     background-color: #606060;
   }
-  
   /* Create the checkmark/indicator (hidden when not checked) */
   .checkmark:after {
     content: "\2713";
@@ -68,8 +66,13 @@
     transform: translate(-50%, -50%);
     display: none;
   }
-  
   /* Show the checkmark when checked */
   .checkbox input:checked ~ .checkmark:after {
     display: block;
   }
+
+  @media screen and (max-width: 800px) {
+    .checkboxContainer {
+       width: 100%;
+    }
+ }
