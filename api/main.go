@@ -191,11 +191,13 @@ func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail st
 			// Error if more than 1 contact is found in Mautic
 			if len(contactList) > 1 {
 				fmt.Fprintf(w, "More than one contact associated with the email address.")
+			}else{
+				for key := range contactList {
+					contactId = key
+				}
 			}
 
-			for key := range contactList {
-				contactId = key
-			}
+			
 		}
 	}
 	return contactId
