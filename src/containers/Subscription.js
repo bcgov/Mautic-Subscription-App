@@ -42,7 +42,7 @@ export const Subscription = () => {
               <div key={contents.segmentID} className="checkboxContent"> 
                 <label className="checkbox" htmlFor={contents.segmentID}>
                   {contents.segmentName} {contents.description ? `- ${contents.description}` : ""} 
-                  {contents.segmentName === 'test role' ? 
+                  {contents.segmentName === 'Critical Updates' ? 
                   <div><input className="grayed-out" type="checkbox" id ={contents.segmentID} checked={contents.isChecked} disabled="disabled"/><span className="checkmark grayed-out"></span></div>: 
                   <div><input type="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/> <span className="checkmark"></span></div>}
                 </label>
@@ -113,40 +113,33 @@ export const Subscription = () => {
                 'Email': `${userEmail}`
               }
             });
-          console.log(segmentResponse)
           // store segments in lexicographic order
           const segmentData = segmentResponse.data
-
           setContactId(segmentData.contactId)
-          const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
-            isChecked: contents.IsChecked,
-            segmentID: contents.SegmentID,
-            segmentName: contents.SegmentName,
-            description: contents.Description
-          }));
-          
-          setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
-          sethttpError(false);
-
+          if(segmentData.segmentsAndIds){
+            const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
+              isChecked: contents.IsChecked,
+              segmentID: contents.SegmentID,
+              segmentName: contents.SegmentName,
+              description: contents.Description
+            }));
+            setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
+            sethttpError(false);
+          }else if (segmentData.includes("More than one contact associated with the email address.")){
+            sethttpError("More than one contact associated with the email address.")
+          }
         } catch(error) {
-          console.log(error)
           if (error.response) {
             // client received error response (5xx, 4xx)
-            if(error.response.data.includes("More than one contact associated with the email address.")){
-              sethttpError("More than one contact associated with the email address.")
-            } else{
-              sethttpError(`Unable to fetch segments: ${error.response.data}`);
-            }
+            sethttpError(`Unable to fetch segments: ${error.response.data}`);
           } else if (error.request) {
             // The request was made but no response was received
             sethttpError("Unable to fetch segments")
-    
           } else {
             // Something happened in setting up the request and triggered an Error
             sethttpError(`Unable to fetch segments: ${error.message}`);
           }
         }
-        
       }
     };
 
