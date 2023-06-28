@@ -24,10 +24,8 @@ export const AuthModal = () => {
       </ModalHeader>
       <ModalBody>Please login to subscribe/unsubscribe from the {APP_INFO.NAME}.</ModalBody>
       <ModalFooter>
-        <p>Login with:</p>
         <div className="auth-buttons">
-          <IdpButton idp={SSO_IDP.IDIR}/>
-          <IdpButton idp={SSO_IDP.GITHUB}/>
+          <IdpButton name="Login with SSO"/>
         </div>
       </ModalFooter>
     </Modal>

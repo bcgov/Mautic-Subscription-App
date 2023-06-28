@@ -56,6 +56,10 @@
   .checkbox input:checked ~ .checkmark {
     background-color: #606060;
   }
+  .grayed-out{
+    background-color: #a0a0a0 !important;
+    outline: 2px solid #a0a0a0;
+  }
   /* Create the checkmark/indicator (hidden when not checked) */
   .checkmark:after {
     content: "\2713";
