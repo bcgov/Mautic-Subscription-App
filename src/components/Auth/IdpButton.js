@@ -22,20 +22,20 @@ import { useKeycloak } from '@react-keycloak/web';
 import React from 'react';
 import './AuthModal.css';
 
-const actionForCurrentState = ( keycloak, idp ) => {
+const actionForCurrentState = ( keycloak ) => {
   return () =>  {
-    keycloak.login({ idpHint: idp, redirectUri: `${window.location.origin}/subscription` });
+    keycloak.login({ redirectUri: `${window.location.origin}/subscription` });
   }
 };
 
-const IdpButton = ( { idp } ) => {
+const IdpButton = ( { name } ) => {
   const { keycloak, initialized } = useKeycloak();
   
   return (
     <button className="auth-button"
-      onClick={actionForCurrentState(keycloak, idp)}
+      onClick={actionForCurrentState(keycloak)}
     >
-      {idp}
+      {name}
     </button>
   );
 };
