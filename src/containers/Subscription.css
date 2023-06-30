@@ -56,8 +56,8 @@
   .checkbox input:checked ~ .checkmark {
     background-color: #606060;
   }
-  .grayed-out{
-    background-color: #a0a0a0 !important;
+  #grayed-out{
+    background-color: #a0a0a0;
     outline: 2px solid #a0a0a0;
   }
   /* Create the checkmark/indicator (hidden when not checked) */

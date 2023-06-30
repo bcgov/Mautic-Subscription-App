@@ -43,8 +43,8 @@ export const Subscription = () => {
                 <label className="checkbox" htmlFor={contents.segmentID}>
                   {contents.segmentName} {contents.description ? `- ${contents.description}` : ""} 
                   {contents.segmentName === 'Critical Updates' ? 
-                  <div><input className="grayed-out" type="checkbox" id ={contents.segmentID} checked={contents.isChecked} disabled="disabled"/><span className="checkmark grayed-out"></span></div>: 
-                  <div><input type="checkbox" id ={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/> <span className="checkmark"></span></div>}
+                  <div><input type="checkbox" id="grayed-out" checked={contents.isChecked} disabled="disabled"/><span className="checkmark" id="grayed-out"></span></div>: 
+                  <div><input type="checkbox" id={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/> <span className="checkmark"></span></div>}
                 </label>
               </div>
             ))}
@@ -115,7 +115,9 @@ export const Subscription = () => {
             });
           // store segments in lexicographic order
           const segmentData = segmentResponse.data
+          const errorMsg = "More than one contact associated with the email address."
           setContactId(segmentData.contactId)
+          //check if response datatype is an object and will not return undefined
           if(segmentData.segmentsAndIds){
             const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
               isChecked: contents.IsChecked,
@@ -125,8 +127,9 @@ export const Subscription = () => {
             }));
             setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
             sethttpError(false);
-          }else if (segmentData.includes("More than one contact associated with the email address.")){
-            sethttpError("More than one contact associated with the email address.")
+          }else if (segmentData.includes(errorMsg)){
+            //mautic server allows multiple accounts to be associated with one email, need to return error if that's the case
+            sethttpError(errorMsg)
           }
         } catch(error) {
           if (error.response) {
@@ -167,6 +170,7 @@ export const Subscription = () => {
 
 
   if (httpError) {
+    //return specific error message depending on the error
     if(httpError.includes("More than one contact associated with the email")){
       return (
         <div>
