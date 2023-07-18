@@ -1,0 +1,29 @@
+name: Dev - build and deploy from feature branch api
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+    paths:
+      - "api/**/*"
+jobs:
+  build-and-tag-image:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: Build and tag the image
+        id: build-image
+        run: |
+          oc version
+          oc login --token=${{ secrets.OpenShiftToken }} --server=${{ secrets.OpenShiftServerURL }}
+          oc -n de0974-tools start-build mautic-subscription-description-api-pr37 --follow
+          export BUILDID="$(oc -n de0974-tools get -o=jsonpath="{.status.lastVersion}" buildconfig mautic-subscription-description-api-pr37)"
+          export COMMITID="$(oc -n de0974-tools get -o=jsonpath="{.spec.revision.git.commit}" build mautic-subscription-description-api-pr37-$BUILDID | cut -c1-7)"
+          export IMAGESHA="$(oc -n de0974-tools get -o=jsonpath="{.status.output.to.imageDigest}" build mautic-subscription-description-api-pr37-$BUILDID)"
+          oc -n de0974-tools tag mautic-subscription-description-api@$IMAGESHA mautic-subscription-description-api:$COMMITID mautic-subscription-description-api:dev
+          echo "::set-output name=imagesha::$IMAGESHA"
+      - name: Update image stream dev
+        id: update-image
+        run: |
+          oc tag de0974-dev tag de0974-tools/mautic-subscription-description-api:dev mautic-subscription-description-api:dev
