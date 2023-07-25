@@ -22,8 +22,12 @@ export const Subscription = () => {
   const [ redirect, setRedirect] = useState(null);
 
   const toggleCheckboxes = () => {
-    const toggledCheckedboxes = segments.map(({isChecked, ...others}) => ( { ...others, "isChecked": !selectAll } ));
-
+    const toggledCheckedboxes = segments.map(({isChecked, segmentName, ...others}) => {
+      if(segmentName === 'Critical Updates' && isChecked === true){ 
+        return { ...others, "isChecked": true, segmentName };
+      } else {
+        return { ...others, "isChecked": !selectAll, segmentName };
+      } });
     setSegments(toggledCheckedboxes)
     setSelectAll(!selectAll)
   }
