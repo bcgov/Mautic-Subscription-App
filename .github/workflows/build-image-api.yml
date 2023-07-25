@@ -1,4 +1,4 @@
-name: Dev - build and deploy from feature branch api
+name: Dev - build and deploy new image api
 on:
   pull_request:
     types:
@@ -26,4 +26,4 @@ jobs:
       - name: Update image stream dev
         id: update-image
         run: |
-          oc tag de0974-dev tag de0974-tools/mautic-subscription-description-api:dev mautic-subscription-description-api:dev
+          oc -n de0974-dev tag de0974-tools/mautic-subscription-description-api:dev mautic-subscription-description-api:dev
