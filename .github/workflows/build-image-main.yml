@@ -1,9 +1,4 @@
-name: Dev - build and deploy from feature branch
-  # Build for Test when a pull request is merged into master with changes to
-  # certain api, db, or web files.
-  # If triggered manually, run all steps. 
-  # web-devops for now, change it to other branch if needed. 
-  # ------------------------------------------------------------------------
+name: Dev - build and deploy image main branch
 on:
   pull_request:
     types:
@@ -31,4 +26,4 @@ jobs:
       - name: Update image stream dev
         id: update-image
         run: |
-          oc tag de0974-dev tag de0974-tools/mautic-subscription-description:dev mautic-subscription-description:dev
+          oc -n de0974-dev tag de0974-tools/mautic-subscription-description:dev mautic-subscription-description:dev
