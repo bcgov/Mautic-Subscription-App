@@ -23,7 +23,7 @@
     position: relative;
     padding-left: 25px;
     margin-bottom: 12px;
-    cursor: pointer;
+    pointer-events: none;
     Font-family: "Noto Sans", Verdana, Arial, sans-serif;
     font-size: 18px;
     -webkit-user-select: none;
@@ -34,6 +34,7 @@
 
   /* Hide the browser's default checkbox */
   .checkbox input {
+    pointer-events: auto;
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -43,6 +44,7 @@
 
   /* Create a custom checkbox */
   .checkmark {
+    pointer-events: auto;
     position: absolute;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);

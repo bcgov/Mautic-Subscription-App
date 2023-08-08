@@ -23,8 +23,8 @@ export const Subscription = () => {
 
   const toggleCheckboxes = () => {
     const toggledCheckedboxes = segments.map(({isChecked, segmentName, ...others}) => {
-      if(segmentName === 'Critical Updates' && isChecked === true){ 
-        return { ...others, "isChecked": true, segmentName };
+      if(segmentName === 'Critical Updates'){ 
+        return { ...others, "isChecked": isChecked, segmentName };
       } else {
         return { ...others, "isChecked": !selectAll, segmentName };
       } });
