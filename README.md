@@ -1,3 +1,6 @@
+# Summary
+This document contains the developer documentation of the Mautic email subscription app. For knowledge and files related to the Mautic server, refer to this repo https://github.com/bcgov/Mautic-Openshift.
+
 # Architecture Diagram
 
 ![Architecture Diagram](architecture-diagram.png)
