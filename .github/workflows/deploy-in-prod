@@ -14,4 +14,4 @@ jobs:
           oc login --token=${{ secrets.OpenShiftToken }} --server=${{ secrets.OpenShiftServerURL }}
       - name: Update imagestream prod
         run: |      
-          oc -n tag de0974-dev/mautic-subscription-description:dev de0974-prod/mautic-subscription:prod
+          oc tag de0974-dev/mautic-subscription-description:dev de0974-prod/mautic-subscription:prod
