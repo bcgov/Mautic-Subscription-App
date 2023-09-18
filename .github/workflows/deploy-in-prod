@@ -1,0 +1,17 @@
+name: prod - update deployment in prod 
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tag_for_prod:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Log into OpenShift
+        run: |
+          oc version
+          oc login --token=${{ secrets.OpenShiftToken }} --server=${{ secrets.OpenShiftServerURL }}
+      - name: Update imagestream prod
+        run: |      
+          oc tag de0974-dev/mautic-subscription-description:dev de0974-prod/mautic-subscription:prod

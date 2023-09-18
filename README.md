@@ -6,11 +6,16 @@ This document contains the developer documentation of the Mautic email subscript
 ![Architecture Diagram](architecture-diagram.png)
 
 # Local Development
-To run this application locally, first create a `.env` file with the parameters in the `.env.example` file in the api directory.
-As well, update the parameters in `public/config` as necessary.
+To run this application locally, first create a `.env` file with the parameters in the `.env.example` file in the api directory or connect to an openshift api deployment by specifying the correct "backendURL" in the form.json file.
+As well, update all the parameters in the `public/config` folder.
+These values can be referenced from the configmap and secrets in the openshift deployment.
 
 The backend server can be run using the command `go run .` in the api directory.
 The frontend can be run using `npm run build` and `npm start`.
+
+# Making Updates
+Create a pull request to the main branch, once merged, a new image will be built in the tools namespace and re-tagged in the dev namespace and a new deployment will be up in dev. Once sufficient testing is done, trigger the deploy-in-prod and deploy-in-prod-api workflow to update the prod deployment.
+If the application needs to be recreated, please refer to the steps below.
 
 # Setting up Mautic Subscription App on Openshift
 
