@@ -17,7 +17,7 @@ sequenceDiagram
 
 | Platform | Cluster | Segment |
 |---|---|---|
-| Private Cloud | Silver | critical-updates-generic, critical-updates-silver |
-| Private Cloud | Gold & Golddr |critical-updates-generic, critical-updates-gold |
-| Private Cloud | Emerald |critical-updates-generic, critical-updates-emerald |
-| Public Cloud | AXS | public-cloud-accelerator-updates |
+| Private Cloud | Silver | critical-updates-generic, critical-updates-silver, platform-comms |
+| Private Cloud | Gold & Golddr |critical-updates-generic, critical-updates-gold, platform-comms |
+| Private Cloud | Emerald |critical-updates-generic, critical-updates-emerald, platform-comms |
+| Public Cloud | AWS | public-cloud-accelerator-updates |
