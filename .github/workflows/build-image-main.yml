@@ -21,9 +21,9 @@ jobs:
           export BUILDID="$(oc -n de0974-tools get -o=jsonpath="{.status.lastVersion}" buildconfig mautic-subscription-description-pr37)"
           export COMMITID="$(oc -n de0974-tools get -o=jsonpath="{.spec.revision.git.commit}" build mautic-subscription-description-pr37-$BUILDID | cut -c1-7)"
           export IMAGESHA="$(oc -n de0974-tools get -o=jsonpath="{.status.output.to.imageDigest}" build mautic-subscription-description-pr37-$BUILDID)"
-          oc -n de0974-tools tag mautic-subscription-description@$IMAGESHA mautic-subscription-description:$COMMITID mautic-subscription-description:dev
+          oc -n de0974-tools tag mautic-subscription-description:$IMAGESHA mautic-subscription-description:$COMMITID mautic-subscription-description:tools
           echo "::set-output name=imagesha::$IMAGESHA"
       - name: Update image stream dev
         id: update-image
         run: |
-          oc -n de0974-dev tag de0974-tools/mautic-subscription-description:dev mautic-subscription-description:dev
+          oc -n de0974-dev tag de0974-tools/mautic-subscription-description:tools mautic-subscription-description:dev
