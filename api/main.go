@@ -25,6 +25,7 @@ var mauticURL = os.Getenv("MAUTIC_URL")
 func main() {
 	http.HandleFunc("/segments", keycloakAuth(getSegmentAndIdInfo))
 	http.HandleFunc("/segments/contact/add", keycloakAuth(updateContactSegments))
+	http.HandleFunc("/segments/contact/cluster/add", keycloakAuth(updateContactSegmentsByCluster))
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -58,6 +59,14 @@ type Segment struct {
 type ContactSegmentsAndIds struct {
 	ContactID      string         `json:"contactId"`
 	SegmentsAndIds []SegmentAndId `json:"segmentsAndIds"`
+}
+
+type ContactAndClusterData struct {
+	FirstName    string   `json:"firstName"`
+	LastName     string   `json:"lastName"`
+	Email        string   `json:"email"`
+	ClusterName  []string `json:"clusterName"`
+	PlatformName string   `json:"platformName"`
 }
 
 type SegmentAndId struct {
@@ -191,13 +200,12 @@ func getContactIdByEmail(w http.ResponseWriter, r *http.Request, contactEmail st
 			// Error if more than 1 contact is found in Mautic
 			if len(contactList) > 1 {
 				fmt.Fprintf(w, "More than one contact associated with the email address.")
-			}else{
+			} else {
 				for key := range contactList {
 					contactId = key
 				}
 			}
 
-			
 		}
 	}
 	return contactId
@@ -323,7 +331,62 @@ func updateContactSegments(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 	}
 }
-
+func updateContactSegmentsByCluster(w http.ResponseWriter, r *http.Request) {
+	client := &http.Client{}
+	newContactAndClusterData := ContactAndClusterData{}
+	//get data from post request body
+	err := json.NewDecoder(r.Body).Decode(&newContactAndClusterData)
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Decode error! please check your JSON formating.")
+		return
+	}
+	//extract email and cluster information
+	contactEmail := newContactAndClusterData.Email
+	clusters := newContactAndClusterData.ClusterName
+	//find out contactId from email
+	contactId := getContactIdByEmail(w, r, contactEmail)
+	//for each cluster the contact is part of, subscribe them to the according segments by segment id, contact is subscribed to segment 14 by default
+	for i := 0; i < len(clusters); i++ {
+		switch clusters[i] {
+		case "Emerald":
+			//subscribe contact to critical updates emerald
+			req, err := http.NewRequest("POST", mauticURL+"api/segments/19/contact/"+contactId+"/add", nil)
+			req.SetBasicAuth(mauticUser, mauticPW)
+			_, err = client.Do(req)
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+			}
+		case "Gold":
+			//subscribe contact to critical updates gold
+			req, err := http.NewRequest("POST", mauticURL+"api/segments/18/contact/"+contactId+"/add", nil)
+			req.SetBasicAuth(mauticUser, mauticPW)
+			_, err = client.Do(req)
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+			}
+		case "Silver":
+			//subscribe contact to critical updates silver
+			req, err := http.NewRequest("POST", mauticURL+"api/segments/17/contact/"+contactId+"/add", nil)
+			req.SetBasicAuth(mauticUser, mauticPW)
+			_, err = client.Do(req)
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+			}
+		}
+		//subscribe contact to critical updates
+		req, err := http.NewRequest("POST", mauticURL+"api/segments/14/contact/"+contactId+"/add", nil)
+		req.SetBasicAuth(mauticUser, mauticPW)
+		_, err = client.Do(req)
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
+		}
+	}
+}
 func sendConfirmationEmail(w http.ResponseWriter, r *http.Request, contactId string) error {
 	err := error(nil)
 	confirmationEmailId := os.Getenv("CONFIRMATION_EMAIL_ID")
