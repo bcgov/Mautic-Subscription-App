@@ -350,6 +350,7 @@ func updateContactSegmentsByCluster(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(clusters); i++ {
 		switch clusters[i] {
 		case "Emerald":
+			//subscribe contact to critical updates emerald
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/19/contact/"+contactId+"/add", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
@@ -358,6 +359,7 @@ func updateContactSegmentsByCluster(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 			}
 		case "Gold":
+			//subscribe contact to critical updates gold
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/18/contact/"+contactId+"/add", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
@@ -366,6 +368,7 @@ func updateContactSegmentsByCluster(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 			}
 		case "Silver":
+			//subscribe contact to critical updates silver
 			req, err := http.NewRequest("POST", mauticURL+"api/segments/17/contact/"+contactId+"/add", nil)
 			req.SetBasicAuth(mauticUser, mauticPW)
 			_, err = client.Do(req)
@@ -374,6 +377,7 @@ func updateContactSegmentsByCluster(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "Mautic HTTP request failed with error %s\n", err)
 			}
 		}
+		//subscribe contact to critical updates
 		req, err := http.NewRequest("POST", mauticURL+"api/segments/14/contact/"+contactId+"/add", nil)
 		req.SetBasicAuth(mauticUser, mauticPW)
 		_, err = client.Do(req)
