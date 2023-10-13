@@ -22,6 +22,7 @@ export const Subscription = () => {
   const [ redirect, setRedirect] = useState(null);
 
   const toggleCheckboxes = () => {
+    //triggered by select all checkbox, critical updates checkbox not affected by select all
     const toggledCheckedboxes = segments.map(({isChecked, segmentName, ...others}) => {
       if(segmentName === 'Critical Updates'){ 
         return { ...others, "isChecked": isChecked, segmentName };
@@ -36,6 +37,7 @@ export const Subscription = () => {
       let isSubscribedToCriticalUpdates = false;
       let criticalUpdatesDescription = "";
       for (const segment of segments) {
+        //if segment name contains Critical Updates, set flag and description to be displayed seperately from other segments
         if (segment.segmentName.includes('Critical Updates')){
           isSubscribedToCriticalUpdates = true;
           criticalUpdatesDescription = segment.description;
@@ -49,6 +51,7 @@ export const Subscription = () => {
               <input type="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
               <span className="checkmark"></span>
             </label>
+            {/* {Critical Updates Segment} */}
             {
               isSubscribedToCriticalUpdates === true ?
               <div key="14" className="checkboxContent">
@@ -58,6 +61,7 @@ export const Subscription = () => {
                 </label>
               </div> : <></>
             }
+             {/* {Other Segments} */}
             {segments.map((contents, x) => (
               <div key={contents.segmentID} className="checkboxContent">
                 {
@@ -87,6 +91,7 @@ export const Subscription = () => {
 
     if (segments && contactId) {
       try {
+        //call backend api to update user segments
         await axios.post(`${config.backendURL}/segments/contact/add`,
           {
             ContactId: contactId,
