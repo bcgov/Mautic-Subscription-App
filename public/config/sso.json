@@ -1,5 +1,5 @@
 {
-    "url": "https://test.oidc.gov.bc.ca/auth",
+    "url": "https://loginproxy.gov.bc.ca",
     "realm": "devhub",
     "clientId": "mautic-subscription-test"
   }

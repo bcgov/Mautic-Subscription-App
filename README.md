@@ -150,11 +150,11 @@ Then deploy the app in the target namespaces using the command:
 
 - Example deploying to dev:
 `oc delete configmap mautic-config-pr10 -n de0974-dev`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr10 -p IMAGE_TAG=pr10 -p KEYCLOAK_URL=https://dev.oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-dev`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-dev -p SSO_CLIENT_ID=mautic-subscription-pr10 -p IMAGE_TAG=pr10 -p KEYCLOAK_URL=https://loginproxy.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-dev`
 
 - Example deploying to prod:
 `oc delete configmap mautic-config-prod -n de0974-prod`
-`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://oidc.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-prod`
+`oc process -f openshift/mautic.subscribe.dc.yaml --param-file=openshift/mautic.subscription.param --ignore-unknown-parameters=true -p TARGET_NAMESPACE=de0974-prod -p SSO_CLIENT_ID=mautic-subscription-prod -p IMAGE_TAG=prod -p KEYCLOAK_URL=https://loginproxy.gov.bc.ca -p SSO_AUTHORIZED_ROLES="github-org-bcgov,github-org-bcgov-c,github-org-bcdevops,idir-user" | oc apply -f - -n de0974-prod`
 
 ##### API
 If there is already a deploymentConfig in the test/prod namespaces, retagging the images will automatically deploy the application using the updated images and existing configmaps/secrets.
