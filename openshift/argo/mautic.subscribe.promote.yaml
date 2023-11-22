@@ -96,8 +96,8 @@ spec:
           - '-c'
         args:
           - >-
-            NAME={{workflow.parameters.APP_NAME}} TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}} 
-            KEYCLOAK_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KEYCLOAK_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.SSO_REALM}} 
+            NAME={{workflow.parameters.APP_NAME}} TARGET_NAMESPACE={{workflow.parameters.TARGET_NAMESPACE}} KC_URL={{workflow.parameters.KC_URL}} 
+            KC_CLIENT_ID=`cat SSO_SA_CLIENT_ID.txt` KC_CLIENT_SECRET=`cat SSO_SA_PASSWORD.txt` REALM_NAME={{workflow.parameters.SSO_REALM}} 
             ./keycloak-client-creation/kc-create-client.sh https://{{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}-{{workflow.parameters.TARGET_NAMESPACE}}.{{workflow.parameters.HOST_ADDRESS}}/*;
             
             jq --arg SSO_CLIENT_ID "$SSO_CLIENT_ID" '.clientId = "{{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}"' "public/config/sso_example.json" > public/config/sso.json;
@@ -162,7 +162,7 @@ spec:
             -p UNSUBSCRIBE_FORM={{workflow.parameters.UNSUBSCRIBE_FORM}}
             -p SUBSCRIBE_URL={{workflow.parameters.SUBSCRIBE_URL}}
             -p UNSUBSCRIBE_URL={{workflow.parameters.UNSUBSCRIBE_URL}}
-            -p KEYCLOAK_URL={{workflow.parameters.KEYCLOAK_URL}}
+            -p KC_URL={{workflow.parameters.KC_URL}}
             -p SSO_REALM={{workflow.parameters.SSO_REALM}}
             -p SSO_CLIENT_ID={{workflow.parameters.APP_NAME}}-{{workflow.parameters.IMAGE_TAG}}
             -p IMAGE_REGISTRY={{workflow.parameters.IMAGE_REGISTRY}}

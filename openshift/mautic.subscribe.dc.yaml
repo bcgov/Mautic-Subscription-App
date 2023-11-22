@@ -21,7 +21,7 @@ objects:
         }
       sso.json: |-
         {
-          "url": "${KEYCLOAK_URL}/auth",
+          "url": "${KC_URL}/auth",
           "realm": "${SSO_REALM}",
           "clientId": "${SSO_CLIENT_ID}"
         }
@@ -205,8 +205,8 @@ parameters:
   name: TARGET_NAMESPACE
   required: true
 - description: Keycloak URL
-  displayName: KEYCLOAK_URL
-  name: KEYCLOAK_URL
+  displayName: KC_URL
+  name: KC_URL
   required: true
 - description: Backend URL
   displayName: BACKEND_URL
