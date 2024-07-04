@@ -22,27 +22,14 @@ export const Subscription = () => {
   const [ redirect, setRedirect] = useState(null);
 
   const toggleCheckboxes = () => {
-    //triggered by select all checkbox, critical updates checkbox not affected by select all
     const toggledCheckedboxes = segments.map(({isChecked, segmentName, ...others}) => {
-      if(segmentName === 'Critical Updates'){ 
-        return { ...others, "isChecked": isChecked, segmentName };
-      } else {
-        return { ...others, "isChecked": !selectAll, segmentName };
-      } });
+      return { ...others, "isChecked": !selectAll, segmentName }; });
     setSegments(toggledCheckedboxes)
     setSelectAll(!selectAll)
   }
 
   const createCheckboxes = () => {
-      let isSubscribedToCriticalUpdates = false;
-      let criticalUpdatesDescription = "";
-      for (const segment of segments) {
-        //if segment name contains Critical Updates, set flag and description to be displayed seperately from other segments
-        if (segment.segmentName.includes('Critical Updates')){
-          isSubscribedToCriticalUpdates = true;
-          criticalUpdatesDescription = segment.description;
-        }
-      }
+  
       return (
         <div >
           <div className="checkboxContent">
@@ -51,26 +38,14 @@ export const Subscription = () => {
               <input type="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
               <span className="checkmark"></span>
             </label>
-            {/* {Critical Updates Segment} */}
-            {
-              isSubscribedToCriticalUpdates === true ?
-              <div key="14" className="checkboxContent">
-                <label className="checkbox" htmlFor="14">
-                  Critical Updates - {criticalUpdatesDescription}
-                  <input type="checkbox" id="grayed-out" checked={true} disabled="disabled"/><span className="checkmark" id="grayed-out"></span>
-                </label>
-              </div> : <></>
-            }
+       
              {/* {Other Segments} */}
             {segments.map((contents, x) => (
               <div key={contents.segmentID} className="checkboxContent">
-                {
-                  contents.segmentName.includes('Critical Updates') ? <></> :
                   <label className="checkbox" htmlFor={contents.segmentID}>
                     {contents.segmentName} {contents.description ? `- ${contents.description}` : ""}
                     <input type="checkbox" id={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/><span className="checkmark"></span>
                   </label>
-                }
               </div>
             ))}
           </div>
