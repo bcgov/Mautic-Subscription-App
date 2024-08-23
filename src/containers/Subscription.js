@@ -197,7 +197,9 @@ export const Subscription = () => {
           <br />
           Your email address is {userEmail}.
         </p>
-   
+        <p>
+        To subscribe to the Private Cloud updates <a href='https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/'>sign up here</a>
+        </p>
         {segments ? (
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
