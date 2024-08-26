@@ -198,7 +198,13 @@ export const Subscription = () => {
           Your email address is {userEmail}.
         </p>
         <p>
-        To subscribe to the Private Cloud updates <a href='https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/'>sign up here</a>
+          To subscribe to the Private Cloud updates 
+            <a href='https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/'
+              style="color: #036;" 
+              onmouseover="this.style.color='#136dc7';" 
+              onmouseout="this.style.color='#036';">
+              sign up here
+            </a>
         </p>
         {segments ? (
           <div>
