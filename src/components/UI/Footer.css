@@ -10,7 +10,7 @@ footer {
   height: 46px;
   width: 100%;
 }
-  
+
 footer ul {
   margin: 0;
   color: #fff;
@@ -23,15 +23,19 @@ footer ul {
 
 footer ul li a {
   font-size: 0.813em;
-  font-weight: normal;  /* 400 */
+  font-weight: normal; /* 400 */
   color: #fff;
   border-right: 1px solid #4b5e7e;
   padding-left: 5px;
   padding-right: 5px;
 }
 
+a {
+  color: #036;
+}
+
 a:hover {
-  color: #fff;
+  color: #136dc7;
   text-decoration: underline;
 }
 
