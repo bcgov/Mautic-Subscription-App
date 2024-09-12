@@ -201,6 +201,10 @@ export const Subscription = () => {
           To subscribe to the Private Cloud updates{' '}
           <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/">sign up here</a>
         </b>
+        <b>
+          To subscribe to the Public Cloud updates{' '}
+          <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/">sign up here</a>
+        </b>
         {segments ? (
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
