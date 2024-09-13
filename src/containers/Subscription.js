@@ -198,26 +198,27 @@ export const Subscription = () => {
           <br />
           Your email address is {userEmail}.
         </p>
-        <b>To subscribe to: </b>
-        <ul>
-          <li>
-            <b>
-              Private Cloud updates{" "}
-              <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/">
-                sign up here
-              </a>
-            </b>
-          </li>
-          <li>
-            <b>
-              Public Cloud updates{" "}
-              <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/">
-                sign up here
-              </a>
-            </b>
-          </li>
-        </ul>
-
+        <div style="text-align: left">
+          <b>To subscribe to: </b>
+          <ul>
+            <li>
+              <b>
+                Private Cloud updates 
+                <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/">
+                   sign up here
+                </a>
+              </b>
+            </li>
+            <li>
+              <b>
+                Public Cloud updates 
+                <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/">
+                   sign up here
+                </a>
+              </b>
+            </li>
+          </ul>
+        </div>
         {segments ? (
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
