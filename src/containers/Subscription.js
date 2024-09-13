@@ -193,35 +193,49 @@ export const Subscription = () => {
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
       <div>
         <p className="displayMessage">
-          Hello {userName}, select/unselect the checkboxes and click submit to update your subscription preferences.
+          Hello {userName}, select/unselect the checkboxes and click submit to
+          update your subscription preferences.
           <br />
           Your email address is {userEmail}.
         </p>
-        <b>
-          To subscribe to the Private Cloud updates{' '}
-          <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/">sign up here</a>
-        </b>
-        <b>
-          To subscribe to the Public Cloud updates{' '}
-          <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/">sign up here</a>
-        </b>
+        <b>To subscribe to: </b>
+        <ul>
+          <li>
+            <b>
+              Private Cloud updates{" "}
+              <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/">
+                sign up here
+              </a>
+            </b>
+          </li>
+          <li>
+            <b>
+              Public Cloud updates{" "}
+              <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/">
+                sign up here
+              </a>
+            </b>
+          </li>
+        </ul>
+
         {segments ? (
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
             <div className="auth-buttons">
               <form onSubmit={postSegments}>
-                <button className="auth-button" type="submit">Submit</button>
+                <button className="auth-button" type="submit">
+                  Submit
+                </button>
               </form>
             </div>
-          </div>    
+          </div>
         ) : (
           <div>
             <div className="bcgov-page-loader"></div>
             <div>Loading... please wait</div>
           </div>
         )}
-          
-      </div>     
+      </div>
     </div>
   );
   }
