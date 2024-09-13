@@ -33,11 +33,11 @@ export const Subscription = () => {
       return (
         <div >
           <div className="checkboxContent">
-            <label className="checkbox" htmlFor="select_all">
+            {/* <label className="checkbox" htmlFor="select_all">
               Select All
               <input type="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
               <span className="checkmark"></span>
-            </label>
+            </label> */}
        
              {/* {Other Segments} */}
             {segments.map((contents, x) => (
