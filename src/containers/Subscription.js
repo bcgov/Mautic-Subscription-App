@@ -198,7 +198,7 @@ export const Subscription = () => {
           <br />
           Your email address is {userEmail}.
         </p>
-        <div style="text-align: left">
+        <div >
           <b>To subscribe to: </b>
           <ul>
             <li>
