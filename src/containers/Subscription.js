@@ -200,24 +200,12 @@ export const Subscription = () => {
         </p>
         <div >
           <b>To subscribe to: </b>
-          <ul>
-            <li>
-              <b>
-                Private Cloud updates 
-                <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/">
-                   sign up here
-                </a>
+          <br></br>
+              <b>&#x2022; Private Cloud updates <a href="https://digital.gov.bc.ca/cloud/services/private/internal-resources/subscribe/"> sign up here</a>
               </b>
-            </li>
-            <li>
-              <b>
-                Public Cloud updates 
-                <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/">
-                   sign up here
-                </a>
-              </b>
-            </li>
-          </ul>
+              <br></br>
+              <b>&#x2022; Public Cloud updates <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/"> sign up here</a>
+              </b>            
         </div>
         {segments ? (
           <div>
