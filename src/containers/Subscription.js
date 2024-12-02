@@ -60,97 +60,97 @@ export const Subscription = () => {
     setSegments(updatedSegments)
   }
 
-  const postSegments = async (event) => {
-    event.preventDefault();
-    setSubmitButtonPressed(true)
+  // const postSegments = async (event) => {
+  //   event.preventDefault();
+  //   setSubmitButtonPressed(true)
 
-    if (segments && contactId) {
-      try {
-        //call backend api to update user segments
-        await axios.post(`${config.backendURL}/segments/contact/add`,
-          {
-            ContactId: contactId,
-            SegmentsAndIds: segments,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `bearer ${userToken}`,
-            },
-          }
-        );
+  //   if (segments && contactId) {
+  //     try {
+  //       //call backend api to update user segments
+  //       await axios.post(`${config.backendURL}/segments/contact/add`,
+  //         {
+  //           ContactId: contactId,
+  //           SegmentsAndIds: segments,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `bearer ${userToken}`,
+  //           },
+  //         }
+  //       );
         
-        sethttpError(false);
-        setRedirect("/subscribe/success")
+  //       sethttpError(false);
+  //       setRedirect("/subscribe/success")
 
-      } catch(error) {
-        setRedirect("/subscribe/error")
-        if (error.response) {
-          // client received error response (5xx, 4xx)
-          sethttpError(`Unable to post segments: ${error.response.data}`);
+  //     } catch(error) {
+  //       setRedirect("/subscribe/error")
+  //       if (error.response) {
+  //         // client received error response (5xx, 4xx)
+  //         sethttpError(`Unable to post segments: ${error.response.data}`);
   
-        } else if (error.request) {
-          // The request was made but no response was received
-          sethttpError("Unable to post segments")
+  //       } else if (error.request) {
+  //         // The request was made but no response was received
+  //         sethttpError("Unable to post segments")
   
-        } else {
-          // Something happened in setting up the request and triggered an Error
-          sethttpError(`Unable to post segments: ${error.message}`);
-        }
-      }
+  //       } else {
+  //         // Something happened in setting up the request and triggered an Error
+  //         sethttpError(`Unable to post segments: ${error.message}`);
+  //       }
+  //     }
       
-    }
-  };
+  //   }
+  // };
 
   // Fetch segments when config file is loaded/changed
-  useEffect(() => {
-    const fetchSegments = async () => {
-      if (config) {
-        try {
-          const segmentResponse = await axios.get(`${config.backendURL}/segments`, {
-              headers: {
-                'Content-Type': "application/json",
-                'Authorization': `bearer ${userToken}`,
-                'Email': `${userEmail}`
-              }
-            });
-          // store segments in lexicographic order
-          const segmentData = segmentResponse.data
-          const errorMsg = "More than one contact associated with the email address."
-          setContactId(segmentData.contactId)
-          //check if response datatype is an object and will not return undefined
-          if(segmentData.segmentsAndIds){
-            const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
-              isChecked: contents.IsChecked,
-              segmentID: contents.SegmentID,
-              segmentName: contents.SegmentName,
-              description: contents.Description
-            }));
-            setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
-            sethttpError(false);
-          }else if (segmentData.includes(errorMsg)){
-            //mautic server allows multiple accounts to be associated with one email, need to return error if that's the case
-            sethttpError(errorMsg)
-          }
-        } catch(error) {
-          if (error.response) {
-            // client received error response (5xx, 4xx)
-            sethttpError(`Unable to fetch segments: ${error.response.data}`);
-          } else if (error.request) {
-            // The request was made but no response was received
-            sethttpError("Unable to fetch segments")
-          } else {
-            // Something happened in setting up the request and triggered an Error
-            sethttpError(`Unable to fetch segments: ${error.message}`);
-          }
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchSegments = async () => {
+  //     if (config) {
+  //       try {
+  //         const segmentResponse = await axios.get(`${config.backendURL}/segments`, {
+  //             headers: {
+  //               'Content-Type': "application/json",
+  //               'Authorization': `bearer ${userToken}`,
+  //               'Email': `${userEmail}`
+  //             }
+  //           });
+  //         // store segments in lexicographic order
+  //         const segmentData = segmentResponse.data
+  //         const errorMsg = "More than one contact associated with the email address."
+  //         setContactId(segmentData.contactId)
+  //         //check if response datatype is an object and will not return undefined
+  //         if(segmentData.segmentsAndIds){
+  //           const segmentObjects = segmentData.segmentsAndIds.map((contents) => ({
+  //             isChecked: contents.IsChecked,
+  //             segmentID: contents.SegmentID,
+  //             segmentName: contents.SegmentName,
+  //             description: contents.Description
+  //           }));
+  //           setSegments(segmentObjects.sort((segmentA, segmentB) => segmentA.segmentName.localeCompare(segmentB.segmentName)));
+  //           sethttpError(false);
+  //         }else if (segmentData.includes(errorMsg)){
+  //           //mautic server allows multiple accounts to be associated with one email, need to return error if that's the case
+  //           sethttpError(errorMsg)
+  //         }
+  //       } catch(error) {
+  //         if (error.response) {
+  //           // client received error response (5xx, 4xx)
+  //           sethttpError(`Unable to fetch segments: ${error.response.data}`);
+  //         } else if (error.request) {
+  //           // The request was made but no response was received
+  //           sethttpError("Unable to fetch segments")
+  //         } else {
+  //           // Something happened in setting up the request and triggered an Error
+  //           sethttpError(`Unable to fetch segments: ${error.message}`);
+  //         }
+  //       }
+  //     }
+  //   };
 
-    if (!segments) {
-      fetchSegments();
-    }
-  }, [config]);
+  //   if (!segments) {
+  //     fetchSegments();
+  //   }
+  // }, [config]);
 
 
   if (submitButtonPressed) {
@@ -205,17 +205,20 @@ export const Subscription = () => {
               </b>
               <br></br>
               <b>&#x2022; Public Cloud updates <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/"> sign up here</a>
-              </b>            
+              </b>   
+              <b>&#x2022; Single Sign-On (SSO) updates <a href="https://digital.gov.bc.ca/sso-notifications/"> sign up here</a>
+              </b>
+              <br></br>         
         </div>
         {segments ? (
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
             <div className="auth-buttons">
-              <form onSubmit={postSegments}>
+              {/* <form onSubmit={postSegments}>
                 <button className="auth-button" type="submit">
                   Submit
                 </button>
-              </form>
+              </form> */}
             </div>
           </div>
         ) : (
