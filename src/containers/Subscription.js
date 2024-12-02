@@ -9,56 +9,56 @@ import { Redirect } from 'react-router';
 
 export const Subscription = () => {
   const { keycloak } = useKeycloak();
-  const config = useConfig('/config/form.json');
+  // const config = useConfig('/config/form.json');
   const userEmail = keycloak.idTokenParsed.email; 
   const userName = keycloak.idTokenParsed.given_name;
-  const userToken = keycloak.token;
+  // const userToken = keycloak.token;
   // segments is an array of objects {isChecked, segmentID, segmentName}
-  const [ segments, setSegments ] = useState(null);
+  // const [ segments, setSegments ] = useState(null);
   const [ httpError, sethttpError] = useState(null);
-  const [ selectAll, setSelectAll] = useState(false);
-  const [ contactId, setContactId] = useState(null);
-  const [ submitButtonPressed, setSubmitButtonPressed] = useState(false);
-  const [ redirect, setRedirect] = useState(null);
+  // const [ selectAll, setSelectAll] = useState(false);
+  // const [ contactId, setContactId] = useState(null);
+  // const [ submitButtonPressed, setSubmitButtonPressed] = useState(false);
+  // const [ redirect, setRedirect] = useState(null);
 
-  const toggleCheckboxes = () => {
-    const toggledCheckedboxes = segments.map(({isChecked, segmentName, ...others}) => {
-      return { ...others, "isChecked": !selectAll, segmentName }; });
-    setSegments(toggledCheckedboxes)
-    setSelectAll(!selectAll)
-  }
+  // const toggleCheckboxes = () => {
+  //   const toggledCheckedboxes = segments.map(({isChecked, segmentName, ...others}) => {
+  //     return { ...others, "isChecked": !selectAll, segmentName }; });
+  //   setSegments(toggledCheckedboxes)
+  //   setSelectAll(!selectAll)
+  // }
 
-  const createCheckboxes = () => {
+  // const createCheckboxes = () => {
   
-      return (
-        <div >
-          <div className="checkboxContent">
-            {/* <label className="checkbox" htmlFor="select_all">
-              Select All
-              <input type="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
-              <span className="checkmark"></span>
-            </label> */}
+  //     return (
+  //       <div >
+  //         <div className="checkboxContent">
+  //           {/* <label className="checkbox" htmlFor="select_all">
+  //             Select All
+  //             <input type="checkbox" id="select_all" onChange={() => toggleCheckboxes()}/>
+  //             <span className="checkmark"></span>
+  //           </label> */}
        
-             {/* {Other Segments} */}
-            {segments.map((contents, x) => (
-              <div key={contents.segmentID} className="checkboxContent">
-                  <label className="checkbox" htmlFor={contents.segmentID}>
-                    {contents.segmentName} {contents.description ? `- ${contents.description}` : ""}
-                    <input type="checkbox" id={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/><span className="checkmark"></span>
-                  </label>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-  }
+  //            {/* {Other Segments} */}
+  //           {segments.map((contents, x) => (
+  //             <div key={contents.segmentID} className="checkboxContent">
+  //                 <label className="checkbox" htmlFor={contents.segmentID}>
+  //                   {contents.segmentName} {contents.description ? `- ${contents.description}` : ""}
+  //                   <input type="checkbox" id={contents.segmentID} checked={contents.isChecked} onChange={() => handleCheckbox(x)}/><span className="checkmark"></span>
+  //                 </label>
+  //             </div>
+  //           ))}
+  //         </div>
+  //       </div>
+  //     )
+  // }
 
-  const handleCheckbox = (updateIndex) => {
-    const updatedSegments = [...segments]
-    updatedSegments[updateIndex].isChecked = !updatedSegments[updateIndex].isChecked
+  // const handleCheckbox = (updateIndex) => {
+  //   const updatedSegments = [...segments]
+  //   updatedSegments[updateIndex].isChecked = !updatedSegments[updateIndex].isChecked
 
-    setSegments(updatedSegments)
-  }
+  //   setSegments(updatedSegments)
+  // }
 
   // const postSegments = async (event) => {
   //   event.preventDefault();
@@ -80,14 +80,14 @@ export const Subscription = () => {
   //         }
   //       );
         
-  //       sethttpError(false);
+        // sethttpError(false);
   //       setRedirect("/subscribe/success")
 
   //     } catch(error) {
   //       setRedirect("/subscribe/error")
   //       if (error.response) {
   //         // client received error response (5xx, 4xx)
-  //         sethttpError(`Unable to post segments: ${error.response.data}`);
+          // sethttpError(`Unable to post segments: ${error.response.data}`);
   
   //       } else if (error.request) {
   //         // The request was made but no response was received
@@ -153,41 +153,41 @@ export const Subscription = () => {
   // }, [config]);
 
 
-  if (submitButtonPressed) {
-    if (redirect) {
-      return <Redirect to={{
-        pathname: redirect,
-      }}/>
-    }
-    return (
-      <div>
-        <div className="bcgov-page-loader"></div>
-        <div>Updating your subscription preferences... please wait</div>
-      </div>
-    )
+  // if (submitButtonPressed) {
+  //   if (redirect) {
+  //     return <Redirect to={{
+  //       pathname: redirect,
+  //     }}/>
+  //   }
+  //   return (
+  //     <div>
+  //       <div className="bcgov-page-loader"></div>
+  //       <div>Updating your subscription preferences... please wait</div>
+  //     </div>
+  //   )
   
-  }
+  // }
 
 
 
-  if (httpError) {
-    //return specific error message depending on the error
-    if(httpError.includes("More than one contact associated with the email")){
-      return (
-        <div>
-          <p>More than one contact associated with the email, please contact the Platform Services team to remove extraneous account(s).</p>
-        </div>
-      )
-    }else{
-      return (
-        <div>
-          <p>There was an unexpected error. Please try again in a few moments. If the error persists, please contact the Platform Services team for more information.</p>
-        </div>
-      )
-    }
+  // if (httpError) {
+  //   //return specific error message depending on the error
+  //   if(httpError.includes("More than one contact associated with the email")){
+  //     return (
+  //       <div>
+  //         <p>More than one contact associated with the email, please contact the Platform Services team to remove extraneous account(s).</p>
+  //       </div>
+  //     )
+  //   }else{
+  //     return (
+  //       <div>
+  //         <p>There was an unexpected error. Please try again in a few moments. If the error persists, please contact the Platform Services team for more information.</p>
+  //       </div>
+  //     )
+  //   }
 
-  }
-  else {
+  // }
+  // else {
   return (
     <div>
       <h1>Welcome to the {APP_INFO.DISPLAY_NAME}</h1>
@@ -206,19 +206,19 @@ export const Subscription = () => {
               <br></br>
               <b>&#x2022; Public Cloud updates <a href="https://digital.gov.bc.ca/cloud/services/public/internal-resources/subscribe/"> sign up here</a>
               </b>   
-              <b>&#x2022; Single Sign-On (SSO) updates <a href="https://digital.gov.bc.ca/sso-notifications/"> sign up here</a>
-              </b>
-              <br></br>         
+              <br></br> 
+              <b>&#x2022; Single Sign-On 	&#40;SSO&#41; updates <a href="https://digital.gov.bc.ca/sso-notifications/"> sign up here</a>
+              </b>                     
         </div>
-        {segments ? (
+        {/* {segments ? (
           <div>
             <div className="checkboxContainer">{createCheckboxes()}</div>
             <div className="auth-buttons">
-              {/* <form onSubmit={postSegments}>
+              <form onSubmit={postSegments}>
                 <button className="auth-button" type="submit">
                   Submit
                 </button>
-              </form> */}
+              </form>
             </div>
           </div>
         ) : (
@@ -226,12 +226,12 @@ export const Subscription = () => {
             <div className="bcgov-page-loader"></div>
             <div>Loading... please wait</div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
   }
-};
+// };
 
 
 
